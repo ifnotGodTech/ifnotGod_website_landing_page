@@ -1,0 +1,73 @@
+import type { Metadata } from "next";
+import { Fraunces, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import "./globals.css";
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  axes: ["opsz"],
+});
+
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
+  subsets: ["latin"],
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ifnotgodtech.com"),
+  title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
+  description:
+    "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
+  keywords: [
+    "software development company Nigeria",
+    "AI automation Nigeria",
+    "business process automation",
+    "custom software development",
+    "AI solutions for businesses",
+    "business automation company",
+    "technology solutions for businesses",
+    "software development Lagos",
+    "digital transformation Nigeria",
+  ],
+  openGraph: {
+    title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
+    description:
+      "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
+    images: ["/ifnotgod-icon.png"],
+    type: "website",
+    locale: "en_NG",
+  },
+  twitter: {
+    card: "summary",
+    title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
+    description:
+      "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
+    images: ["/ifnotgod-icon.png"],
+  },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${publicSans.variable} ${plexMono.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+      </body>
+    </html>
+  );
+}

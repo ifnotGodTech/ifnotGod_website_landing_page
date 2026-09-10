@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #0b0706;
+  --color-surface: #18100e;
+  --color-surface-2: #1f1512;
+  --color-line: rgba(224, 123, 42, 0.16);
+  --color-line-strong: rgba(224, 123, 42, 0.32);
+  --color-maroon: #6b1f2a;
+  --color-maroon-bright: #8c3140;
+  --color-orange: #e07b2a;
+  --color-orange-soft: rgba(224, 123, 42, 0.13);
+  --color-paper: #f7f1ec;
+  --color-paper-dim: #c9bcb5;
+  --color-mute: #8c7c77;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-line: var(--color-line);
+  --color-line-strong: var(--color-line-strong);
+  --color-maroon: var(--color-maroon);
+  --color-maroon-bright: var(--color-maroon-bright);
+  --color-orange: var(--color-orange);
+  --color-orange-soft: var(--color-orange-soft);
+  --color-paper: var(--color-paper);
+  --color-paper-dim: var(--color-paper-dim);
+  --color-mute: var(--color-mute);
+
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-public-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 900px 500px at 15% 0%, rgba(107, 31, 42, 0.2), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 30%, rgba(224, 123, 42, 0.08), transparent 55%),
+    var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  text-wrap: balance;
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
