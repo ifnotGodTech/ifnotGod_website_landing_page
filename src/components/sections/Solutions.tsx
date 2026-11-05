@@ -79,7 +79,7 @@ export function Solutions() {
         </SectionHeading>
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
+      <RevealOnScroll>
         <div className="mt-13 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {SOLUTIONS.map((s) => (
             <Card key={s.title} icon={s.icon} title={s.title} description={s.description} size="lg" />

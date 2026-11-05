@@ -28,7 +28,7 @@ export function WhoWeHelp() {
           </SectionHeading>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.1}>
+        <RevealOnScroll>
           <div className="mt-2 flex flex-wrap gap-3">
             {AUDIENCES.map((audience) => (
               <span

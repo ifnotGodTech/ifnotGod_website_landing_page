@@ -58,7 +58,7 @@ export function WhyUs() {
         <SectionHeading eyebrow="Why IFNOTGOD TECH LTD" title="Technology Should Solve Problems, Not Create Them." />
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
+      <RevealOnScroll>
         <div className="mt-13 grid grid-cols-1 gap-8 sm:grid-cols-1 lg:grid-cols-5">
           {VALUES.map((value, i) => (
             <div

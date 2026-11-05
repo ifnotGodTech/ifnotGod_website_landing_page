@@ -103,7 +103,7 @@ export function Contact() {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.1}>
+        <RevealOnScroll>
           <form onSubmit={handleSubmit} className="border border-line-strong bg-surface p-7 sm:p-11" noValidate>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field id="fullName" name="fullName" label="Full Name" required error={fieldErrors.fullName} />
