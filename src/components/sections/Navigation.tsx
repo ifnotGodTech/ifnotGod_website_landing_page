@@ -49,7 +49,7 @@ export function Navigation() {
           </span>
         </a>
 
-        <div className="hidden items-center gap-8.5 lg:flex">
+        <div className="hidden items-center gap-8.5 xl:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
@@ -73,7 +73,7 @@ export function Navigation() {
             </Button>
           </div>
           <button
-            className="flex h-9 w-9 items-center justify-center text-paper lg:hidden"
+            className="flex h-9 w-9 items-center justify-center text-paper xl:hidden"
             aria-label="Open menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -91,7 +91,7 @@ export function Navigation() {
 
       <div
         className={cn(
-          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-[#120b09] px-7 pb-10 pt-24 transition-opacity duration-200 lg:hidden",
+          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-[#120b09] px-5 pb-10 pt-24 sm:px-8 lg:px-16 transition-opacity duration-200 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0"
         )}
       >

@@ -20,47 +20,49 @@ export function Footer() {
       className="border-t border-line py-14 pb-9"
       style={{ background: "radial-gradient(ellipse 600px 300px at 0% 100%, rgba(107,31,42,0.24), transparent 60%)" }}
     >
-      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <Image
-              src="/ifnotgod-icon.png"
-              alt="IFNOTGOD TECH LTD logo"
-              width={1271}
-              height={1237}
-              className="h-7.5 w-7.5 object-contain"
-            />
-            <span className="font-display text-[1.02rem] font-semibold">IFNOTGOD TECH LTD</span>
+      <div className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <Image
+                src="/ifnotgod-icon.png"
+                alt="IFNOTGOD TECH LTD logo"
+                width={1271}
+                height={1237}
+                className="h-7.5 w-7.5 object-contain"
+              />
+              <span className="font-display text-[1.02rem] font-semibold">IFNOTGOD TECH LTD</span>
+            </div>
+            <p className="mt-3.5 max-w-[30ch] text-[0.88rem] text-mute">&quot;Every problem has a tech solution.&quot;</p>
           </div>
-          <p className="mt-3.5 max-w-[30ch] text-[0.88rem] text-mute">&quot;Every problem has a tech solution.&quot;</p>
+
+          <FooterColumn heading="Company" links={COMPANY_LINKS} />
+          <FooterColumn heading="Legal" links={LEGAL_LINKS} />
+
+          <div>
+            <h4 className="mb-4.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-mute">Connect</h4>
+            <div className="flex gap-3.5">
+              <SocialIcon href={SOCIAL_LINKS.linkedin} label="LinkedIn">
+                <rect x="3" y="9" width="4" height="12" />
+                <circle cx="5" cy="4" r="2" />
+                <path d="M11 21v-7a3 3 0 0 1 6 0v7M11 12v9" />
+              </SocialIcon>
+              <SocialIcon href={SOCIAL_LINKS.x} label="X">
+                <path d="M4 4l16 16M20 4 4 20" />
+              </SocialIcon>
+              <SocialIcon href={SOCIAL_LINKS.instagram} label="Instagram">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
+              </SocialIcon>
+            </div>
+          </div>
         </div>
 
-        <FooterColumn heading="Company" links={COMPANY_LINKS} />
-        <FooterColumn heading="Legal" links={LEGAL_LINKS} />
-
-        <div>
-          <h4 className="mb-4.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-mute">Connect</h4>
-          <div className="flex gap-3.5">
-            <SocialIcon href={SOCIAL_LINKS.linkedin} label="LinkedIn">
-              <rect x="3" y="9" width="4" height="12" />
-              <circle cx="5" cy="4" r="2" />
-              <path d="M11 21v-7a3 3 0 0 1 6 0v7M11 12v9" />
-            </SocialIcon>
-            <SocialIcon href={SOCIAL_LINKS.x} label="X">
-              <path d="M4 4l16 16M20 4 4 20" />
-            </SocialIcon>
-            <SocialIcon href={SOCIAL_LINKS.instagram} label="Instagram">
-              <rect x="3" y="3" width="18" height="18" rx="5" />
-              <circle cx="12" cy="12" r="4" />
-              <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
-            </SocialIcon>
-          </div>
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[0.8rem] text-mute">
+          <span>© 2026 IFNOTGOD TECH LTD. All rights reserved.</span>
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.08em]">Every problem has a tech solution.</span>
         </div>
-      </div>
-
-      <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6 text-[0.8rem] text-mute">
-        <span>© 2026 IFNOTGOD TECH LTD. All rights reserved.</span>
-        <span className="font-mono text-[0.7rem] uppercase tracking-[0.08em]">Every problem has a tech solution.</span>
       </div>
     </footer>
   );

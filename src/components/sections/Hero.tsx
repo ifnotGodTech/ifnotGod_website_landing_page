@@ -15,7 +15,7 @@ export function Hero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-[8%] top-[20%] -z-10 h-95 w-95 rounded-full blur-[20px]"
+        className="pointer-events-none absolute -left-[8%] top-[20%] -z-10 h-95 w-95 max-w-full rounded-full blur-[20px]"
         style={{ background: "radial-gradient(circle, rgba(107,31,42,0.38), transparent 70%)" }}
       />
 
