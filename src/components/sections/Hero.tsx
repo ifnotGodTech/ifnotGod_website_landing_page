@@ -29,9 +29,9 @@ export function Hero() {
 
         <h1
           style={{ animationDelay: "0.16s" }}
-          className="hero-rise mt-5 text-[clamp(2.6rem,5.4vw,4.7rem)] font-semibold"
+          className="hero-rise mt-5 text-[clamp(2.6rem,5.4vw,4.7rem)] font-bold"
         >
-          Every Problem Has <em className="text-orange italic">a Tech Solution.</em>
+          Every Problem Has <em className="text-orange not-italic">a Tech Solution.</em>
         </h1>
 
         <div style={{ animationDelay: "0.27s" }} className="hero-rise mt-5.5 flex max-w-[56ch] flex-col gap-3.5">

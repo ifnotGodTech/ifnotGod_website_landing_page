@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const AUDIENCES = [
   "Startups",
@@ -29,17 +30,20 @@ export function WhoWeHelp() {
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <div className="mt-2 flex flex-wrap gap-3">
+          <ul className="mt-2 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {AUDIENCES.map((audience) => (
-              <span
-                key={audience}
-                className="rounded-full border border-line-strong px-5 py-2.5 font-mono text-[0.82rem] tracking-[0.03em] text-paper-dim transition-colors hover:border-orange hover:text-orange"
-              >
+              <li key={audience} className="flex min-h-24 items-end bg-ink p-5 font-display text-[1rem] font-semibold">
                 {audience}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </RevealOnScroll>
+
+        <div className="mt-11">
+          <Button href="#contact" variant="outline-orange">
+            Let&apos;s Solve Your Problem
+          </Button>
+        </div>
       </div>
     </section>
   );

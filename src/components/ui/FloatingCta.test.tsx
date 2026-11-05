@@ -1,5 +1,6 @@
 import { act, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { CONTACT_INFO } from "@/shared/constants";
 import { FloatingCta } from "./FloatingCta";
 
 type ObserverCallback = (entries: Array<{ target: Element; isIntersecting: boolean }>) => void;
@@ -60,6 +61,15 @@ describe("FloatingCta", () => {
     act(() => notify([{ target: target("footer"), isIntersecting: true }]));
     act(() => notify([{ target: target("#contact"), isIntersecting: false }]));
     expect(wrapper()).toHaveClass("invisible");
+  });
+
+  it("offers WhatsApp alongside the main call to action", () => {
+    render(<FloatingCta />);
+
+    expect(screen.getByRole("link", { name: "Chat on WhatsApp", hidden: true })).toHaveAttribute(
+      "href",
+      CONTACT_INFO.whatsappHref
+    );
   });
 
   it("disconnects its observer on unmount", () => {

@@ -31,7 +31,7 @@ export function Footer() {
                 height={1237}
                 className="h-7.5 w-7.5 object-contain"
               />
-              <span className="font-display text-[1.02rem] font-semibold">IFNOTGOD TECH LTD</span>
+              <span className="font-display text-[1.02rem] font-bold">IFNOTGOD TECH LTD</span>
             </div>
             <p className="mt-3.5 max-w-[30ch] text-[0.88rem] text-mute">&quot;Every problem has a tech solution.&quot;</p>
           </div>

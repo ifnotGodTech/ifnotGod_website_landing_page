@@ -95,7 +95,12 @@ export function Contact() {
             <div className="mt-9 flex flex-col gap-7">
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Email</span>
-                <span className="font-display text-[1.15rem]">{CONTACT_INFO.email}</span>
+                <a
+                  href={`mailto:${CONTACT_INFO.email}`}
+                  className="w-fit break-all font-display text-[1.15rem] transition-colors hover:text-orange"
+                >
+                  {CONTACT_INFO.email}
+                </a>
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">WhatsApp</span>

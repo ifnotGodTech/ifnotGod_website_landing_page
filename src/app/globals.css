@@ -31,7 +31,7 @@
   --color-paper-dim: var(--color-paper-dim);
   --color-mute: var(--color-mute);
 
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-manrope);
   --font-body: var(--font-public-sans);
   --font-mono: var(--font-plex-mono);
 }
@@ -53,6 +53,7 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
+  letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
   color: var(--color-paper);

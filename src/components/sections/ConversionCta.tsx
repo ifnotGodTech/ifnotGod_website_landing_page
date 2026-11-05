@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
+import { CONTACT_INFO } from "@/shared/constants";
 
 export function ConversionCta() {
   return (
@@ -24,7 +25,7 @@ export function ConversionCta() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button href="#contact">Tell Us Your Challenge</Button>
-            <Button href="#contact" variant="ghost">
+            <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="ghost">
               Talk to Our Team
             </Button>
           </div>

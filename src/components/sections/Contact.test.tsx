@@ -1,6 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { CONTACT_INFO } from "@/shared/constants";
 import { Contact } from "./Contact";
 
 describe("Contact form", () => {
@@ -54,6 +55,15 @@ describe("Contact form", () => {
     expect(await screen.findByText(/enter a valid email address/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email address/i)).toHaveFocus();
     expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+  });
+
+  it("makes the email address a mail link", () => {
+    render(<Contact />);
+
+    expect(screen.getByRole("link", { name: CONTACT_INFO.email })).toHaveAttribute(
+      "href",
+      `mailto:${CONTACT_INFO.email}`
+    );
   });
 
   it("offers autofill and labels optional fields", () => {

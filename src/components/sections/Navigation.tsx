@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { NAV_LINKS } from "@/shared/constants";
+import { CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
 
@@ -71,7 +71,7 @@ export function Navigation() {
             priority
             className="h-9 w-9 object-contain"
           />
-          <span className="font-display text-[1.02rem] font-semibold tracking-wide">
+          <span className="font-display text-[1.02rem] font-bold tracking-wide">
             IFNOTGOD TECH LTD
             <small className="mt-px block font-mono text-[0.58rem] font-normal tracking-[0.18em] text-mute">
               EVERY PROBLEM HAS A TECH SOLUTION
@@ -140,9 +140,14 @@ export function Navigation() {
             {link.label}
           </a>
         ))}
-        <Button href="#contact" onClick={() => setOpen(false)} className="mt-3 w-fit">
-          Tell Us Your Challenge
-        </Button>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Button href="#contact" onClick={() => setOpen(false)}>
+            Tell Us Your Challenge
+          </Button>
+          <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="outline-orange">
+            Chat on WhatsApp
+          </Button>
+        </div>
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const STEPS = [
   {
@@ -47,11 +48,17 @@ export function HowWeWork() {
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <p className="mt-16 text-balance border-t border-line pt-10 font-display text-[clamp(1.4rem,2.6vw,2rem)] italic">
+        <p className="mt-16 text-balance border-t border-line pt-10 font-display text-[clamp(1.4rem,2.6vw,2rem)] font-semibold tracking-[-0.02em]">
           You don&apos;t need to know what technology you need.{" "}
           <span className="text-orange">You just need to know what problem you want solved.</span>
         </p>
       </RevealOnScroll>
+
+      <div className="mt-11">
+        <Button href="#contact" variant="outline-orange">
+          Let&apos;s Solve Your Problem
+        </Button>
+      </div>
     </section>
   );
 }

@@ -36,7 +36,7 @@ export function AISection() {
         <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-start gap-14 px-5 py-14 sm:px-8 sm:py-22 lg:grid-cols-2 lg:px-16">
           <div>
             <span className="flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-orange before:content-[''] before:h-px before:w-[18px] before:bg-orange">
-              The Differentiator
+              AI at Work
             </span>
             <h2 className="mt-4 text-[clamp(1.8rem,3.4vw,2.7rem)] font-semibold">
               Don&apos;t Just Use AI. <em className="text-orange not-italic">Put It to Work.</em>

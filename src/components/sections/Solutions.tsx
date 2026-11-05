@@ -1,6 +1,7 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 
 const SOLUTIONS = [
   {
@@ -71,7 +72,7 @@ export function Solutions() {
   return (
     <section id="solutions" className="py-16 sm:py-24 lg:py-32">
       <RevealOnScroll>
-        <SectionHeading eyebrow="What We Build" title="Technology Built Around Your Problem.">
+        <SectionHeading eyebrow="What We Solve" title="Technology Built Around Your Problem.">
           <p className="max-w-[56ch] text-[clamp(1.05rem,1.4vw,1.2rem)] text-paper-dim">
             We don&apos;t force your organisation into a pre-built solution. We understand your challenge first,
             then determine the right technology to solve it.
@@ -86,6 +87,12 @@ export function Solutions() {
           ))}
         </div>
       </RevealOnScroll>
+
+      <div className="mt-11">
+        <Button href="#contact" variant="outline-orange">
+          Tell Us Your Challenge
+        </Button>
+      </div>
     </section>
   );
 }

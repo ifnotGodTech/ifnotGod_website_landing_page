@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const VALUES = [
   {
@@ -76,6 +77,12 @@ export function WhyUs() {
           ))}
         </div>
       </RevealOnScroll>
+
+      <div className="mt-11">
+        <Button href="#contact" variant="outline-orange">
+          Tell Us Your Challenge
+        </Button>
+      </div>
     </section>
   );
 }

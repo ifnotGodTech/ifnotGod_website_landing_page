@@ -1,4 +1,5 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { Button } from "@/components/ui/Button";
 
 export function About() {
   return (
@@ -21,6 +22,11 @@ export function About() {
               work easier, businesses more efficient, organisations more effective, and people more productive.
             </p>
             <p>Our job is to understand the problem, find the opportunity, and build the technology that makes the difference.</p>
+            <div className="mt-2">
+              <Button href="#contact" variant="outline-orange">
+                Tell Us Your Challenge
+              </Button>
+            </div>
           </div>
         </div>
       </RevealOnScroll>

@@ -26,20 +26,20 @@ type ButtonProps = ComponentPropsWithoutRef<"a"> & {
 };
 
 export function Button({ href, variant = "primary", size = "md", className, children, ...rest }: ButtonProps) {
-  const isAnchor = href.startsWith("#");
+  const isInternalRoute = href.startsWith("/");
   const classes = cn(base, variantClasses[variant], sizeClasses[size], className);
 
-  if (isAnchor) {
+  if (isInternalRoute) {
     return (
-      <a href={href} className={classes} {...rest}>
+      <Link href={href} className={classes} {...rest}>
         {children}
-      </a>
+      </Link>
     );
   }
 
   return (
-    <Link href={href} className={classes} {...rest}>
+    <a href={href} className={classes} {...rest}>
       {children}
-    </Link>
+    </a>
   );
 }
