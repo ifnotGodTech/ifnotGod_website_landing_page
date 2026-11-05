@@ -29,7 +29,7 @@ function buildContent(submission: ContactSubmission): { subject: string; html: s
   ];
 
   const html = `
-    <h2>New challenge submitted via ifnotgodtech.com</h2>
+    <h2>New challenge submitted via ifnotgod.com</h2>
     <table cellpadding="6" cellspacing="0">
       ${rows
         .map(

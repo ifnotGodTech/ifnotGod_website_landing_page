@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseContactSubmission } from "@/shared/validators/contact";
 import { sendContactNotification, EmailNotConfiguredError } from "@/lib/notifications/email";
+import { createRateLimiter } from "@/lib/rateLimit";
 import { HONEYPOT_FIELD } from "@/shared/constants";
 
-// Simple in-memory rate limit: 5 submissions per IP per 10 minutes.
-// Resets on server restart/redeploy — sufficient to blunt naive spam bots,
-// not a substitute for a durable rate limiter if abuse becomes a real problem.
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_REQUESTS_PER_WINDOW = 5;
-const hits = new Map<string, number[]>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
-  timestamps.push(now);
-  hits.set(key, timestamps);
-  return timestamps.length > MAX_REQUESTS_PER_WINDOW;
-}
+// 5 submissions per IP per 10 minutes. Vercel overwrites x-forwarded-for,
+// so visitors can't fake their IP to get around this.
+const limiter = createRateLimiter({
+  windowMs: 10 * 60 * 1000,
+  maxRequests: 5,
+  maxTrackedKeys: 10_000,
+});
 
 // Comfortably above the validator's limits on all fields combined.
 const MAX_BODY_BYTES = 32 * 1024;
@@ -53,7 +47,7 @@ export async function POST(request: NextRequest) {
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
-  if (isRateLimited(ip)) {
+  if (limiter.isLimited(ip)) {
     return NextResponse.json(
       { ok: false, error: "Too many submissions. Please try again in a few minutes." },
       { status: 429 }

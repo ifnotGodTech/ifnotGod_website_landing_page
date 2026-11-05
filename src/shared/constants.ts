@@ -1,3 +1,5 @@
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ifnotgod.com";
+
 export const NAV_LINKS = [
   { label: "Solutions", href: "#solutions" },
   { label: "How We Work", href: "#how-we-work" },

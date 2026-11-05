@@ -17,10 +17,10 @@ Open <http://localhost:3000>.
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `BREVO_API_KEY` | Yes, for the form to deliver | Sends contact form leads by email. Without it, the form shows visitors an error asking them to use WhatsApp or email. |
-| `CONTACT_RECIPIENT_EMAIL` | Recommended | The inbox that receives leads. Defaults to `hello@ifnotgodtech.com`. |
-| `BREVO_SENDER_EMAIL` | Optional | Sender address. It must be a sender you've verified in Brevo. |
+| `CONTACT_RECIPIENT_EMAIL` | Recommended | The inbox that receives leads. Defaults to the public contact email in `src/shared/constants.ts`. |
+| `BREVO_SENDER_EMAIL` | Recommended | Sender address, verified in Brevo. A sender on your own authenticated domain is the most reliable. Defaults to `no-reply@ifnotgod.com`. |
 | `BREVO_SENDER_NAME` | Optional | Sender name. |
-| `NEXT_PUBLIC_SITE_URL` | Recommended | The live site URL, used for sharing links, the sitemap and structured data. |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | The site's main address, used for the canonical URL, sitemap, sharing image and structured data. Defaults to `https://www.ifnotgod.com`. Takes effect at build time, so redeploy after changing it. |
 
 Running the site locally with a real `BREVO_API_KEY` means form submissions send real email.
 

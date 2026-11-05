@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { SITE_URL } from "@/shared/constants";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -19,7 +20,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ifnotgodtech.com"),
+  metadataBase: new URL(SITE_URL),
   title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
   description:
     "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
