@@ -18,7 +18,7 @@ export function Footer() {
   return (
     <footer
       className="border-t border-line py-14 pb-9"
-      style={{ background: "radial-gradient(ellipse 600px 300px at 0% 100%, rgba(107,31,42,0.24), transparent 60%)" }}
+      style={{ background: "radial-gradient(ellipse 600px 300px at 0% 100%, color-mix(in srgb, var(--color-maroon) 24%, transparent), transparent 60%)" }}
     >
       <div className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
@@ -27,8 +27,8 @@ export function Footer() {
               <Image
                 src="/ifnotgod-icon.png"
                 alt="IFNOTGOD TECH LTD logo"
-                width={1271}
-                height={1237}
+                width={30}
+                height={29}
                 className="h-7.5 w-7.5 object-contain"
               />
               <span className="font-display text-[1.02rem] font-bold">IFNOTGOD TECH LTD</span>

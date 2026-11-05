@@ -17,7 +17,7 @@ export function WhoWeHelp() {
   return (
     <section
       className="border-y border-line"
-      style={{ background: "linear-gradient(120deg, rgba(107,31,42,0.22), var(--color-surface) 60%)" }}
+      style={{ background: "linear-gradient(120deg, color-mix(in srgb, var(--color-maroon) 22%, transparent), var(--color-surface) 60%)" }}
     >
       <div className="mx-auto max-w-[1180px] px-5 py-14 sm:px-8 sm:py-22 lg:px-16">
         <RevealOnScroll>

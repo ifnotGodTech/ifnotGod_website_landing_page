@@ -11,12 +11,15 @@ import { ConversionCta } from "@/components/sections/ConversionCta";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { FloatingCta } from "@/components/ui/FloatingCta";
+import { buildOrganizationJsonLd } from "@/shared/structuredData";
 
-const CONTAINER = "mx-auto w-full max-w-[1180px] px-5 sm:px-8 lg:px-16";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ifnotgodtech.com";
+const CONTAINER ="mx-auto w-full max-w-[1180px] px-5 sm:px-8 lg:px-16";
 
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: buildOrganizationJsonLd(SITE_URL) }} />
       <Navigation />
       <main>
         <div className={CONTAINER}>

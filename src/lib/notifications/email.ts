@@ -2,6 +2,7 @@ import { config } from "@/lib/config";
 import type { ContactSubmission } from "@/types/contact";
 
 const BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email";
+const BREVO_TIMEOUT_MS = 10_000;
 
 export class EmailDeliveryError extends Error {
   constructor(message: string, readonly cause?: unknown) {
@@ -40,7 +41,8 @@ function buildContent(submission: ContactSubmission): { subject: string; html: s
   `;
 
   return {
-    subject: `New challenge from ${submission.fullName}${submission.organisation ? ` (${submission.organisation})` : ""}`,
+    subject: `New challenge from ${submission.fullName}${submission.organisation ? ` (${submission.organisation})` : ""}`
+      .replace(/\s+/g, " "),
     html,
   };
 }
@@ -66,21 +68,27 @@ export async function sendContactNotification(submission: ContactSubmission): Pr
 
   const { subject, html } = buildContent(submission);
 
-  const response = await fetch(BREVO_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      accept: "application/json",
-      "api-key": apiKey,
-    },
-    body: JSON.stringify({
-      sender: { name: senderName, email: senderEmail },
-      to: [{ email: recipientEmail }],
-      replyTo: { email: submission.email, name: submission.fullName },
-      subject,
-      htmlContent: html,
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetch(BREVO_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json",
+        "api-key": apiKey,
+      },
+      body: JSON.stringify({
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email: recipientEmail }],
+        replyTo: { email: submission.email, name: submission.fullName },
+        subject,
+        htmlContent: html,
+      }),
+      signal: AbortSignal.timeout(BREVO_TIMEOUT_MS),
+    });
+  } catch (error) {
+    throw new EmailDeliveryError("Brevo request failed or timed out.", error);
+  }
 
   if (!response.ok) {
     const body = await response.text().catch(() => "");

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
+import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { submitContactForm } from "@/lib/contact/client";
 import { cn } from "@/shared/cn";
-import { CONTACT_INFO } from "@/shared/constants";
-import { contactSubmissionSchema, type ContactFieldErrors } from "@/shared/validators/contact";
+import { CONTACT_INFO, HONEYPOT_FIELD } from "@/shared/constants";
+import { parseContactSubmission, type ContactFieldErrors } from "@/shared/validators/contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -19,7 +22,7 @@ export function Contact() {
   const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -32,17 +35,12 @@ export function Contact() {
       desiredOutcome: String(formData.get("desiredOutcome") ?? ""),
     };
 
-    const parsed = contactSubmissionSchema.safeParse(payload);
+    const parsed = parseContactSubmission(payload);
     if (!parsed.success) {
-      const errors: ContactFieldErrors = {};
-      for (const issue of parsed.error.issues) {
-        const field = issue.path[0] as keyof ContactFieldErrors;
-        if (field && !errors[field]) errors[field] = issue.message;
-      }
-      setFieldErrors(errors);
+      setFieldErrors(parsed.errors);
       setFormError(null);
       setStatus("error");
-      focusFirstInvalidField(form, errors);
+      focusFirstInvalidField(form, parsed.errors);
       return;
     }
 
@@ -50,32 +48,18 @@ export function Contact() {
     setFormError(null);
     setStatus("submitting");
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      const result = await response.json();
+    const result = await submitContactForm(parsed.data, String(formData.get(HONEYPOT_FIELD) ?? ""));
 
-      if (!response.ok || !result.ok) {
-        const serverFieldErrors: ContactFieldErrors = result.errors ?? {};
-        setFormError(
-          result.error ??
-            (result.errors ? null : "Something went wrong sending your message. Please try again.")
-        );
-        setFieldErrors(serverFieldErrors);
-        setStatus("error");
-        focusFirstInvalidField(form, serverFieldErrors);
-        return;
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch {
-      setFormError("Something went wrong sending your message. Please check your connection and try again.");
+    if (!result.ok) {
+      setFormError(result.message);
+      setFieldErrors(result.fieldErrors);
       setStatus("error");
+      focusFirstInvalidField(form, result.fieldErrors);
+      return;
     }
+
+    setStatus("success");
+    form.reset();
   }
 
   return (
@@ -83,9 +67,7 @@ export function Contact() {
       <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.85fr_1.15fr]">
         <RevealOnScroll>
           <div>
-            <span className="flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-orange before:content-[''] before:h-px before:w-[18px] before:bg-orange">
-              Contact
-            </span>
+            <Eyebrow>Contact</Eyebrow>
             <h2 className="mt-4 text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold">Let&apos;s Solve Something.</h2>
             <p className="mt-4 text-[clamp(1.05rem,1.4vw,1.2rem)] text-paper-dim">
               Tell us what&apos;s slowing your organisation down. We&apos;ll help you explore what technology can
@@ -113,14 +95,16 @@ export function Contact() {
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">WhatsApp</span>
-                <a
+                <Button
                   href={CONTACT_INFO.whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-flex w-fit items-center justify-center gap-2 rounded-[3px] border border-orange px-[18px] py-[10px] text-[0.85rem] font-semibold text-orange transition-colors hover:bg-orange hover:text-ink"
+                  variant="outline-orange"
+                  size="sm"
+                  className="mt-1 w-fit"
                 >
                   Chat on WhatsApp
-                </a>
+                </Button>
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Location</span>
@@ -131,7 +115,11 @@ export function Contact() {
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <form onSubmit={handleSubmit} className="border border-line-strong bg-surface p-7 sm:p-11" noValidate>
+          <form onSubmit={handleSubmit} className="relative border border-line-strong bg-surface p-7 sm:p-11" noValidate>
+            <div aria-hidden className="absolute h-px w-px overflow-hidden opacity-0">
+              <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+              <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" />
+            </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Field
                 id="fullName"

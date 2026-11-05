@@ -13,15 +13,16 @@ Engineering standards for the IFNOTGOD TECH LTD marketing website: a single-page
   - unit tests for form validation logic and edge cases
   - integration test for the contact submission API route
   - UI interaction tests for form states (idle, submitting, success, error)
+  - browser tests in `e2e` for behavior jsdom can't check, such as whether content is actually visible
 
-## Suggested Folder Structure (Next.js Reference)
-- `src/app` (App Router: root layout, the single page, `api/contact` route handler)
+## Folder Structure
+- `src/app` (App Router: root layout, the single page, `api/contact` route handler, global styles and theme tokens in `globals.css`)
 - `src/components/sections` (Hero, Problem, Solutions, AI, HowWeWork, WhyUs, WhoWeHelp, About, ConversionCta, Contact, Footer, Navigation)
-- `src/components/ui` (shared reusable UI primitives: Button, Card, Input, TextArea, Badge)
-- `src/lib` (contact-submission service, email/notification client, config)
+- `src/components/ui` (shared reusable UI primitives: Button, Card, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
+- `src/lib` (contact form client, email/notification client, config)
 - `src/shared` (constants, validators, shared helpers)
 - `src/types` (`ContactSubmission` and other shared contracts)
-- `src/styles` (global styles, theme tokens)
+- `e2e` (Playwright browser tests)
 
 ## Next.js Architecture Rules
 - Keep route concerns in `src/app`; keep section composition and any submission logic in `src/components/sections` and `src/lib`.
@@ -123,17 +124,18 @@ A feature/section is done when:
 - Avoid continuous or decorative motion.
 - Animations must never block interaction.
 - Respect reduced-motion preferences.
+- Content must be visible by default, without JavaScript. Use CSS for entrance and scroll animations, and never server-render content hidden.
 - Verify no visible jank on scroll or hover interactions.
 
 ## Brand and CTA Color Rules
 - Brand palette:
   - Maroon/Burgundy `#6B1F2A` — primary brand color; primary CTA background, key accents.
   - Black `#000000` — primary dark background/base for the site's dark aesthetic.
-  - White `#FFFFFF` — primary text on dark surfaces, CTA text on maroon/orange.
+  - White `#FFFFFF` — primary text on dark surfaces, CTA text on maroon.
   - Orange `#E07B2A` — secondary accent; secondary/tertiary CTA background, highlights, icon accents, matches the logo's gradient warmth.
-- Define all colors as theme tokens (`src/styles`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
+- Define all colors as theme tokens (`src/app/globals.css`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
 - Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments per the brief's "avoid overusing neon colours" direction.
-- Keep button/CTA text contrast accessible (minimum WCAG AA): white text on maroon and on orange both pass AA for normal-size CTA text; verify any smaller/lighter text combinations before shipping.
+- Keep button/CTA text contrast accessible (minimum WCAG AA): white on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.
 
 ## UI File Size and Composition Rules
 - Avoid oversized UI files; split components when a file grows beyond a maintainable size.

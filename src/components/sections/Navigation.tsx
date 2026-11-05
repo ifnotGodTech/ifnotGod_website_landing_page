@@ -66,8 +66,8 @@ export function Navigation() {
           <Image
             src="/ifnotgod-icon.png"
             alt="IFNOTGOD TECH LTD logo"
-            width={1271}
-            height={1237}
+            width={36}
+            height={35}
             priority
             className="h-9 w-9 object-contain"
           />
@@ -126,7 +126,7 @@ export function Navigation() {
         id={MOBILE_MENU_ID}
         inert={!open}
         className={cn(
-          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-[#120b09] px-5 pb-10 pt-24 sm:px-8 lg:px-16 transition-opacity duration-200 xl:hidden",
+          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-menu px-5 pb-10 pt-24 sm:px-8 lg:px-16 transition-opacity duration-200 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0"
         )}
       >

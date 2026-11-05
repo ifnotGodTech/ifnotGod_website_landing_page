@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 
 const FLOW_STEPS = ["Business Challenge", "Analysis", "Technology", "Solution", "Better Business"];
 
@@ -11,21 +12,18 @@ export function Hero() {
       <div
         aria-hidden
         className="pointer-events-none absolute -right-[2%] -top-[14%] -z-10 h-130 w-130 rounded-full blur-[10px]"
-        style={{ background: "radial-gradient(circle, rgba(224,123,42,0.22), transparent 68%)" }}
+        style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--color-orange) 22%, transparent), transparent 68%)" }}
       />
       <div
         aria-hidden
         className="pointer-events-none absolute -left-[8%] top-[20%] -z-10 h-95 w-95 max-w-full rounded-full blur-[20px]"
-        style={{ background: "radial-gradient(circle, rgba(107,31,42,0.38), transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, color-mix(in srgb, var(--color-maroon) 38%, transparent), transparent 70%)" }}
       />
 
       <div>
-        <span
-          style={{ animationDelay: "0.05s" }}
-          className="hero-rise flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-orange before:content-[''] before:h-px before:w-[18px] before:bg-orange"
-        >
+        <Eyebrow style={{ animationDelay: "0.05s" }} className="hero-rise">
           Nigerian Technology Consultancy
-        </span>
+        </Eyebrow>
 
         <h1
           style={{ animationDelay: "0.16s" }}

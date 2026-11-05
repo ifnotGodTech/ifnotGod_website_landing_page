@@ -23,31 +23,18 @@ export const metadata: Metadata = {
   title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
   description:
     "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-  keywords: [
-    "software development company Nigeria",
-    "AI automation Nigeria",
-    "business process automation",
-    "custom software development",
-    "AI solutions for businesses",
-    "business automation company",
-    "technology solutions for businesses",
-    "software development Lagos",
-    "digital transformation Nigeria",
-  ],
   openGraph: {
     title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
     description:
       "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-    images: ["/ifnotgod-icon.png"],
     type: "website",
     locale: "en_NG",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
     description:
       "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-    images: ["/ifnotgod-icon.png"],
   },
   alternates: {
     canonical: "/",

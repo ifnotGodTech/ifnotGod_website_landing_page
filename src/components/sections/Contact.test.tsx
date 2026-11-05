@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CONTACT_INFO } from "@/shared/constants";
+import { CONTACT_INFO, HONEYPOT_FIELD } from "@/shared/constants";
 import { Contact } from "./Contact";
 
 describe("Contact form", () => {
@@ -13,10 +13,65 @@ describe("Contact form", () => {
     const user = userEvent.setup();
     render(<Contact />);
 
+    await user.type(screen.getByLabelText(/email address/i), "ada@obilogistics.com");
     await user.click(screen.getByRole("button", { name: /send my challenge/i }));
 
     expect(await screen.findByText(/enter your full name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toHaveValue("ada@obilogistics.com");
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("sends the visitor's details, with the honeypot left empty", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ ok: true }),
+    });
+
+    const user = userEvent.setup();
+    render(<Contact />);
+
+    await user.type(screen.getByLabelText(/full name/i), "Ada Obi");
+    await user.type(screen.getByLabelText(/email address/i), "ada@obilogistics.com");
+    await user.type(
+      screen.getByLabelText(/what challenge are you facing/i),
+      "Our dispatch process is entirely manual and error-prone."
+    );
+    await user.click(screen.getByRole("button", { name: /send my challenge/i }));
+
+    await screen.findByText(/we've received your challenge/i);
+    const [url, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(url).toBe("/api/contact");
+    expect(JSON.parse(options.body)).toMatchObject({
+      fullName: "Ada Obi",
+      email: "ada@obilogistics.com",
+      [HONEYPOT_FIELD]: "",
+    });
+  });
+
+  it("keeps input and offers WhatsApp when the network fails", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("offline"));
+
+    const user = userEvent.setup();
+    render(<Contact />);
+
+    await user.type(screen.getByLabelText(/full name/i), "Ada Obi");
+    await user.type(screen.getByLabelText(/email address/i), "ada@obilogistics.com");
+    await user.type(
+      screen.getByLabelText(/what challenge are you facing/i),
+      "Our dispatch process is entirely manual and error-prone."
+    );
+    await user.click(screen.getByRole("button", { name: /send my challenge/i }));
+
+    expect(await screen.findByText(/check your connection/i)).toHaveTextContent(/whatsapp/i);
+    expect(screen.getByLabelText(/full name/i)).toHaveValue("Ada Obi");
+  });
+
+  it("keeps the honeypot out of the tab order and away from assistive tech", () => {
+    const { container } = render(<Contact />);
+    const honeypot = container.querySelector(`input[name="${HONEYPOT_FIELD}"]`) as HTMLInputElement;
+
+    expect(honeypot).toHaveAttribute("tabindex", "-1");
+    expect(honeypot.closest("[aria-hidden]")).not.toBeNull();
   });
 
   it("marks invalid fields, links their errors, and focuses the first one", async () => {

@@ -14,6 +14,10 @@ export const CONTACT_INFO = {
   location: "Lagos, Nigeria",
 } as const;
 
+// Hidden form field that only bots fill in. The name avoids words browsers autofill,
+// so real visitors can't trip it by accident.
+export const HONEYPOT_FIELD = "hp_field";
+
 export const SOCIAL_LINKS = {
   linkedin: "https://www.linkedin.com/in/ifnotgod-tech-71233036b/",
   x: "https://x.com/Ifnotgodtech",
