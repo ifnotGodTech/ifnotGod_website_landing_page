@@ -18,6 +18,56 @@ describe("Contact form", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  it("marks invalid fields, links their errors, and focuses the first one", async () => {
+    const user = userEvent.setup();
+    render(<Contact />);
+
+    await user.type(screen.getByLabelText(/email address/i), "not-an-email");
+    await user.click(screen.getByRole("button", { name: /send my challenge/i }));
+
+    const fullName = screen.getByLabelText(/full name/i);
+    expect(await screen.findByText(/enter your full name/i)).toHaveAttribute("id", "fullName-error");
+    expect(fullName).toHaveAttribute("aria-invalid", "true");
+    expect(fullName).toHaveAttribute("aria-describedby", "fullName-error");
+    expect(fullName).toHaveFocus();
+    expect(screen.getByLabelText(/email address/i)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/organisation/i)).not.toHaveAttribute("aria-invalid");
+  });
+
+  it("shows server field errors without a generic failure message", async () => {
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ ok: false, errors: { email: "Enter a valid email address." } }),
+    });
+
+    const user = userEvent.setup();
+    render(<Contact />);
+
+    await user.type(screen.getByLabelText(/full name/i), "Ada Obi");
+    await user.type(screen.getByLabelText(/email address/i), "ada@obilogistics.com");
+    await user.type(
+      screen.getByLabelText(/what challenge are you facing/i),
+      "Our dispatch process is entirely manual and error-prone."
+    );
+    await user.click(screen.getByRole("button", { name: /send my challenge/i }));
+
+    expect(await screen.findByText(/enter a valid email address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toHaveFocus();
+    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+  });
+
+  it("offers autofill and labels optional fields", () => {
+    render(<Contact />);
+
+    expect(screen.getByLabelText(/full name/i)).toHaveAttribute("autocomplete", "name");
+    expect(screen.getByLabelText(/organisation \/ company \(optional\)/i)).toHaveAttribute(
+      "autocomplete",
+      "organization"
+    );
+    expect(screen.getByLabelText(/email address/i)).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByLabelText(/phone \/ whatsapp \(optional\)/i)).toHaveAttribute("autocomplete", "tel");
+  });
+
   it("submits successfully and shows a success message", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,

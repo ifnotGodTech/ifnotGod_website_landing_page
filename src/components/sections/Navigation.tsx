@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { NAV_LINKS } from "@/shared/constants";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
 
+const MOBILE_MENU_ID = "mobile-menu";
+const DESKTOP_NAV_QUERY = "(min-width: 80rem)"; // Tailwind's xl, where the menu is hidden.
+const BEHIND_MENU = "main, footer, [data-testid='floating-cta']";
+
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -18,9 +23,34 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+
+    const behindMenu = document.querySelectorAll<HTMLElement>(BEHIND_MENU);
+    const desktopNav = window.matchMedia(DESKTOP_NAV_QUERY);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    const onDesktopNavChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    behindMenu.forEach((element) => {
+      element.inert = true;
+    });
+    document.addEventListener("keydown", onKeyDown);
+    desktopNav.addEventListener("change", onDesktopNavChange);
+
     return () => {
       document.body.style.overflow = "";
+      behindMenu.forEach((element) => {
+        element.inert = false;
+      });
+      document.removeEventListener("keydown", onKeyDown);
+      desktopNav.removeEventListener("change", onDesktopNavChange);
     };
   }, [open]);
 
@@ -73,14 +103,17 @@ export function Navigation() {
             </Button>
           </div>
           <button
+            ref={toggleRef}
+            type="button"
             className="flex h-9 w-9 items-center justify-center text-paper xl:hidden"
-            aria-label="Open menu"
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls={MOBILE_MENU_ID}
             onClick={() => setOpen((v) => !v)}
           >
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="1.5">
               {open ? (
-                <path d="M2 2l16 10M18 2 2 12" strokeLinecap="round" />
+                <path d="M4 1l12 12M16 1 4 13" strokeLinecap="round" />
               ) : (
                 <path d="M0 1h20M0 7h20M0 13h20" />
               )}
@@ -90,6 +123,8 @@ export function Navigation() {
       </nav>
 
       <div
+        id={MOBILE_MENU_ID}
+        inert={!open}
         className={cn(
           "fixed inset-0 z-99 flex flex-col gap-6.5 bg-[#120b09] px-5 pb-10 pt-24 sm:px-8 lg:px-16 transition-opacity duration-200 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0"

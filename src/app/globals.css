@@ -40,10 +40,6 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background:
     radial-gradient(ellipse 900px 500px at 15% 0%, rgba(107, 31, 42, 0.2), transparent 60%),
@@ -100,6 +96,10 @@ h3 {
 
 /* Motion is opt-in: without these rules, all content is simply visible. */
 @media screen and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
   .hero-rise {
     animation: hero-rise 0.8s ease-out both;
   }

@@ -2,10 +2,17 @@
 
 import { useState, type FormEvent } from "react";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { cn } from "@/shared/cn";
 import { CONTACT_INFO } from "@/shared/constants";
 import { contactSubmissionSchema, type ContactFieldErrors } from "@/shared/validators/contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+function focusFirstInvalidField(form: HTMLFormElement, errors: ContactFieldErrors) {
+  const fields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea");
+  const firstInvalid = Array.from(fields).find((field) => field.name in errors);
+  firstInvalid?.focus();
+}
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
@@ -35,6 +42,7 @@ export function Contact() {
       setFieldErrors(errors);
       setFormError(null);
       setStatus("error");
+      focusFirstInvalidField(form, errors);
       return;
     }
 
@@ -51,9 +59,14 @@ export function Contact() {
       const result = await response.json();
 
       if (!response.ok || !result.ok) {
-        setFormError(result.error ?? "Something went wrong sending your message. Please try again.");
-        setFieldErrors(result.errors ?? {});
+        const serverFieldErrors: ContactFieldErrors = result.errors ?? {};
+        setFormError(
+          result.error ??
+            (result.errors ? null : "Something went wrong sending your message. Please try again.")
+        );
+        setFieldErrors(serverFieldErrors);
         setStatus("error");
+        focusFirstInvalidField(form, serverFieldErrors);
         return;
       }
 
@@ -106,12 +119,40 @@ export function Contact() {
         <RevealOnScroll>
           <form onSubmit={handleSubmit} className="border border-line-strong bg-surface p-7 sm:p-11" noValidate>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field id="fullName" name="fullName" label="Full Name" required error={fieldErrors.fullName} />
-              <Field id="organisation" name="organisation" label="Organisation / Company" error={fieldErrors.organisation} />
+              <Field
+                id="fullName"
+                name="fullName"
+                label="Full Name"
+                autoComplete="name"
+                required
+                error={fieldErrors.fullName}
+              />
+              <Field
+                id="organisation"
+                name="organisation"
+                label="Organisation / Company (optional)"
+                autoComplete="organization"
+                error={fieldErrors.organisation}
+              />
             </div>
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field id="email" name="email" label="Email Address" type="email" required error={fieldErrors.email} />
-              <Field id="phone" name="phone" label="Phone / WhatsApp" type="tel" error={fieldErrors.phone} />
+              <Field
+                id="email"
+                name="email"
+                label="Email Address"
+                type="email"
+                autoComplete="email"
+                required
+                error={fieldErrors.email}
+              />
+              <Field
+                id="phone"
+                name="phone"
+                label="Phone / WhatsApp (optional)"
+                type="tel"
+                autoComplete="tel"
+                error={fieldErrors.phone}
+              />
             </div>
             <div className="mt-5">
               <Field
@@ -168,15 +209,29 @@ type FieldProps = {
   name: string;
   label: string;
   type?: string;
+  autoComplete?: string;
   required?: boolean;
   textarea?: boolean;
   rows?: number;
   error?: string;
 };
 
-function Field({ id, name, label, type = "text", required, textarea, rows = 5, error }: FieldProps) {
-  const fieldClasses =
-    "border border-line-strong bg-ink px-3.5 py-3.5 font-body text-[0.95rem] text-paper focus:border-orange focus:outline-none";
+function Field({ id, name, label, type = "text", autoComplete, required, textarea, rows = 5, error }: FieldProps) {
+  const errorId = `${id}-error`;
+  // text-base (16px) stops iOS Safari zooming in when a field is focused.
+  // The scroll margin keeps a focused field clear of the fixed nav.
+  const fieldProps = {
+    id,
+    name,
+    required,
+    autoComplete,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+    className: cn(
+      "scroll-mt-28 border bg-ink px-3.5 py-3.5 font-body text-base text-paper focus:border-orange focus:outline-none",
+      error ? "border-orange" : "border-line-strong"
+    ),
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -184,11 +239,15 @@ function Field({ id, name, label, type = "text", required, textarea, rows = 5, e
         {label}
       </label>
       {textarea ? (
-        <textarea id={id} name={name} required={required} rows={rows} className={`${fieldClasses} resize-y`} />
+        <textarea {...fieldProps} rows={rows} className={cn(fieldProps.className, "resize-y")} />
       ) : (
-        <input id={id} name={name} type={type} required={required} className={fieldClasses} />
+        <input {...fieldProps} type={type} />
       )}
-      {error && <span className="text-[0.78rem] text-orange">{error}</span>}
+      {error && (
+        <span id={errorId} className="text-[0.78rem] text-orange">
+          {error}
+        </span>
+      )}
     </div>
   );
 }
