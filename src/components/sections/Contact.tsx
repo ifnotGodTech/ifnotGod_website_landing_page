@@ -103,6 +103,15 @@ export function Contact() {
                 </a>
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
+                <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Phone</span>
+                <a
+                  href={CONTACT_INFO.phoneHref}
+                  className="w-fit font-display text-[1.15rem] transition-colors hover:text-orange"
+                >
+                  {CONTACT_INFO.phoneDisplay}
+                </a>
+              </div>
+              <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">WhatsApp</span>
                 <a
                   href={CONTACT_INFO.whatsappHref}

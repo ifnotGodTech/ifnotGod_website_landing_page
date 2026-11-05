@@ -8,6 +8,8 @@ export const NAV_LINKS = [
 
 export const CONTACT_INFO = {
   email: "ifnotgodtech@gmail.com",
+  phoneDisplay: "+234 806 146 4092",
+  phoneHref: "tel:+2348061464092",
   whatsappHref: "https://wa.me/2348061464092",
   location: "Lagos, Nigeria",
 } as const;

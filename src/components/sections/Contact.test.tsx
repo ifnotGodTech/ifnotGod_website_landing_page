@@ -66,6 +66,15 @@ describe("Contact form", () => {
     );
   });
 
+  it("makes the phone number a call link", () => {
+    render(<Contact />);
+
+    expect(screen.getByRole("link", { name: CONTACT_INFO.phoneDisplay })).toHaveAttribute(
+      "href",
+      "tel:+2348061464092"
+    );
+  });
+
   it("offers autofill and labels optional fields", () => {
     render(<Contact />);
 
