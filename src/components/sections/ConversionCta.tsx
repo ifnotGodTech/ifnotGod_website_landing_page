@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
+import { CONTACT_INFO } from "@/shared/constants";
 
 export function ConversionCta() {
   return (
@@ -9,7 +10,7 @@ export function ConversionCta() {
           className="relative overflow-hidden rounded-sm border border-line py-20 text-center sm:py-28 lg:py-35"
           style={{
             background:
-              "radial-gradient(circle at 30% 15%, rgba(224,123,42,0.24), transparent 50%), radial-gradient(circle at 75% 85%, rgba(107,31,42,0.55), transparent 55%), linear-gradient(180deg, var(--color-surface-2), var(--color-ink))",
+              "radial-gradient(circle at 30% 15%, color-mix(in srgb, var(--color-orange) 24%, transparent), transparent 50%), radial-gradient(circle at 75% 85%, color-mix(in srgb, var(--color-maroon) 55%, transparent), transparent 55%), linear-gradient(180deg, var(--color-surface-2), var(--color-ink))",
           }}
         >
           <span className="flex items-center justify-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-orange">
@@ -24,7 +25,7 @@ export function ConversionCta() {
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Button href="#contact">Tell Us Your Challenge</Button>
-            <Button href="#contact" variant="ghost">
+            <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="ghost">
               Talk to Our Team
             </Button>
           </div>

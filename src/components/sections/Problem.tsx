@@ -102,7 +102,7 @@ export function Problem() {
         </SectionHeading>
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
+      <RevealOnScroll>
         <div className="mt-13 grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
           {PROBLEMS.map((p) => (
             <Card key={p.title} icon={p.icon} title={p.title} description={p.description} />

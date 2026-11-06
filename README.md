@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IFNOTGOD TECH LTD website
 
-## Getting Started
+The company's one-page marketing site. Its main job is to get business owners and organisations to tell us about a problem they want solved. Built with Next.js (App Router), React, TypeScript and Tailwind CSS.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # then fill in the values below
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `BREVO_API_KEY` | Yes, for the form to deliver | Sends contact form leads by email. Without it, the form shows visitors an error asking them to use WhatsApp or email. |
+| `CONTACT_RECIPIENT_EMAIL` | Recommended | The inbox that receives leads. Defaults to the public contact email in `src/shared/constants.ts`. |
+| `BREVO_SENDER_EMAIL` | Recommended | Sender address, verified in Brevo. A sender on your own authenticated domain is the most reliable. Defaults to `no-reply@ifnotgod.com`. |
+| `BREVO_SENDER_NAME` | Optional | Sender name. |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | The site's main address, used for the canonical URL, sitemap, sharing image and structured data. Defaults to `https://www.ifnotgod.com`. Takes effect at build time, so redeploy after changing it. |
 
-## Learn More
+Running the site locally with a real `BREVO_API_KEY` means form submissions send real email.
 
-To learn more about Next.js, take a look at the following resources:
+## Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Starts the development server |
+| `npm run build` | Creates the production build |
+| `npm start` | Runs the production build |
+| `npm run lint` | Runs ESLint |
+| `npm test` | Runs unit and component tests with Vitest |
+| `npm run test:e2e` | Runs browser tests against the production build. Run `npm run build` first. The first time, also run `npx playwright install chromium`. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Where things live
 
-## Deploy on Vercel
+- `src/app`: the page, layout, metadata and `api/contact` route
+- `src/components/sections`: one component per page section
+- `src/components/ui`: shared components such as buttons and cards
+- `src/lib`: the contact form's request code and email delivery
+- `src/shared`: constants (including contact details), validation and helpers
+- `src/app/globals.css`: colour and font tokens, and animations
+- `e2e`: browser tests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Engineering standards are in [`AGENTS.md`](./AGENTS.md).

@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const STEPS = [
   {
@@ -31,7 +32,7 @@ export function HowWeWork() {
         <SectionHeading eyebrow="How We Work" title="From Problem to Solution." />
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
+      <RevealOnScroll>
         <div className="relative mt-13 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-0">
           <div aria-hidden className="absolute top-8.5 right-0 left-0 hidden h-px bg-line-strong lg:block" />
           {STEPS.map((step) => (
@@ -46,12 +47,18 @@ export function HowWeWork() {
         </div>
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.15}>
-        <p className="mt-16 text-balance border-t border-line pt-10 font-display text-[clamp(1.4rem,2.6vw,2rem)] italic">
+      <RevealOnScroll>
+        <p className="mt-16 text-balance border-t border-line pt-10 font-display text-[clamp(1.4rem,2.6vw,2rem)] font-semibold tracking-[-0.02em]">
           You don&apos;t need to know what technology you need.{" "}
           <span className="text-orange">You just need to know what problem you want solved.</span>
         </p>
       </RevealOnScroll>
+
+      <div className="mt-11">
+        <Button href="#contact" variant="outline-orange">
+          Let&apos;s Solve Your Problem
+        </Button>
+      </div>
     </section>
   );
 }

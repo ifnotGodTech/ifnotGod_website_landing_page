@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { NAV_LINKS } from "@/shared/constants";
+import { CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
+
+const MOBILE_MENU_ID = "mobile-menu";
+const DESKTOP_NAV_QUERY = "(min-width: 80rem)"; // Tailwind's xl, where the menu is hidden.
+const BEHIND_MENU = "main, footer, [data-testid='floating-cta']";
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -18,9 +23,34 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+
+    const behindMenu = document.querySelectorAll<HTMLElement>(BEHIND_MENU);
+    const desktopNav = window.matchMedia(DESKTOP_NAV_QUERY);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    const onDesktopNavChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    behindMenu.forEach((element) => {
+      element.inert = true;
+    });
+    document.addEventListener("keydown", onKeyDown);
+    desktopNav.addEventListener("change", onDesktopNavChange);
+
     return () => {
       document.body.style.overflow = "";
+      behindMenu.forEach((element) => {
+        element.inert = false;
+      });
+      document.removeEventListener("keydown", onKeyDown);
+      desktopNav.removeEventListener("change", onDesktopNavChange);
     };
   }, [open]);
 
@@ -36,12 +66,12 @@ export function Navigation() {
           <Image
             src="/ifnotgod-icon.png"
             alt="IFNOTGOD TECH LTD logo"
-            width={1271}
-            height={1237}
+            width={36}
+            height={35}
             priority
             className="h-9 w-9 object-contain"
           />
-          <span className="font-display text-[1.02rem] font-semibold tracking-wide">
+          <span className="font-display text-[1.02rem] font-bold tracking-wide">
             IFNOTGOD TECH LTD
             <small className="mt-px block font-mono text-[0.58rem] font-normal tracking-[0.18em] text-mute">
               EVERY PROBLEM HAS A TECH SOLUTION
@@ -49,7 +79,7 @@ export function Navigation() {
           </span>
         </a>
 
-        <div className="hidden items-center gap-8.5 lg:flex">
+        <div className="hidden items-center gap-8.5 xl:flex">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
@@ -73,14 +103,17 @@ export function Navigation() {
             </Button>
           </div>
           <button
-            className="flex h-9 w-9 items-center justify-center text-paper lg:hidden"
-            aria-label="Open menu"
+            ref={toggleRef}
+            type="button"
+            className="flex h-9 w-9 items-center justify-center text-paper xl:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls={MOBILE_MENU_ID}
             onClick={() => setOpen((v) => !v)}
           >
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="1.5">
               {open ? (
-                <path d="M2 2l16 10M18 2 2 12" strokeLinecap="round" />
+                <path d="M4 1l12 12M16 1 4 13" strokeLinecap="round" />
               ) : (
                 <path d="M0 1h20M0 7h20M0 13h20" />
               )}
@@ -90,8 +123,10 @@ export function Navigation() {
       </nav>
 
       <div
+        id={MOBILE_MENU_ID}
+        inert={!open}
         className={cn(
-          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-[#120b09] px-7 pb-10 pt-24 transition-opacity duration-200 lg:hidden",
+          "fixed inset-0 z-99 flex flex-col gap-6.5 bg-menu px-5 pb-10 pt-24 sm:px-8 lg:px-16 transition-opacity duration-200 xl:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0"
         )}
       >
@@ -105,9 +140,14 @@ export function Navigation() {
             {link.label}
           </a>
         ))}
-        <Button href="#contact" onClick={() => setOpen(false)} className="mt-3 w-fit">
-          Tell Us Your Challenge
-        </Button>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Button href="#contact" onClick={() => setOpen(false)}>
+            Tell Us Your Challenge
+          </Button>
+          <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="outline-orange">
+            Chat on WhatsApp
+          </Button>
+        </div>
       </div>
     </>
   );

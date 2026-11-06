@@ -1,18 +1,29 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { CONTACT_INFO } from "@/shared/constants";
-import { contactSubmissionSchema, type ContactFieldErrors } from "@/shared/validators/contact";
+import { submitContactForm } from "@/lib/contact/client";
+import { cn } from "@/shared/cn";
+import { CONTACT_INFO, HONEYPOT_FIELD } from "@/shared/constants";
+import { parseContactSubmission, type ContactFieldErrors } from "@/shared/validators/contact";
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+function focusFirstInvalidField(form: HTMLFormElement, errors: ContactFieldErrors) {
+  const fields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input, textarea");
+  const firstInvalid = Array.from(fields).find((field) => field.name in errors);
+  firstInvalid?.focus();
+}
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
   const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -25,16 +36,12 @@ export function Contact() {
       desiredOutcome: String(formData.get("desiredOutcome") ?? ""),
     };
 
-    const parsed = contactSubmissionSchema.safeParse(payload);
+    const parsed = parseContactSubmission(payload);
     if (!parsed.success) {
-      const errors: ContactFieldErrors = {};
-      for (const issue of parsed.error.issues) {
-        const field = issue.path[0] as keyof ContactFieldErrors;
-        if (field && !errors[field]) errors[field] = issue.message;
-      }
-      setFieldErrors(errors);
+      setFieldErrors(parsed.errors);
       setFormError(null);
       setStatus("error");
+      focusFirstInvalidField(form, parsed.errors);
       return;
     }
 
@@ -42,27 +49,18 @@ export function Contact() {
     setFormError(null);
     setStatus("submitting");
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      const result = await response.json();
+    const result = await submitContactForm(parsed.data, String(formData.get(HONEYPOT_FIELD) ?? ""));
 
-      if (!response.ok || !result.ok) {
-        setFormError(result.error ?? "Something went wrong sending your message. Please try again.");
-        setFieldErrors(result.errors ?? {});
-        setStatus("error");
-        return;
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch {
-      setFormError("Something went wrong sending your message. Please check your connection and try again.");
+    if (!result.ok) {
+      setFormError(result.message);
+      setFieldErrors(result.fieldErrors);
       setStatus("error");
+      focusFirstInvalidField(form, result.fieldErrors);
+      return;
     }
+
+    setStatus("success");
+    form.reset();
   }
 
   return (
@@ -70,9 +68,7 @@ export function Contact() {
       <div className="grid grid-cols-1 gap-14 lg:grid-cols-[0.85fr_1.15fr]">
         <RevealOnScroll>
           <div>
-            <span className="flex items-center gap-2.5 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-orange before:content-[''] before:h-px before:w-[18px] before:bg-orange">
-              Contact
-            </span>
+            <Eyebrow>Contact</Eyebrow>
             <h2 className="mt-4 text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold">Let&apos;s Solve Something.</h2>
             <p className="mt-4 text-[clamp(1.05rem,1.4vw,1.2rem)] text-paper-dim">
               Tell us what&apos;s slowing your organisation down. We&apos;ll help you explore what technology can
@@ -82,18 +78,34 @@ export function Contact() {
             <div className="mt-9 flex flex-col gap-7">
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Email</span>
-                <span className="font-display text-[1.15rem]">{CONTACT_INFO.email}</span>
+                <a
+                  href={`mailto:${CONTACT_INFO.email}`}
+                  className="w-fit break-all font-display text-[1.15rem] transition-colors hover:text-orange"
+                >
+                  {CONTACT_INFO.email}
+                </a>
+              </div>
+              <div className="flex flex-col gap-1.5 border-t border-line pt-5">
+                <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Phone</span>
+                <a
+                  href={CONTACT_INFO.phoneHref}
+                  className="w-fit font-display text-[1.15rem] transition-colors hover:text-orange"
+                >
+                  {CONTACT_INFO.phoneDisplay}
+                </a>
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">WhatsApp</span>
-                <a
+                <Button
                   href={CONTACT_INFO.whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-flex w-fit items-center justify-center gap-2 rounded-[3px] border border-orange px-[18px] py-[10px] text-[0.85rem] font-semibold text-orange transition-colors hover:bg-orange hover:text-ink"
+                  variant="outline-orange"
+                  size="sm"
+                  className="mt-1 w-fit"
                 >
                   Chat on WhatsApp
-                </a>
+                </Button>
               </div>
               <div className="flex flex-col gap-1.5 border-t border-line pt-5">
                 <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-mute">Location</span>
@@ -103,15 +115,47 @@ export function Contact() {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={0.1}>
-          <form onSubmit={handleSubmit} className="border border-line-strong bg-surface p-7 sm:p-11" noValidate>
+        <RevealOnScroll>
+          <form onSubmit={handleSubmit} className="relative border border-line-strong bg-surface p-7 sm:p-11" noValidate>
+            <div aria-hidden className="absolute h-px w-px overflow-hidden opacity-0">
+              <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+              <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" />
+            </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field id="fullName" name="fullName" label="Full Name" required error={fieldErrors.fullName} />
-              <Field id="organisation" name="organisation" label="Organisation / Company" error={fieldErrors.organisation} />
+              <Field
+                id="fullName"
+                name="fullName"
+                label="Full Name"
+                autoComplete="name"
+                required
+                error={fieldErrors.fullName}
+              />
+              <Field
+                id="organisation"
+                name="organisation"
+                label="Organisation / Company (optional)"
+                autoComplete="organization"
+                error={fieldErrors.organisation}
+              />
             </div>
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <Field id="email" name="email" label="Email Address" type="email" required error={fieldErrors.email} />
-              <Field id="phone" name="phone" label="Phone / WhatsApp" type="tel" error={fieldErrors.phone} />
+              <Field
+                id="email"
+                name="email"
+                label="Email Address"
+                type="email"
+                autoComplete="email"
+                required
+                error={fieldErrors.email}
+              />
+              <Field
+                id="phone"
+                name="phone"
+                label="Phone / WhatsApp (optional)"
+                type="tel"
+                autoComplete="tel"
+                error={fieldErrors.phone}
+              />
             </div>
             <div className="mt-5">
               <Field
@@ -136,7 +180,12 @@ export function Contact() {
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
               <p className="max-w-[32ch] text-[0.82rem] text-mute">
-                You don&apos;t need to know what technology you need. Just tell us the problem.
+                You don&apos;t need to know what technology you need. Just tell us the problem. We use your details to
+                respond to you. See our{" "}
+                <Link href="/privacy-policy" className="text-paper-dim underline transition-colors hover:text-orange">
+                  Privacy Policy
+                </Link>
+                .
               </p>
               <button
                 type="submit"
@@ -168,15 +217,29 @@ type FieldProps = {
   name: string;
   label: string;
   type?: string;
+  autoComplete?: string;
   required?: boolean;
   textarea?: boolean;
   rows?: number;
   error?: string;
 };
 
-function Field({ id, name, label, type = "text", required, textarea, rows = 5, error }: FieldProps) {
-  const fieldClasses =
-    "border border-line-strong bg-ink px-3.5 py-3.5 font-body text-[0.95rem] text-paper focus:border-orange focus:outline-none";
+function Field({ id, name, label, type = "text", autoComplete, required, textarea, rows = 5, error }: FieldProps) {
+  const errorId = `${id}-error`;
+  // text-base (16px) stops iOS Safari zooming in when a field is focused.
+  // The scroll margin keeps a focused field clear of the fixed nav.
+  const fieldProps = {
+    id,
+    name,
+    required,
+    autoComplete,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+    className: cn(
+      "scroll-mt-28 border bg-ink px-3.5 py-3.5 font-body text-base text-paper focus:border-orange focus:outline-none",
+      error ? "border-orange" : "border-line-strong"
+    ),
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -184,11 +247,15 @@ function Field({ id, name, label, type = "text", required, textarea, rows = 5, e
         {label}
       </label>
       {textarea ? (
-        <textarea id={id} name={name} required={required} rows={rows} className={`${fieldClasses} resize-y`} />
+        <textarea {...fieldProps} rows={rows} className={cn(fieldProps.className, "resize-y")} />
       ) : (
-        <input id={id} name={name} type={type} required={required} className={fieldClasses} />
+        <input {...fieldProps} type={type} />
       )}
-      {error && <span className="text-[0.78rem] text-orange">{error}</span>}
+      {error && (
+        <span id={errorId} className="text-[0.78rem] text-orange">
+          {error}
+        </span>
+      )}
     </div>
   );
 }

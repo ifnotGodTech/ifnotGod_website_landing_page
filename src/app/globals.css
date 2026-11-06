@@ -4,6 +4,7 @@
   --color-ink: #0b0706;
   --color-surface: #18100e;
   --color-surface-2: #1f1512;
+  --color-menu: #120b09;
   --color-line: rgba(224, 123, 42, 0.16);
   --color-line-strong: rgba(224, 123, 42, 0.32);
   --color-maroon: #6b1f2a;
@@ -21,6 +22,7 @@
   --color-ink: var(--color-ink);
   --color-surface: var(--color-surface);
   --color-surface-2: var(--color-surface-2);
+  --color-menu: var(--color-menu);
   --color-line: var(--color-line);
   --color-line-strong: var(--color-line-strong);
   --color-maroon: var(--color-maroon);
@@ -31,7 +33,7 @@
   --color-paper-dim: var(--color-paper-dim);
   --color-mute: var(--color-mute);
 
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-manrope);
   --font-body: var(--font-public-sans);
   --font-mono: var(--font-plex-mono);
 }
@@ -40,14 +42,10 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background:
-    radial-gradient(ellipse 900px 500px at 15% 0%, rgba(107, 31, 42, 0.2), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 100% 30%, rgba(224, 123, 42, 0.08), transparent 55%),
+    radial-gradient(ellipse 900px 500px at 15% 0%, color-mix(in srgb, var(--color-maroon) 20%, transparent), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 30%, color-mix(in srgb, var(--color-orange) 8%, transparent), transparent 55%),
     var(--color-ink);
   color: var(--color-paper);
   font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -57,6 +55,7 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
+  letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
   color: var(--color-paper);
@@ -75,5 +74,48 @@ h3 {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Motion is opt-in: without these rules, all content is simply visible. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .hero-rise {
+    animation: hero-rise 0.8s ease-out both;
+  }
+
+  .hero-fade {
+    animation: hero-fade 0.7s ease-out both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: cover 0 cover 160px;
+    }
   }
 }

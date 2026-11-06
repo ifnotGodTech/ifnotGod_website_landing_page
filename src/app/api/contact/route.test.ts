@@ -13,12 +13,22 @@ vi.mock("@/lib/notifications/email", async () => {
   };
 });
 
+import { EmailNotConfiguredError } from "@/lib/notifications/email";
+import { HONEYPOT_FIELD } from "@/shared/constants";
 import { POST } from "./route";
 
-function makeRequest(body: unknown) {
+// A fresh IP per request keeps tests independent of the shared rate limiter.
+let nextIp = 0;
+
+function makeRequest(body: unknown, headers: Record<string, string> = {}) {
   return new NextRequest("http://localhost/api/contact", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      host: "localhost",
+      "x-forwarded-for": `10.0.0.${nextIp++}`,
+      ...headers,
+    },
     body: JSON.stringify(body),
   });
 }
@@ -63,5 +73,72 @@ describe("POST /api/contact", () => {
 
     expect(response.status).toBe(502);
     expect(json.ok).toBe(false);
+  });
+
+  it("returns 503 with a helpful message when email isn't configured", async () => {
+    sendContactNotification.mockRejectedValueOnce(new EmailNotConfiguredError());
+    const response = await POST(makeRequest(validPayload));
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.error).toMatch(/whatsapp/i);
+  });
+
+  it("returns 429 after too many submissions from one IP", async () => {
+    sendContactNotification.mockResolvedValue(undefined);
+    const headers = { "x-forwarded-for": "10.9.9.9" };
+
+    for (let i = 0; i < 5; i++) {
+      expect((await POST(makeRequest(validPayload, headers))).status).toBe(200);
+    }
+    const response = await POST(makeRequest(validPayload, headers));
+
+    expect(response.status).toBe(429);
+    expect(sendContactNotification).toHaveBeenCalledTimes(5);
+  });
+
+  it("reports success for a filled honeypot without delivering anything", async () => {
+    const response = await POST(makeRequest({ ...validPayload, [HONEYPOT_FIELD]: "spam" }));
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.ok).toBe(true);
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+
+  it("delivers when the honeypot is empty", async () => {
+    sendContactNotification.mockResolvedValueOnce(undefined);
+    const response = await POST(makeRequest({ ...validPayload, [HONEYPOT_FIELD]: "" }));
+
+    expect(response.status).toBe(200);
+    expect(sendContactNotification).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects requests from another origin", async () => {
+    const response = await POST(makeRequest(validPayload, { origin: "https://evil.example" }));
+
+    expect(response.status).toBe(403);
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+
+  it("accepts requests from the site's own origin", async () => {
+    sendContactNotification.mockResolvedValueOnce(undefined);
+    const response = await POST(makeRequest(validPayload, { origin: "https://localhost" }));
+
+    expect(response.status).toBe(200);
+  });
+
+  it("rejects non-JSON content types", async () => {
+    const response = await POST(makeRequest(validPayload, { "content-type": "text/plain" }));
+
+    expect(response.status).toBe(415);
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized requests", async () => {
+    const response = await POST(makeRequest(validPayload, { "content-length": String(64 * 1024) }));
+
+    expect(response.status).toBe(413);
+    expect(sendContactNotification).not.toHaveBeenCalled();
   });
 });

@@ -11,26 +11,33 @@ import { ConversionCta } from "@/components/sections/ConversionCta";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
 import { FloatingCta } from "@/components/ui/FloatingCta";
+import { SITE_URL } from "@/shared/constants";
+import { buildOrganizationJsonLd } from "@/shared/structuredData";
+
+const CONTAINER ="mx-auto w-full max-w-[1180px] px-5 sm:px-8 lg:px-16";
 
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: buildOrganizationJsonLd(SITE_URL) }} />
       <Navigation />
-      <main className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
-        <Hero />
-        <Problem />
-        <Solutions />
-      </main>
-      <AISection />
-      <main className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
-        <HowWeWork />
-        <WhyUs />
-      </main>
-      <WhoWeHelp />
-      <main className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
-        <About />
-        <ConversionCta />
-        <Contact />
+      <main>
+        <div className={CONTAINER}>
+          <Hero />
+          <Problem />
+          <Solutions />
+        </div>
+        <AISection />
+        <div className={CONTAINER}>
+          <HowWeWork />
+          <WhyUs />
+        </div>
+        <WhoWeHelp />
+        <div className={CONTAINER}>
+          <About />
+          <ConversionCta />
+          <Contact />
+        </div>
       </main>
       <Footer />
       <FloatingCta />

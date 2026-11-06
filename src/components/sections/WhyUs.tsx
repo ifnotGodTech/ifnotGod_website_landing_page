@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Button } from "@/components/ui/Button";
 
 const VALUES = [
   {
@@ -58,7 +59,7 @@ export function WhyUs() {
         <SectionHeading eyebrow="Why IFNOTGOD TECH LTD" title="Technology Should Solve Problems, Not Create Them." />
       </RevealOnScroll>
 
-      <RevealOnScroll delay={0.1}>
+      <RevealOnScroll>
         <div className="mt-13 grid grid-cols-1 gap-8 sm:grid-cols-1 lg:grid-cols-5">
           {VALUES.map((value, i) => (
             <div
@@ -76,6 +77,12 @@ export function WhyUs() {
           ))}
         </div>
       </RevealOnScroll>
+
+      <div className="mt-11">
+        <Button href="#contact" variant="outline-orange">
+          Tell Us Your Challenge
+        </Button>
+      </div>
     </section>
   );
 }

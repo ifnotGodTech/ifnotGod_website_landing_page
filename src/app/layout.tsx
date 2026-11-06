@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Manrope, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { SITE_URL } from "@/shared/constants";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
-  axes: ["opsz"],
 });
 
 const publicSans = Public_Sans({
@@ -20,35 +20,22 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ifnotgodtech.com"),
+  metadataBase: new URL(SITE_URL),
   title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
   description:
     "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-  keywords: [
-    "software development company Nigeria",
-    "AI automation Nigeria",
-    "business process automation",
-    "custom software development",
-    "AI solutions for businesses",
-    "business automation company",
-    "technology solutions for businesses",
-    "software development Lagos",
-    "digital transformation Nigeria",
-  ],
   openGraph: {
     title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
     description:
       "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-    images: ["/ifnotgod-icon.png"],
     type: "website",
     locale: "en_NG",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
     description:
       "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-    images: ["/ifnotgod-icon.png"],
   },
   alternates: {
     canonical: "/",
@@ -66,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${publicSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${publicSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
