@@ -1,17 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { SOCIAL_LINKS } from "@/shared/constants";
 
 const COMPANY_LINKS = [
-  { label: "Solutions", href: "#solutions" },
-  { label: "How We Work", href: "#how-we-work" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Solutions", href: "/#solutions" },
+  { label: "How We Work", href: "/#how-we-work" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms", href: "#" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms", href: "/terms" },
 ];
 
 export function Footer() {
@@ -73,13 +74,13 @@ function FooterColumn({ heading, links }: { heading: string; links: { label: str
     <div>
       <h4 className="mb-4.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-mute">{heading}</h4>
       {links.map((link) => (
-        <a
+        <Link
           key={link.label}
           href={link.href}
           className="block py-1.5 text-[0.92rem] text-paper-dim transition-colors hover:text-orange"
         >
           {link.label}
-        </a>
+        </Link>
       ))}
     </div>
   );

@@ -16,6 +16,15 @@ export const CONTACT_INFO = {
   location: "Lagos, Nigeria",
 } as const;
 
+// Used by the Privacy Policy and Terms. Section 27(1)(a) of the Nigeria Data Protection
+// Act requires the business address. Replace every "[TO CONFIRM" value before publishing.
+export const LEGAL_INFO = {
+  companyName: "IFNOTGOD TECH LTD",
+  registeredAddress: "[TO CONFIRM: registered business address], Lagos, Nigeria",
+  rcNumber: "[TO CONFIRM: CAC RC number]",
+  lastUpdated: "6 November 2026",
+} as const;
+
 // Hidden form field that only bots fill in. The name avoids words browsers autofill,
 // so real visitors can't trip it by accident.
 export const HONEYPOT_FIELD = "hp_field";

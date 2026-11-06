@@ -19,6 +19,7 @@ Engineering standards for the IFNOTGOD TECH LTD marketing website: a single-page
 - `src/app` (App Router: root layout, the single page, `api/contact` route handler, global styles and theme tokens in `globals.css`)
 - `src/components/sections` (Hero, Problem, Solutions, AI, HowWeWork, WhyUs, WhoWeHelp, About, ConversionCta, Contact, Footer, Navigation)
 - `src/components/ui` (shared reusable UI primitives: Button, Card, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
+- `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/privacy-policy` and `src/app/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/lib` (contact form client, email/notification client, config)
 - `src/shared` (constants, validators, shared helpers)
 - `src/types` (`ContactSubmission` and other shared contracts)

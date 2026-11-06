@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type SubmitEvent } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -179,7 +180,12 @@ export function Contact() {
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
               <p className="max-w-[32ch] text-[0.82rem] text-mute">
-                You don&apos;t need to know what technology you need. Just tell us the problem.
+                You don&apos;t need to know what technology you need. Just tell us the problem. We use your details to
+                respond to you. See our{" "}
+                <Link href="/privacy-policy" className="text-paper-dim underline transition-colors hover:text-orange">
+                  Privacy Policy
+                </Link>
+                .
               </p>
               <button
                 type="submit"
