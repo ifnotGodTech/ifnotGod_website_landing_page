@@ -22,7 +22,8 @@ export default function TermsPage() {
     >
       <LegalSection title="About us">
         <p>
-          {LEGAL_INFO.companyName}, RC number {LEGAL_INFO.rcNumber}, has its place of business at{" "}
+          {LEGAL_INFO.companyName}, company registration number {LEGAL_INFO.registrationNumber}, has its place of
+          business at{" "}
           {LEGAL_INFO.registeredAddress}. You can reach us at{" "}
           <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>.
         </p>

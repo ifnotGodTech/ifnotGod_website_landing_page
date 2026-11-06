@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="Who we are">
         <p>
           {LEGAL_INFO.companyName} (&quot;we&quot;, &quot;us&quot;) is the data controller for the personal data
-          described in this policy. RC number: {LEGAL_INFO.rcNumber}.
+          described in this policy. Company registration number: {LEGAL_INFO.registrationNumber}.
         </p>
         <ul>
           <li>

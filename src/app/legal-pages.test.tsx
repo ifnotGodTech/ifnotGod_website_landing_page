@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { CONTACT_INFO } from "@/shared/constants";
+import { CONTACT_INFO, LEGAL_INFO } from "@/shared/constants";
 import PrivacyPolicyPage, { metadata as privacyMetadata } from "./privacy-policy/page";
 import TermsPage, { metadata as termsMetadata } from "./terms/page";
 
@@ -46,6 +46,19 @@ describe("Privacy Policy", () => {
 
   it("has its own canonical URL", () => {
     expect(privacyMetadata.alternates?.canonical).toBe("/privacy-policy");
+  });
+});
+
+describe("company details", () => {
+  it.each([
+    ["Privacy Policy", <PrivacyPolicyPage key="privacy" />],
+    ["Terms of Use", <TermsPage key="terms" />],
+  ])("%s shows the address and registration number, with no placeholders", (_, page) => {
+    const { container } = render(page);
+
+    expect(container).toHaveTextContent(LEGAL_INFO.registeredAddress);
+    expect(container).toHaveTextContent(LEGAL_INFO.registrationNumber);
+    expect(container).not.toHaveTextContent("[TO CONFIRM");
   });
 });
 

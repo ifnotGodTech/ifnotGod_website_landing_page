@@ -17,11 +17,11 @@ export const CONTACT_INFO = {
 } as const;
 
 // Used by the Privacy Policy and Terms. Section 27(1)(a) of the Nigeria Data Protection
-// Act requires the business address. Replace every "[TO CONFIRM" value before publishing.
+// Act requires the business address.
 export const LEGAL_INFO = {
   companyName: "IFNOTGOD TECH LTD",
-  registeredAddress: "[TO CONFIRM: registered business address], Lagos, Nigeria",
-  rcNumber: "[TO CONFIRM: CAC RC number]",
+  registeredAddress: "3, Kingsley Uwagbale Street, Off Mopo Road, United Estate, Lagos, Nigeria",
+  registrationNumber: "8384966",
   lastUpdated: "6 November 2026",
 } as const;
 
