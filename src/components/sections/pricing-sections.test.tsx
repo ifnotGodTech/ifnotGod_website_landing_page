@@ -129,7 +129,7 @@ describe("plan terms and questions", () => {
   it("shows the fee, term and billing terms", () => {
     render(<PlanTerms />);
 
-    expect(screen.getByText("No setup fee.")).toBeInTheDocument();
+    expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.")).toBeInTheDocument();
     expect(screen.getByText("Pay month by month. There's no minimum term.")).toBeInTheDocument();
     expect(screen.getByText(/2 months free/)).toBeInTheDocument();
     expect(screen.getByText(/billed at cost/)).toBeInTheDocument();

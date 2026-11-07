@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { cn } from "@/shared/cn";
 
 const TERMS = [
-  "No setup fee.",
+  "One-time setup fee of ₦100,000, waived when you pay 6 months upfront.",
   "Pay month by month. There's no minimum term.",
   "Pay 12 months upfront and get 2 months free.",
   "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
