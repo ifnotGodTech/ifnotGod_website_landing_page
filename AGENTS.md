@@ -27,9 +27,11 @@ Until the backend reaches a feature, its data stays in code.
 - `src/components/sections` (Hero, Problem, Solutions, AI, HowWeWork, WhyUs, WhoWeHelp, About, ConversionCta, Contact, Footer, Navigation)
 - `src/components/ui` (shared reusable UI primitives: Button, Card, Container, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
 - `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
+- `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
 - `src/lib` (contact form client, email/notification client, config)
+- `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
 - `src/shared` (constants, validators, shared helpers)
-- `src/types` (`ContactSubmission` and other shared contracts)
+- `src/types` (`ContactSubmission`, plan and service types, and other shared contracts)
 - `e2e` (Playwright browser tests)
 
 ## Next.js Architecture Rules
