@@ -6,7 +6,7 @@ const FLOW_STEPS = ["Business Challenge", "Analysis", "Technology", "Solution", 
 export function Hero() {
   return (
     <section
-      id="top"
+      data-page-hero
       className="relative grid grid-cols-1 items-center gap-10 pb-18 pt-[clamp(140px,18vw,190px)] sm:pb-24 lg:grid-cols-[1.15fr_0.85fr] lg:gap-18"
     >
       <div

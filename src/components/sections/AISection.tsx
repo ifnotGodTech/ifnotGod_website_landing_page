@@ -1,5 +1,6 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 const AI_EXAMPLES = [
@@ -34,7 +35,7 @@ export function AISection() {
       }}
     >
       <RevealOnScroll>
-        <div className="mx-auto grid max-w-[1180px] grid-cols-1 items-start gap-14 px-5 py-14 sm:px-8 sm:py-22 lg:grid-cols-2 lg:px-16">
+        <Container className="grid grid-cols-1 items-start gap-14 py-14 sm:py-22 lg:grid-cols-2">
           <div>
             <Eyebrow>AI at Work</Eyebrow>
             <h2 className="mt-4 text-[clamp(1.8rem,3.4vw,2.7rem)] font-semibold">
@@ -85,7 +86,7 @@ export function AISection() {
               </g>
             </svg>
           </div>
-        </div>
+        </Container>
       </RevealOnScroll>
     </section>
   );

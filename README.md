@@ -1,6 +1,6 @@
 # IFNOTGOD TECH LTD website
 
-The company's one-page marketing site. Its main job is to get business owners and organisations to tell us about a problem they want solved. Built with Next.js (App Router), React, TypeScript and Tailwind CSS.
+The company's public website. Its main job is to get business owners and organisations to book a free automation audit. Built with Next.js (App Router), React, TypeScript and Tailwind CSS.
 
 ## Getting started
 
@@ -37,7 +37,8 @@ Running the site locally with a real `BREVO_API_KEY` means form submissions send
 
 ## Where things live
 
-- `src/app`: the page, layout, metadata and `api/contact` route
+- `src/app`: the root layout, metadata and `api/contact` route
+- `src/app/(site)`: the public pages and their shared navigation, footer and floating button
 - `src/components/sections`: one component per page section
 - `src/components/ui`: shared components such as buttons and cards
 - `src/lib`: the contact form's request code and email delivery

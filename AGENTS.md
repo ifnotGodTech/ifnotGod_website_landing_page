@@ -1,11 +1,18 @@
 # AGENTS.md - IFNOTGOD TECH LTD
 
-Engineering standards for the IFNOTGOD TECH LTD marketing website: a single-page, conversion-focused corporate site (see project brief in `CLAUDE.md`). No auth, no user accounts, no backend domain beyond capturing and delivering contact/lead submissions.
+Engineering standards for `WEB`, the IFNOTGOD TECH LTD public website: a multi-page, conversion-focused site whose main action is booking a free automation audit.
+
+`WEB` is one of three applications:
+- `WEB`: this Next.js public site. It has no login or user accounts, and its only server work is capturing and delivering leads.
+- `dashboard`: for managing plans, services, leads, clients and site text. It isn't built yet.
+- `backend`: the Django API, database and login. It's built last.
+
+Until the backend exists, content stays in code.
 
 ## Engineering Standards
 - Use TypeScript for all application code.
 - Use Next.js App Router (`src/app`) for all route definitions.
-- Keep the page composed from section components matching the brief's page structure (Nav, Hero, Problem, Solutions, AI, How We Work, Why Us, Who We Help, About, Conversion CTA, Contact, Footer).
+- Add public pages inside the `src/app/(site)` route group, so they share its navigation, footer and floating button. Keep each page composed from section components.
 - Validate incoming data at boundary layers (client form and server route handler).
 - Favor explicit types for domain entities (`ContactSubmission`).
 - All modules must be thoroughly tested.
@@ -16,10 +23,11 @@ Engineering standards for the IFNOTGOD TECH LTD marketing website: a single-page
   - browser tests in `e2e` for behavior jsdom can't check, such as whether content is actually visible
 
 ## Folder Structure
-- `src/app` (App Router: root layout, the single page, `api/contact` route handler, global styles and theme tokens in `globals.css`)
+- `src/app` (App Router: root layout, `api/contact` route handler, metadata files, global styles and theme tokens in `globals.css`)
+- `src/app/(site)` (public pages and their shared layout, which owns `<main>`, so pages must not render their own)
 - `src/components/sections` (Hero, Problem, Solutions, AI, HowWeWork, WhyUs, WhoWeHelp, About, ConversionCta, Contact, Footer, Navigation)
-- `src/components/ui` (shared reusable UI primitives: Button, Card, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
-- `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/privacy-policy` and `src/app/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
+- `src/components/ui` (shared reusable UI primitives: Button, Card, Container, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
+- `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/lib` (contact form client, email/notification client, config)
 - `src/shared` (constants, validators, shared helpers)
 - `src/types` (`ContactSubmission` and other shared contracts)
@@ -30,9 +38,11 @@ Engineering standards for the IFNOTGOD TECH LTD marketing website: a single-page
 - Prefer Server Components by default; use Client Components only where interactivity is required (contact form, nav hamburger, scroll/fade animations).
 - Co-locate section-specific UI/hooks within `src/components/sections`.
 - Use shared UI components from `src/components/ui` to maintain design consistency.
+- Components in the shared layout (Navigation, FloatingCta) stay mounted between pages. Reset their page-specific state and re-find page elements when the pathname changes.
+- Mark each page's hero with `data-page-hero`, so the floating button doesn't cover it.
 
 ## Performance Standards
-- Optimize for Core Web Vitals on the landing page:
+- Optimize for Core Web Vitals on every public page:
   - LCP under 2.5s on standard broadband
   - INP under 200ms for core interactions (nav, form, CTAs)
   - CLS under 0.1
@@ -95,7 +105,7 @@ A feature/section is done when:
 - Keep state minimal.
 - Use local state for isolated interactions (form fields, nav toggle, accordion/tab UI).
 - Use immutable updates.
-- Avoid global state; this page does not need a client store.
+- Avoid global state; this site does not need a client store.
 
 ## Error Handling Rules
 - Use exceptions in the data/integration layer (e.g. email/lead delivery failures).
@@ -112,6 +122,7 @@ A feature/section is done when:
 
 ## UI, Responsive, and Motion Rules
 - Follow consistent spacing, typography, hierarchy, and interaction patterns across all sections.
+- Use `Container` for page width and side padding.
 - Use reusable components and avoid duplicated UI code (cards, buttons, section headings).
 - UI files must remain focused on presentation and interaction wiring, not business/validation logic.
 - Standardize repeated UI patterns: buttons, inputs, cards, and the section-header pattern used throughout the page.
@@ -134,6 +145,7 @@ A feature/section is done when:
   - Black `#000000` — primary dark background/base for the site's dark aesthetic.
   - White `#FFFFFF` — primary text on dark surfaces, CTA text on maroon.
   - Orange `#E07B2A` — secondary accent; secondary/tertiary CTA background, highlights, icon accents, matches the logo's gradient warmth.
+- Light sections use the `surface-light` class, which also sets their heading and focus colours. On them, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
 - Define all colors as theme tokens (`src/app/globals.css`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
 - Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments per the brief's "avoid overusing neon colours" direction.
 - Keep button/CTA text contrast accessible (minimum WCAG AA): white on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.

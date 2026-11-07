@@ -1,11 +1,12 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ifnotgod.com";
 
+export const AUDIT_PATH = "/audit";
+
 export const NAV_LINKS = [
-  { label: "Solutions", href: "#solutions" },
-  { label: "How We Work", href: "#how-we-work" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Services", href: "/services" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "How it works", href: "/#how-it-works" },
+  { label: "About", href: "/#about" },
 ] as const;
 
 export const CONTACT_INFO = {

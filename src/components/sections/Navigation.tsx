@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AUDIT_PATH, CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
 
@@ -14,6 +16,15 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const [lastPathname, setLastPathname] = useState(pathname);
+
+  // This component stays mounted between pages, so close the menu when the page
+  // changes, including through the browser's back button.
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -62,7 +73,7 @@ export function Navigation() {
           scrolled ? "border-b border-line bg-ink/86 py-3.5 backdrop-blur-md" : "border-b border-transparent"
         )}
       >
-        <a href="#top" className="flex items-center gap-2.5">
+        <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
           <Image
             src="/ifnotgod-icon.png"
             alt="IFNOTGOD TECH LTD logo"
@@ -77,29 +88,24 @@ export function Navigation() {
               EVERY PROBLEM HAS A TECH SOLUTION
             </small>
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8.5 xl:flex">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="font-mono text-[0.74rem] uppercase tracking-[0.08em] text-paper-dim transition-colors hover:text-orange"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="flex items-center gap-3.5">
-          <div className="hidden xl:block">
-            <Button href="#solutions" variant="ghost" size="sm">
-              Explore Our Solutions
-            </Button>
-          </div>
           <div className="hidden lg:block">
-            <Button href="#contact" size="sm">
-              Tell Us Your Challenge
+            <Button href={AUDIT_PATH} size="sm">
+              Book a free audit
             </Button>
           </div>
           <button
@@ -131,18 +137,18 @@ export function Navigation() {
         )}
       >
         {NAV_LINKS.map((link) => (
-          <a
+          <Link
             key={link.href}
             href={link.href}
             onClick={() => setOpen(false)}
             className="font-display text-[1.6rem]"
           >
             {link.label}
-          </a>
+          </Link>
         ))}
         <div className="mt-3 flex flex-wrap gap-3">
-          <Button href="#contact" onClick={() => setOpen(false)}>
-            Tell Us Your Challenge
+          <Button href={AUDIT_PATH} onClick={() => setOpen(false)}>
+            Book a free audit
           </Button>
           <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="outline-orange">
             Chat on WhatsApp

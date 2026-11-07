@@ -14,8 +14,23 @@
   --color-paper: #f7f1ec;
   --color-paper-dim: #c9bcb5;
   --color-mute: #8c7c77;
+  --color-on-light: #1b1210;
+  --color-on-light-dim: #4a3a34;
+  --color-line-light: #ddd0c8;
+  --color-heading: var(--color-paper);
+  --color-focus: var(--color-orange);
 
   color-scheme: dark;
+}
+
+/* Orange and mute text fail contrast on this background. Use on-light, on-light-dim or maroon. */
+.surface-light {
+  --color-heading: var(--color-on-light);
+  --color-focus: var(--color-maroon);
+
+  background: var(--color-paper);
+  color: var(--color-on-light);
+  color-scheme: light;
 }
 
 @theme inline {
@@ -32,6 +47,9 @@
   --color-paper: var(--color-paper);
   --color-paper-dim: var(--color-paper-dim);
   --color-mute: var(--color-mute);
+  --color-on-light: var(--color-on-light);
+  --color-on-light-dim: var(--color-on-light-dim);
+  --color-line-light: var(--color-line-light);
 
   --font-display: var(--font-manrope);
   --font-body: var(--font-public-sans);
@@ -51,18 +69,21 @@ body {
   font-family: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-  text-wrap: balance;
-  color: var(--color-paper);
+/* In the base layer so Tailwind utilities on a heading can override these. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+    color: var(--color-heading);
+  }
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-orange);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
 

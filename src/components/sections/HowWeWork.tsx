@@ -27,7 +27,7 @@ const STEPS = [
 
 export function HowWeWork() {
   return (
-    <section id="how-we-work" className="py-16 sm:py-24 lg:py-32">
+    <section id="how-it-works" className="py-16 sm:py-24 lg:py-32">
       <RevealOnScroll>
         <SectionHeading eyebrow="How We Work" title="From Problem to Solution." />
       </RevealOnScroll>

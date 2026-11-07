@@ -1,14 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { SOCIAL_LINKS } from "@/shared/constants";
+import { Container } from "@/components/ui/Container";
+import { AUDIT_PATH, NAV_LINKS, SOCIAL_LINKS } from "@/shared/constants";
 
-const COMPANY_LINKS = [
-  { label: "Solutions", href: "/#solutions" },
-  { label: "How We Work", href: "/#how-we-work" },
-  { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
-];
+const COMPANY_LINKS = [...NAV_LINKS, { label: "Free audit", href: AUDIT_PATH }];
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "/privacy-policy" },
@@ -21,7 +17,7 @@ export function Footer() {
       className="border-t border-line py-14 pb-9"
       style={{ background: "radial-gradient(ellipse 600px 300px at 0% 100%, color-mix(in srgb, var(--color-maroon) 24%, transparent), transparent 60%)" }}
     >
-      <div className="mx-auto max-w-[1180px] px-5 sm:px-8 lg:px-16">
+      <Container>
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-2.5">
@@ -64,12 +60,12 @@ export function Footer() {
           <span>© 2026 IFNOTGOD TECH LTD. All rights reserved.</span>
           <span className="font-mono text-[0.7rem] uppercase tracking-[0.08em]">Every problem has a tech solution.</span>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }
 
-function FooterColumn({ heading, links }: { heading: string; links: { label: string; href: string }[] }) {
+function FooterColumn({ heading, links }: { heading: string; links: readonly { label: string; href: string }[] }) {
   return (
     <div>
       <h4 className="mb-4.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-mute">{heading}</h4>
