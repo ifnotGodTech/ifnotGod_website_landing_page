@@ -21,7 +21,7 @@ const QUESTIONS = [
   {
     question: "Can I cancel?",
     answer:
-      "Yes. There's no minimum term. Your plan renews each month until you cancel. If you cancel, you keep everything in your plan until the end of the month you've paid for, and it won't renew after that.",
+      "Yes. There's no minimum term. Your plan renews each month until you cancel. If you cancel, everything in your plan, including your automations and website, keeps working until the end of the month you've paid for, and it won't renew after that. Then your automations stop, because they run on our systems. Your website is yours to keep.",
   },
 ];
 

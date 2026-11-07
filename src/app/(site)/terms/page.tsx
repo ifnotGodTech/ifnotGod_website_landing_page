@@ -62,8 +62,14 @@ export default function TermsPage() {
           offer are limited. The price agreed with you in writing is the one that applies to you.
         </p>
         <p>
-          Plans are paid monthly, with no minimum term, and renew each month until you cancel. If you cancel, you keep
-          everything in your plan until the end of the month you&apos;ve paid for, and it won&apos;t renew after that.
+          Plans are paid monthly, with no minimum term, and renew each month until you cancel. If you cancel, everything
+          in your plan, including your automations and website, keeps working until the end of the month you&apos;ve paid
+          for, and it won&apos;t renew after that. Then your automations stop, because they run on our systems. The
+          website we build for you is yours to keep.
+        </p>
+        <p>
+          Plans are subscriptions, so payments aren&apos;t refundable, including for the rest of a month after you cancel.
+          This doesn&apos;t affect any right you have under Nigerian consumer law.
         </p>
       </LegalSection>
 

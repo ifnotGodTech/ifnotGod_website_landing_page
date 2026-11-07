@@ -138,7 +138,9 @@ describe("plan terms and questions", () => {
   it("lets clients cancel at the end of any month, with no minimum term", () => {
     const { container } = render(<PlanTerms />);
 
-    expect(screen.getByText(/you keep everything in your plan until the end of the month you've paid for, and it won't renew after that/)).toBeInTheDocument();
+    expect(screen.getByText(/including your automations and website, keeps working until the end of the month you've paid for, and it won't renew after that/)).toHaveTextContent(
+      "Then your automations stop, because they run on our systems. Your website is yours to keep."
+    );
     expect(container).not.toHaveTextContent(/3 months|3-month/);
   });
 
