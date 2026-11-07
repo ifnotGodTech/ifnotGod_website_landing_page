@@ -44,9 +44,9 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="The personal data we collect">
         <ul>
           <li>
-            <strong>What you send through our contact form:</strong> your full name, email address, your challenge and
-            what you would like technology to help you achieve. Your organisation and phone or WhatsApp number are
-            optional.
+            <strong>What you send through our audit form:</strong> your full name, email address and the task or
+            problem you tell us about. Your business or brand name, phone or WhatsApp number, and the plan you&apos;re
+            interested in are optional.
           </li>
           <li>
             <strong>What you send us directly:</strong> anything you include when you email, call or message us on

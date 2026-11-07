@@ -53,7 +53,7 @@ test.describe("content stays visible", () => {
     test("the headline and form are in the page", async ({ page }) => {
       await page.goto("/audit");
       await expect(page.locator("h1")).toBeVisible();
-      await expect(page.locator("#contact form")).toBeAttached();
+      await expect(page.getByRole("form", { name: "Book your free audit" })).toBeAttached();
     });
   });
 

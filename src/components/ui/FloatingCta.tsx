@@ -8,7 +8,7 @@ import { AUDIT_PATH, CONTACT_INFO } from "@/shared/constants";
 
 // These areas have their own calls to action, and the button would cover them.
 // A page opts its hero in with the data-page-hero attribute.
-const HIDE_OVER = "[data-page-hero], #contact, footer";
+const HIDE_OVER = "[data-page-hero], footer";
 
 // The audit page is the button's destination, and on legal pages it would cover text being read.
 const HIDDEN_ON: readonly string[] = [AUDIT_PATH, "/privacy-policy", "/terms"];

@@ -52,7 +52,7 @@ test("the main buttons reach the audit and pricing pages", async ({ page }) => {
   await page.goto("/");
   await page.locator("main").getByRole("link", { name: "Start with an audit: Growth" }).click();
   await expect(page).toHaveURL(/\/audit\?plan=growth$/);
-  await expect(page.locator("#contact form")).toBeVisible();
+  await expect(page.getByLabel("Interested in a plan? (optional)")).toHaveValue("growth");
 });
 
 test.describe("plan section", () => {

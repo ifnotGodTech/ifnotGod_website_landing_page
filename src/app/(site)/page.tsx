@@ -1,6 +1,7 @@
 import { ClosingCta } from "@/components/sections/ClosingCta";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { LegacyContactRedirect } from "@/components/sections/LegacyContactRedirect";
 import { PastWork } from "@/components/sections/PastWork";
 import { PlanSummary } from "@/components/sections/PlanSummary";
 import { YourWeek } from "@/components/sections/YourWeek";
@@ -11,6 +12,7 @@ import { buildOrganizationJsonLd } from "@/shared/structuredData";
 export default function Home() {
   return (
     <>
+      <LegacyContactRedirect />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: buildOrganizationJsonLd(SITE_URL) }} />
       <Container>
         <Hero />

@@ -56,6 +56,23 @@ describe("POST /api/contact", () => {
     expect(sendContactNotification).toHaveBeenCalledTimes(1);
   });
 
+  it("delivers the chosen plan, and drops fields the form no longer has", async () => {
+    sendContactNotification.mockResolvedValueOnce(undefined);
+    await POST(makeRequest({ ...validPayload, plan: "pro", desiredOutcome: "Old field" }));
+
+    const delivered = sendContactNotification.mock.calls[0][0];
+    expect(delivered.plan).toBe("pro");
+    expect(delivered).not.toHaveProperty("desiredOutcome");
+  });
+
+  it("rejects a plan that isn't on offer", async () => {
+    const response = await POST(makeRequest({ ...validPayload, plan: "platinum" }));
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).errors.plan).toBeDefined();
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+
   it("returns 400 for an invalid submission and does not attempt delivery", async () => {
     const response = await POST(makeRequest({ fullName: "", email: "not-an-email", challenge: "short" }));
     const json = await response.json();

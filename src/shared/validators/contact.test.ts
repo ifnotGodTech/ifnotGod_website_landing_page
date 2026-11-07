@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseContactSubmission } from "./contact";
+import { parseContactSubmission, parsePlanParam } from "./contact";
 
 const validPayload = {
   fullName: "Ada Obi",
@@ -7,13 +7,14 @@ const validPayload = {
   email: "ada@obilogistics.com",
   phone: "+2348012345678",
   challenge: "Our dispatch process is entirely manual and error-prone.",
-  desiredOutcome: "Automated dispatch assignment.",
+  plan: "growth",
 };
 
 describe("parseContactSubmission", () => {
   it("accepts a fully valid submission", () => {
     const result = parseContactSubmission(validPayload);
-    expect(result.success).toBe(true);
+
+    expect(result).toEqual({ success: true, data: validPayload });
   });
 
   it("accepts a submission with only the required fields", () => {
@@ -23,6 +24,27 @@ describe("parseContactSubmission", () => {
       challenge: "Our dispatch process is entirely manual and error-prone.",
     });
     expect(result.success).toBe(true);
+  });
+
+  it("treats 'Not sure yet' as no plan", () => {
+    const result = parseContactSubmission({ ...validPayload, plan: "" });
+
+    expect(result.success && result.data.plan).toBeUndefined();
+  });
+
+  it("rejects a plan that isn't on offer", () => {
+    const result = parseContactSubmission({ ...validPayload, plan: "platinum" });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errors.plan).toBe("Choose a plan from the list.");
+    }
+  });
+
+  it("drops fields it doesn't know, such as ones sent by the old form", () => {
+    const result = parseContactSubmission({ ...validPayload, desiredOutcome: "Automated dispatch." });
+
+    expect(result.success && result.data).not.toHaveProperty("desiredOutcome");
   });
 
   it("rejects a missing full name", () => {
@@ -57,5 +79,15 @@ describe("parseContactSubmission", () => {
       expect(result.errors.email).toBeDefined();
       expect(result.errors.challenge).toBeDefined();
     }
+  });
+});
+
+describe("parsePlanParam", () => {
+  it.each(["starter", "growth", "pro", "custom"])("reads %s", (plan) => {
+    expect(parsePlanParam(plan)).toBe(plan);
+  });
+
+  it.each([undefined, "", "platinum", ["growth", "pro"], "GROWTH"])("ignores %j", (value) => {
+    expect(parsePlanParam(value)).toBeUndefined();
   });
 });

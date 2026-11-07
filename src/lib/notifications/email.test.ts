@@ -17,7 +17,6 @@ const submission = {
   email: "ada@obilogistics.com",
   phone: "+2348012345678",
   challenge: "Line one\nLine two",
-  desiredOutcome: "",
 };
 
 describe("sendContactNotification", () => {
@@ -47,15 +46,27 @@ describe("sendContactNotification", () => {
       sender: { email: "sender@example.com", name: "Sender" },
       to: [{ email: "leads@example.com" }],
       replyTo: { email: "ada@obilogistics.com", name: "Ada Obi" },
-      subject: "New challenge from Ada Obi (Obi Logistics)",
+      subject: "New audit request from Ada Obi (Obi Logistics)",
     });
   });
 
   it("keeps line breaks and shows a dash for empty optional fields", async () => {
-    await sendContactNotification(submission);
+    await sendContactNotification({ ...submission, phone: "" });
 
     expect(sentBody().htmlContent).toContain("Line one<br/>Line two");
     expect(sentBody().htmlContent).toContain("<td>—</td>");
+  });
+
+  it("names the plan the visitor chose", async () => {
+    await sendContactNotification({ ...submission, plan: "growth" });
+
+    expect(sentBody().htmlContent).toContain("<td><strong>Interested in</strong></td><td>Growth</td>");
+  });
+
+  it("says when the visitor isn't sure about a plan", async () => {
+    await sendContactNotification(submission);
+
+    expect(sentBody().htmlContent).toContain("<td><strong>Interested in</strong></td><td>Not sure yet</td>");
   });
 
   it("escapes HTML in visitor input", async () => {
@@ -69,7 +80,7 @@ describe("sendContactNotification", () => {
   it("keeps the subject on one line", async () => {
     await sendContactNotification({ ...submission, fullName: "Ada\r\nObi", organisation: "" });
 
-    expect(sentBody().subject).toBe("New challenge from Ada Obi");
+    expect(sentBody().subject).toBe("New audit request from Ada Obi");
   });
 
   it("throws EmailNotConfiguredError without calling Brevo when the key is missing", async () => {

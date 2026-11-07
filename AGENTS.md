@@ -24,7 +24,7 @@ Until the backend reaches a feature, its data stays in code.
 ## Folder Structure
 - `src/app` (App Router: root layout, `api/contact` route handler, metadata files, global styles and theme tokens in `globals.css`)
 - `src/app/(site)` (public pages and their shared layout, which owns `<main>`, so pages must not render their own)
-- `src/components/sections` (Navigation, Footer, Contact, the home page's Hero, HowItWorks, YourWeek, PlanSummary and PastWork, the pricing page's PricingPlans, PlanSelector and PlanTerms, the services page's ServiceGroups, and the shared ClosingCta)
+- `src/components/sections` (Navigation, Footer, the audit page's AuditForm, LegacyContactRedirect for old `/#contact` links, the home page's Hero, HowItWorks, YourWeek, PlanSummary and PastWork, the pricing page's PricingPlans, PlanSelector and PlanTerms, the services page's ServiceGroups, and the shared ClosingCta)
 - `src/components/ui` (shared reusable UI primitives: Button, Container, Eyebrow, RevealOnScroll, FloatingCta)
 - `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
@@ -112,7 +112,7 @@ A feature/section is done when:
 - Use typed failures or normalized error objects in the application layer.
 - Never expose raw exceptions directly to the UI.
 - Presentation layer must map failures into clear, human user-facing messages (e.g. "Something went wrong sending your message — try again or reach us on WhatsApp").
-- The contact form must support loading, empty, error, and success states.
+- The audit form must support loading, empty, error, and success states.
 - Add retry-friendly UX on submission failure (do not clear the user's input on error).
 
 ## Dependency Management Rules

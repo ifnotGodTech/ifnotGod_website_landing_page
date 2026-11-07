@@ -23,7 +23,7 @@ export const LEGAL_INFO = {
   companyName: "IFNOTGOD TECH LTD",
   registeredAddress: "3, Kingsley Uwagbale Street, Off Mopo Road, United Estate, Lagos, Nigeria",
   registrationNumber: "8384966",
-  lastUpdated: "6 November 2026",
+  lastUpdated: "7 November 2026",
 } as const;
 
 // Hidden form field that only bots fill in. The name avoids words browsers autofill,

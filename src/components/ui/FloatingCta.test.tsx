@@ -15,7 +15,7 @@ describe("FloatingCta", () => {
 
   beforeEach(() => {
     navigation.pathname = "/";
-    document.body.innerHTML = '<section data-page-hero></section><section id="contact"></section><footer></footer>';
+    document.body.innerHTML = '<section data-page-hero></section><footer></footer>';
     observed.length = 0;
     disconnect.mockReset();
     vi.stubGlobal(
@@ -39,11 +39,11 @@ describe("FloatingCta", () => {
   const wrapper = () => screen.getByTestId("floating-cta");
   const target = (selector: string) => document.querySelector(selector) as Element;
 
-  it("starts hidden and watches the page's hero, contact section and footer", () => {
+  it("starts hidden and watches the page's hero and footer", () => {
     render(<FloatingCta />);
 
     expect(wrapper()).toHaveClass("invisible");
-    expect(observed).toEqual([target("[data-page-hero]"), target("#contact"), target("footer")]);
+    expect(observed).toEqual([target("[data-page-hero]"), target("footer")]);
   });
 
   it("shows only when none of the watched areas are in view", () => {
@@ -55,11 +55,11 @@ describe("FloatingCta", () => {
     act(() => notify([{ target: target("[data-page-hero]"), isIntersecting: false }]));
     expect(wrapper()).toHaveClass("visible");
 
-    act(() => notify([{ target: target("#contact"), isIntersecting: true }]));
+    act(() => notify([{ target: target("footer"), isIntersecting: true }]));
     expect(wrapper()).toHaveClass("invisible");
 
-    act(() => notify([{ target: target("footer"), isIntersecting: true }]));
-    act(() => notify([{ target: target("#contact"), isIntersecting: false }]));
+    act(() => notify([{ target: target("[data-page-hero]"), isIntersecting: true }]));
+    act(() => notify([{ target: target("footer"), isIntersecting: false }]));
     expect(wrapper()).toHaveClass("invisible");
   });
 
@@ -78,7 +78,6 @@ describe("FloatingCta", () => {
     act(() => notify([{ target: target("[data-page-hero]"), isIntersecting: true }]));
 
     target("[data-page-hero]").remove();
-    target("#contact").remove();
     document.body.insertAdjacentHTML("afterbegin", '<section data-page-hero id="new-hero"></section>');
     observed.length = 0;
     navigation.pathname = "/pricing";
