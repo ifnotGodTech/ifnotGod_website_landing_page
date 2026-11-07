@@ -91,6 +91,6 @@ test.describe("without JavaScript", () => {
     for (const heading of SECTION_HEADINGS) {
       await expect(page.getByRole("heading", { level: 2, name: heading })).toBeVisible();
     }
-    await expect(page.getByText("₦150,000")).toBeVisible();
+    await expect(page.getByText("₦40,000")).toBeVisible();
   });
 });

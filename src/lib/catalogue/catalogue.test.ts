@@ -15,9 +15,9 @@ describe("plans", () => {
   });
 
   it.each([
-    ["starter", 60_000],
-    ["growth", 150_000],
-    ["pro", 300_000],
+    ["starter", 20_000],
+    ["growth", 40_000],
+    ["pro", 80_000],
     ["custom", null],
   ] as const)("%s costs %s a month", async (id, price) => {
     expect((await getPlan(id))?.monthlyPrice).toBe(price);

@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 
 const TITLE = "Plans and Prices | IFNOTGOD TECH LTD";
 const DESCRIPTION =
-  "See exactly what each IFNOTGOD TECH plan includes. One monthly fee covers your automations, hosting, monitoring and fixes, from ₦60,000 a month.";
+  "See exactly what each IFNOTGOD TECH plan includes. One monthly fee covers your automations, monitoring and fixes, from ₦20,000 a month.";
 
 export const metadata: Metadata = {
   title: TITLE,

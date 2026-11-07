@@ -25,6 +25,28 @@ export function allowanceLabel(group: ServiceGroup, allowance: Allowance): strin
   return `${allowance} ${allowance === 1 ? group.unitSingular : group.unitPlural}`;
 }
 
+/** Services to list individually, leaving out the catch-all entry. */
+export function listedServices(services: Service[]): Service[] {
+  return services.filter((service) => !service.catchAll);
+}
+
+/** For example, "From Growth". */
+export function lowestPlanLabel(service: Service, plans: Plan[]): string {
+  const plan = plans.find((candidate) => candidate.id === service.includedFrom);
+  return plan ? `From ${plan.name}` : "";
+}
+
+/** For example, "Starter includes 1, Growth 3, Pro 6". Leaves out plans with none or an agreed number. */
+export function groupAllowanceSummary(group: ServiceGroup, plans: Plan[]): string {
+  return plans
+    .flatMap((plan) => {
+      const allowance = plan.allowances[group.id];
+      return typeof allowance === "number" && allowance > 0 ? [{ name: plan.name, allowance }] : [];
+    })
+    .map(({ name, allowance }, index) => (index === 0 ? `${name} includes ${allowance}` : `${name} ${allowance}`))
+    .join(", ");
+}
+
 /** The short list of what a plan includes, for plan summaries. */
 export function planHighlights(plan: Plan, choices: PlanChoice[]): string[] {
   if (plan.monthlyPrice === null) return ["Everything agreed around your needs", plan.website, plan.tag];

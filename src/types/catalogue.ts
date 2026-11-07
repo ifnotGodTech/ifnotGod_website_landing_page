@@ -40,6 +40,8 @@ export type Service = {
   /** When false, the service doesn't appear anywhere on the site. */
   available: boolean;
   note?: string;
+  /** Stands for "anything else", so it's offered in plans but not listed as a service of its own. */
+  catchAll?: boolean;
 };
 
 export type ServiceGroupWithServices = ServiceGroup & {

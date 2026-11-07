@@ -2,8 +2,8 @@ import { Container } from "@/components/ui/Container";
 import { cn } from "@/shared/cn";
 
 const TERMS = [
-  "One-time setup fee of ₦100,000, waived when you commit to 6 months.",
-  "Minimum term of 3 months, then month to month with 30 days' notice.",
+  "No setup fee.",
+  "Pay month by month. There's no minimum term.",
   "Pay 12 months upfront and get 2 months free.",
   "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
   "We're alerted the moment anything fails, on every plan.",
@@ -12,7 +12,7 @@ const TERMS = [
 const QUESTIONS = [
   {
     question: "Do I need to understand the technology?",
-    answer: "No. Tell us the problem. We choose the tools, build everything and keep it running.",
+    answer: "No. Tell us the problem. We choose the tools, build everything and keep your automations running.",
   },
   {
     question: "What if my problem isn't on your list?",
@@ -20,7 +20,7 @@ const QUESTIONS = [
   },
   {
     question: "Can I cancel?",
-    answer: "Yes. After the 3-month minimum term, your plan runs month to month and you can cancel with 30 days' notice.",
+    answer: "Yes. There's no minimum term, so you can stop at the end of any month.",
   },
 ];
 

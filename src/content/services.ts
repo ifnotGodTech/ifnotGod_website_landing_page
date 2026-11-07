@@ -77,6 +77,7 @@ export const SERVICES: Service[] = [
     problem: "Our problem isn't on your list.",
     includedFrom: "starter",
     available: true,
+    catchAll: true,
   },
   {
     id: "scheduling-posting",

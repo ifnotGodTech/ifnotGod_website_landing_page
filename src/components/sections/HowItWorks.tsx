@@ -12,7 +12,7 @@ const STEPS = [
   },
   {
     title: "We run and improve",
-    detail: "We host, monitor and fix everything, and keep improving it every month.",
+    detail: "We host, monitor and fix your automations, and keep improving them every month.",
   },
 ];
 

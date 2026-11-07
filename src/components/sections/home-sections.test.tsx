@@ -74,9 +74,9 @@ describe("Plan summary", () => {
   it("shows the four plans with their prices", async () => {
     await renderSummary();
 
-    expect(card("Starter")).toHaveTextContent("₦60,000 / month");
-    expect(card("Growth")).toHaveTextContent("₦150,000 / month");
-    expect(card("Pro")).toHaveTextContent("₦300,000 / month");
+    expect(card("Starter")).toHaveTextContent("₦20,000 / month");
+    expect(card("Growth")).toHaveTextContent("₦40,000 / month");
+    expect(card("Pro")).toHaveTextContent("₦80,000 / month");
     expect(card("Custom")).toHaveTextContent("Let's talk");
   });
 

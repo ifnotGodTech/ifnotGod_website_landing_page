@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { Plan, Service, ServiceGroup } from "@/types/catalogue";
-import { allowanceLabel, buildPlanChoices, formatNaira, formatPlanPrice, isIncludedInPlan, planHighlights } from "./rules";
+import {
+  allowanceLabel,
+  buildPlanChoices,
+  formatNaira,
+  formatPlanPrice,
+  groupAllowanceSummary,
+  isIncludedInPlan,
+  listedServices,
+  lowestPlanLabel,
+  planHighlights,
+} from "./rules";
 
 const group: ServiceGroup = { id: "agents", name: "AI agents", unitSingular: "AI agent", unitPlural: "AI agents" };
 
@@ -72,6 +82,37 @@ describe("allowanceLabel", () => {
     ["agreed", "AI agents"],
   ] as const)("describes an allowance of %s", (allowance, label) => {
     expect(allowanceLabel(group, allowance)).toBe(label);
+  });
+});
+
+describe("listedServices", () => {
+  it("leaves out the catch-all entry", () => {
+    const listed = service({ id: "listed" });
+
+    expect(listedServices([listed, service({ id: "other", catchAll: true })])).toEqual([listed]);
+  });
+});
+
+describe("lowestPlanLabel", () => {
+  it("names the lowest plan that includes the service", () => {
+    expect(lowestPlanLabel(service({ includedFrom: "growth" }), [plan({ id: "growth", name: "Growth" })])).toBe(
+      "From Growth"
+    );
+  });
+
+  it("stays empty when the plan isn't on offer", () => {
+    expect(lowestPlanLabel(service({ includedFrom: "pro" }), [plan({ id: "growth" })])).toBe("");
+  });
+});
+
+describe("groupAllowanceSummary", () => {
+  const agents = (id: "starter" | "growth" | "pro" | "custom", name: string, count: number | "agreed") =>
+    plan({ id, name, allowances: { everyday: 1, social: 1, agents: count } });
+
+  it("names each plan's allowance, leaving out plans with none or an agreed number", () => {
+    const plans = [agents("starter", "Starter", 0), agents("growth", "Growth", 1), agents("pro", "Pro", 2), agents("custom", "Custom", "agreed")];
+
+    expect(groupAllowanceSummary(group, plans)).toBe("Growth includes 1, Pro 2");
   });
 });
 

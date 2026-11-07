@@ -5,7 +5,7 @@ export const PLANS: Plan[] = [
   {
     id: "starter",
     name: "Starter",
-    monthlyPrice: 60_000,
+    monthlyPrice: 20_000,
     tag: "Fix your first problem",
     summary: "For a business or creator fixing their first problem.",
     ctaLabel: "Start with an audit",
@@ -18,7 +18,7 @@ export const PLANS: Plan[] = [
   {
     id: "growth",
     name: "Growth",
-    monthlyPrice: 150_000,
+    monthlyPrice: 40_000,
     tag: "Recommended",
     summary: "For a team ready to automate follow-up, content and sales.",
     ctaLabel: "Start with an audit",
@@ -31,7 +31,7 @@ export const PLANS: Plan[] = [
   {
     id: "pro",
     name: "Pro",
-    monthlyPrice: 300_000,
+    monthlyPrice: 80_000,
     tag: "Run several automations",
     summary: "For a busy organisation running several automations and agents.",
     ctaLabel: "Start with an audit",

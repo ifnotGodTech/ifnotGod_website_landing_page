@@ -35,10 +35,10 @@ export async function PricingPlans() {
 
 function PlanPanel({ plan, choices }: { plan: Plan; choices: PlanChoice[] }) {
   const extras = [
-    { label: "Website", value: plan.website },
+    { label: "Website we build", value: plan.website },
     { label: "Changes", value: plan.changes },
     { label: "Support", value: plan.support },
-    { label: "Running it", value: "Hosting, monitoring and monthly report" },
+    { label: "Running it", value: "Hosting and monitoring for your automations, and a monthly report" },
   ];
 
   return (

@@ -97,7 +97,7 @@ test.describe("without JavaScript", () => {
     for (const name of ["Starter", "Growth", "Pro", "Custom"]) {
       await expect(page.getByRole("heading", { level: 2, name: panelHeading(name) })).toBeVisible();
     }
-    await expect(page.getByText("₦300,000 / month")).toBeVisible();
+    await expect(page.getByText("₦80,000 / month")).toBeVisible();
     await expect(page.getByText("AI call agent").first()).toBeVisible();
   });
 });

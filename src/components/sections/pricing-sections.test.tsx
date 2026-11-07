@@ -15,9 +15,9 @@ describe("plan selector", () => {
     await renderPlans();
 
     expect(screen.getByRole("group", { name: "Choose a plan" })).toBeInTheDocument();
-    expect(planButton(/Starter/)).toHaveTextContent("₦60,000 / month");
-    expect(planButton(/Growth/)).toHaveTextContent("₦150,000 / month");
-    expect(planButton(/Pro/)).toHaveTextContent("₦300,000 / month");
+    expect(planButton(/Starter/)).toHaveTextContent("₦20,000 / month");
+    expect(planButton(/Growth/)).toHaveTextContent("₦40,000 / month");
+    expect(planButton(/Pro/)).toHaveTextContent("₦80,000 / month");
     expect(planButton(/Custom/)).toHaveTextContent("Let's talk");
   });
 
@@ -96,6 +96,15 @@ describe("what each plan shows", () => {
     expect(panel("pro")).toHaveTextContent("AI call agent (Minutes billed separately.)");
   });
 
+  it("only promises hosting for automations, not websites", async () => {
+    await renderPlans();
+
+    ["starter", "growth", "pro", "custom"].forEach((id) => {
+      expect(panel(id)).toHaveTextContent("Hosting and monitoring for your automations");
+      expect(panel(id)).toHaveTextContent("Website we build");
+    });
+  });
+
   it("shows each plan's website, changes and support", async () => {
     await renderPlans();
 
@@ -120,10 +129,17 @@ describe("plan terms and questions", () => {
   it("shows the fee, term and billing terms", () => {
     render(<PlanTerms />);
 
-    expect(screen.getByText(/setup fee of ₦100,000/)).toBeInTheDocument();
-    expect(screen.getByText(/Minimum term of 3 months/)).toBeInTheDocument();
+    expect(screen.getByText("No setup fee.")).toBeInTheDocument();
+    expect(screen.getByText("Pay month by month. There's no minimum term.")).toBeInTheDocument();
     expect(screen.getByText(/2 months free/)).toBeInTheDocument();
     expect(screen.getByText(/billed at cost/)).toBeInTheDocument();
+  });
+
+  it("lets clients cancel at the end of any month, with no minimum term", () => {
+    const { container } = render(<PlanTerms />);
+
+    expect(screen.getByText(/you can stop at the end of any month/)).toBeInTheDocument();
+    expect(container).not.toHaveTextContent(/3 months|3-month/);
   });
 
   it("answers questions with native disclosure elements, with no placeholders", () => {

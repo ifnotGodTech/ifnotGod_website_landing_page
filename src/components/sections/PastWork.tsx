@@ -20,7 +20,7 @@ export function PastWork() {
           <div className="flex flex-col items-start gap-3 rounded-[10px] border border-line-strong p-7 sm:p-8">
             <h2 className="text-[1.6rem] font-extrabold tracking-[-0.015em]">Founding client offer</h2>
             <p className="text-paper-dim">
-              We&apos;re taking three founding clients: 50% off any plan for the first 3 months and no setup fee, in
+              We&apos;re taking three founding clients: 50% off any plan for the first 3 months, in
               exchange for a short testimonial and permission to share the results.
             </p>
             <Link href={AUDIT_PATH} className="font-bold text-orange underline transition-colors hover:text-paper">

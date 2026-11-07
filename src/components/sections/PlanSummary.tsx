@@ -21,8 +21,8 @@ export async function PlanSummary() {
             One monthly fee. We do the work.
           </h2>
           <p className="text-[1.1rem] text-on-light-dim">
-            Every plan includes hosting, monitoring, fixes and a monthly report. Third-party costs, such as WhatsApp
-            messages and AI usage, are billed at cost.
+            Every plan includes running and monitoring your automations, fixes and a monthly report. Third-party costs, such as WhatsApp messages and AI usage,
+            are billed at cost.
           </p>
         </div>
 
