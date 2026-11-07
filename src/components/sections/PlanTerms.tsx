@@ -20,7 +20,8 @@ const QUESTIONS = [
   },
   {
     question: "Can I cancel?",
-    answer: "Yes. There's no minimum term. If you cancel, we keep providing your service until the end of the month you've paid for.",
+    answer:
+      "Yes. There's no minimum term. Your plan renews each month until you cancel. If you cancel, you keep everything in your plan until the end of the month you've paid for, and it won't renew after that.",
   },
 ];
 

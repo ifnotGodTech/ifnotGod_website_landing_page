@@ -77,7 +77,8 @@ describe("Terms of Use", () => {
 
     expect(screen.getByText(/booking a free audit doesn't create a contract or commit you to a plan/)).toBeInTheDocument();
     expect(screen.getByText(/that written agreement takes priority over anything on this website/)).toBeInTheDocument();
-    expect(screen.getByText(/we keep providing your service until the end of the month you've paid for/)).toBeInTheDocument();
+    expect(screen.getByText(/renew each month until you cancel/)).toBeInTheDocument();
+    expect(screen.getByText(/you keep everything in your plan until the end of the month you've paid for, and it won't renew after that/)).toBeInTheDocument();
   });
 
   it("links to the Privacy Policy", () => {

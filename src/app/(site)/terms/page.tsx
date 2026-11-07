@@ -62,8 +62,8 @@ export default function TermsPage() {
           offer are limited. The price agreed with you in writing is the one that applies to you.
         </p>
         <p>
-          Plans are paid monthly, with no minimum term. If you cancel, we keep providing your service until the end of
-          the month you&apos;ve paid for.
+          Plans are paid monthly, with no minimum term, and renew each month until you cancel. If you cancel, you keep
+          everything in your plan until the end of the month you&apos;ve paid for, and it won&apos;t renew after that.
         </p>
       </LegalSection>
 
