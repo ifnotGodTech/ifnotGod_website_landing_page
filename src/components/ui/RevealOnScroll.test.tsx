@@ -16,7 +16,7 @@ describe("server-rendered content visibility", () => {
   it("does not hide the hero with inline styles", () => {
     const html = renderToStaticMarkup(<Hero />);
 
-    expect(html).toContain("Every Problem Has");
+    expect(html).toContain("answering back while you sleep");
     expect(html).not.toMatch(/opacity:\s*0/);
   });
 });

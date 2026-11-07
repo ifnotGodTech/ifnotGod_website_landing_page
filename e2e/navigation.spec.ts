@@ -122,7 +122,7 @@ test.describe("floating button", () => {
     await page.goto("/");
     await expect(floatingCta(page)).toBeHidden();
 
-    await page.locator("#solutions").scrollIntoViewIfNeeded();
+    await page.locator(".surface-light").scrollIntoViewIfNeeded();
     await expect(floatingCta(page)).toBeVisible();
 
     await page.locator("footer").scrollIntoViewIfNeeded();
@@ -131,7 +131,7 @@ test.describe("floating button", () => {
 
   test("keeps working as the visitor moves between pages", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#solutions").scrollIntoViewIfNeeded();
+    await page.locator(".surface-light").scrollIntoViewIfNeeded();
     await expect(floatingCta(page)).toBeVisible();
 
     // The new page's hero is what hides it.
@@ -142,7 +142,7 @@ test.describe("floating button", () => {
     // Back on the home page, it watches the home page's areas again.
     await page.locator("nav").first().getByRole("link").first().click();
     await expect(page).toHaveURL(/\/$/);
-    await page.locator("#solutions").scrollIntoViewIfNeeded();
+    await page.locator(".surface-light").scrollIntoViewIfNeeded();
     await expect(floatingCta(page)).toBeVisible();
   });
 
@@ -159,7 +159,7 @@ test.describe("floating button", () => {
 
   test("takes the visitor to the audit page, and stays hidden there", async ({ page }) => {
     await page.goto("/");
-    await page.locator("#solutions").scrollIntoViewIfNeeded();
+    await page.locator(".surface-light").scrollIntoViewIfNeeded();
 
     await floatingCta(page).getByRole("link", { name: "Book a free audit" }).click();
 

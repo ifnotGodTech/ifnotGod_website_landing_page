@@ -33,6 +33,24 @@
   color-scheme: light;
 }
 
+.surface-maroon {
+  --color-heading: var(--color-paper);
+  --color-focus: var(--color-paper);
+
+  background: var(--color-maroon);
+  color: var(--color-paper);
+}
+
+/* A dark card inside a light section. */
+.surface-ink {
+  --color-heading: var(--color-paper);
+  --color-focus: var(--color-orange);
+
+  background: var(--color-on-light);
+  color: var(--color-paper);
+  color-scheme: dark;
+}
+
 @theme inline {
   --color-ink: var(--color-ink);
   --color-surface: var(--color-surface);
@@ -98,15 +116,6 @@ body {
   }
 }
 
-@keyframes hero-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes reveal {
   from {
     opacity: 0;
@@ -126,10 +135,6 @@ body {
 
   .hero-rise {
     animation: hero-rise 0.8s ease-out both;
-  }
-
-  .hero-fade {
-    animation: hero-fade 0.7s ease-out both;
   }
 
   @supports (animation-timeline: view()) {

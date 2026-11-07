@@ -27,7 +27,10 @@ function findHiddenContent(page: Page) {
 test.describe("content stays visible", () => {
   test("in a normal visit", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("h1")).toHaveCSS("opacity", "1");
+    // The hero's parts fade in one after another, so wait for all of them.
+    for (const part of await page.locator(".hero-rise").all()) {
+      await expect(part).toHaveCSS("opacity", "1");
+    }
     expect(await findHiddenContent(page)).toEqual([]);
   });
 
@@ -40,7 +43,7 @@ test.describe("content stays visible", () => {
 
   test("when printing", async ({ page }) => {
     await page.emulateMedia({ media: "print" });
-    await page.goto("/");
+    await page.goto("/audit");
     await expect(page.locator("form")).toHaveCSS("opacity", "1");
   });
 
@@ -48,7 +51,7 @@ test.describe("content stays visible", () => {
     test.use({ javaScriptEnabled: false });
 
     test("the headline and form are in the page", async ({ page }) => {
-      await page.goto("/");
+      await page.goto("/audit");
       await expect(page.locator("h1")).toBeVisible();
       await expect(page.locator("#contact form")).toBeAttached();
     });

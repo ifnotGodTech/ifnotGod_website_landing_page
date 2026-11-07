@@ -24,8 +24,8 @@ Until the backend reaches a feature, its data stays in code.
 ## Folder Structure
 - `src/app` (App Router: root layout, `api/contact` route handler, metadata files, global styles and theme tokens in `globals.css`)
 - `src/app/(site)` (public pages and their shared layout, which owns `<main>`, so pages must not render their own)
-- `src/components/sections` (Hero, Problem, Solutions, AI, HowWeWork, WhyUs, WhoWeHelp, About, ConversionCta, Contact, Footer, Navigation)
-- `src/components/ui` (shared reusable UI primitives: Button, Card, Container, Eyebrow, SectionHeading, RevealOnScroll, FloatingCta)
+- `src/components/sections` (Navigation, Footer, Contact, and the home page's Hero, HowItWorks, YourWeek, PlanSummary, PastWork and ClosingCta)
+- `src/components/ui` (shared reusable UI primitives: Button, Container, Eyebrow, RevealOnScroll, FloatingCta)
 - `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
 - `src/lib` (contact form client, email/notification client, config)
@@ -123,7 +123,7 @@ A feature/section is done when:
 ## UI, Responsive, and Motion Rules
 - Follow consistent spacing, typography, hierarchy, and interaction patterns across all sections.
 - Use `Container` for page width and side padding.
-- Use reusable components and avoid duplicated UI code (cards, buttons, section headings).
+- Use reusable components and avoid duplicated UI code (cards, buttons, headings).
 - UI files must remain focused on presentation and interaction wiring, not business/validation logic.
 - Standardize repeated UI patterns: buttons, inputs, cards, and the section-header pattern used throughout the site.
 - All sections must support adaptive layouts across mobile, tablet, and desktop.
@@ -145,7 +145,7 @@ A feature/section is done when:
   - Ink `#0B0706` — primary dark background/base for the site's dark aesthetic.
   - Paper `#F7F1EC` — primary text on dark surfaces, CTA text on maroon, and the background of light sections.
   - Orange `#E07B2A` — secondary accent; secondary/tertiary CTA background, highlights, icon accents, matches the logo's gradient warmth.
-- Light sections use the `surface-light` class, which also sets their heading and focus colours. On them, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
+- Sections and cards with their own background use `surface-light`, `surface-maroon` or `surface-ink`, which also set their heading and focus colours. On light surfaces, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
 - Define all colors as theme tokens (`src/app/globals.css`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
 - Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments.
 - Keep button/CTA text contrast accessible (minimum WCAG AA): paper on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.
@@ -179,7 +179,7 @@ Clients log in on this site to subscribe, and to see, renew, upgrade or cancel t
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 

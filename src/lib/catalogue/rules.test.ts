@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Plan, Service, ServiceGroup } from "@/types/catalogue";
-import { allowanceLabel, buildPlanChoices, formatNaira, isIncludedInPlan } from "./rules";
+import { allowanceLabel, buildPlanChoices, formatNaira, isIncludedInPlan, planHighlights } from "./rules";
 
 const group: ServiceGroup = { id: "agents", name: "AI agents", unitSingular: "AI agent", unitPlural: "AI agents" };
 
@@ -62,6 +62,41 @@ describe("allowanceLabel", () => {
     ["agreed", "AI agents"],
   ] as const)("describes an allowance of %s", (allowance, label) => {
     expect(allowanceLabel(group, allowance)).toBe(label);
+  });
+});
+
+describe("planHighlights", () => {
+  it("lists a plan's allowances, then its website", () => {
+    const growth = plan({ website: "Landing page" });
+    const choices = buildPlanChoices(growth, [group], [service({})]);
+
+    expect(planHighlights(growth, choices)).toEqual(["1 AI agent", "Landing page"]);
+  });
+
+  describe("naming an example service", () => {
+    const pro = plan({ website: "Site", highlightExample: { serviceId: "call", label: "the call agent" } });
+
+    it("adds the example to the group that offers it", () => {
+      const choices = buildPlanChoices(pro, [group], [service({ id: "call" })]);
+
+      expect(planHighlights(pro, choices)).toEqual(["1 AI agent, such as the call agent", "Site"]);
+    });
+
+    it("drops the example when that service isn't on offer", () => {
+      const choices = buildPlanChoices(pro, [group], [service({ id: "other" }), service({ id: "call", available: false })]);
+
+      expect(planHighlights(pro, choices)).toEqual(["1 AI agent", "Site"]);
+    });
+  });
+
+  it("describes a quoted plan in words, not allowances", () => {
+    const custom = plan({ monthlyPrice: null, website: "Larger apps", tag: "Quoted after the audit" });
+
+    expect(planHighlights(custom, [])).toEqual([
+      "Everything agreed around your needs",
+      "Larger apps",
+      "Quoted after the audit",
+    ]);
   });
 });
 

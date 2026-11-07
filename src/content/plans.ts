@@ -37,6 +37,7 @@ export const PLANS: Plan[] = [
     ctaLabel: "Start with an audit",
     recommended: false,
     allowances: { everyday: 6, social: 4, agents: 2 },
+    highlightExample: { serviceId: "ai-call-agent", label: "the call agent" },
     website: "Small multi-page site",
     changes: "2 changes or new builds a month",
     support: "Priority WhatsApp and monthly review call",

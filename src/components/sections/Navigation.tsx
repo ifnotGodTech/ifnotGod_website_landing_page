@@ -70,7 +70,7 @@ export function Navigation() {
       <nav
         className={cn(
           "fixed inset-x-0 top-0 z-100 flex items-center justify-between px-5 py-4.5 transition-[background-color,border-color,padding] duration-300 sm:px-8 lg:px-16",
-          scrolled ? "border-b border-line bg-ink/86 py-3.5 backdrop-blur-md" : "border-b border-transparent"
+          scrolled ? "border-b border-line bg-ink/95 py-3.5 backdrop-blur-md" : "border-b border-transparent"
         )}
       >
         <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">

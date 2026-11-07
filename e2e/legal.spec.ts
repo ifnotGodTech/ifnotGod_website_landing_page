@@ -38,7 +38,7 @@ test("footer links return to home page sections from a legal page", async ({ pag
 });
 
 test("the contact form links to the Privacy Policy", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/audit");
 
   await expect(page.locator("form").getByRole("link", { name: "Privacy Policy" })).toHaveAttribute(
     "href",

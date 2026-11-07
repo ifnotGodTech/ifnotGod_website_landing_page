@@ -89,6 +89,12 @@ describe("what each plan can choose from", () => {
     expect(await agentIds("pro")).toContain("document-reader");
   });
 
+  it("still lists Pro's allowance plainly, for the full plan details", async () => {
+    const choices = await getPlanChoices("pro");
+
+    expect(choices.find((choice) => choice.group.id === "agents")?.label).toBe("2 AI agents");
+  });
+
   it("never allows more choices than a plan has services to choose from", async () => {
     for (const plan of await getPlans()) {
       const choices = await getPlanChoices(plan.id);

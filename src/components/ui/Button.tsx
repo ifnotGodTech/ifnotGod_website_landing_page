@@ -2,13 +2,15 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/shared/cn";
 
-type Variant = "primary" | "ghost" | "outline-orange";
+type Variant = "primary" | "ghost" | "outline-orange" | "outline-maroon" | "paper";
 type Size = "md" | "sm";
 
 const variantClasses: Record<Variant, string> = {
   primary: "bg-maroon text-paper hover:bg-maroon-bright",
   ghost: "border border-line-strong text-paper bg-transparent hover:border-orange hover:text-orange",
   "outline-orange": "border border-orange text-orange bg-transparent hover:bg-orange hover:text-ink",
+  "outline-maroon": "border border-maroon text-maroon bg-transparent hover:bg-maroon hover:text-paper",
+  paper: "bg-paper text-maroon hover:bg-white",
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -17,7 +19,7 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-semibold rounded-[3px] transition-[background-color,color,border-color,transform] duration-200 ease-out hover:-translate-y-px whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 font-semibold rounded-md transition-[background-color,color,border-color,transform] duration-200 ease-out hover:-translate-y-px whitespace-nowrap";
 
 type ButtonProps = ComponentPropsWithoutRef<"a"> & {
   href: string;

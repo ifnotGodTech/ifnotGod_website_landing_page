@@ -15,6 +15,8 @@ export type Plan = {
   ctaLabel: string;
   recommended: boolean;
   allowances: Record<ServiceGroupId, Allowance>;
+  /** A service to name as an example in the plan's summary, shown only while it's on offer. */
+  highlightExample?: { serviceId: string; label: string };
   website: string;
   changes: string;
   support: string;
