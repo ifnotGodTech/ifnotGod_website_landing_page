@@ -63,7 +63,7 @@ describe("company details", () => {
 });
 
 describe("Terms of Use", () => {
-  it.each(["Enquiries and services", "Acceptable use", "Availability and liability", "Governing law"])(
+  it.each(["Enquiries and services", "Plans and prices", "Acceptable use", "Availability and liability", "Governing law"])(
     "covers %s",
     (heading) => {
       render(<TermsPage />);
@@ -71,6 +71,14 @@ describe("Terms of Use", () => {
       expect(screen.getByRole("heading", { level: 2, name: heading })).toBeInTheDocument();
     }
   );
+
+  it("says booking an audit doesn't commit anyone to a plan, and the written agreement comes first", () => {
+    render(<TermsPage />);
+
+    expect(screen.getByText(/booking a free audit doesn't create a contract or commit you to a plan/)).toBeInTheDocument();
+    expect(screen.getByText(/that written agreement takes priority over anything on this website/)).toBeInTheDocument();
+    expect(screen.getByText(/we keep providing your service until the end of the month you've paid for/)).toBeInTheDocument();
+  });
 
   it("links to the Privacy Policy", () => {
     render(<TermsPage />);

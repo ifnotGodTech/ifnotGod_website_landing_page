@@ -5,7 +5,7 @@ import { AUDIT_PATH } from "@/shared/constants";
 
 export function PastWork() {
   return (
-    <section id="about" className="py-16 sm:py-24">
+    <section className="py-16 sm:py-24">
       <Container>
         <RevealOnScroll className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           <div className="flex flex-col gap-4">

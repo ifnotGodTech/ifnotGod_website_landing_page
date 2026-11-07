@@ -4,6 +4,7 @@ const SECTION_HEADINGS = [
   "You tell us the task that wastes your time. We handle the rest.",
   "Which of these sounds like your week?",
   "One monthly fee. We do the work.",
+  "Technology with a purpose.",
   "We build bigger things too.",
   "What's the task wasting your time?",
 ];

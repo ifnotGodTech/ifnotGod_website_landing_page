@@ -1,3 +1,4 @@
+import { About } from "@/components/sections/About";
 import { ClosingCta } from "@/components/sections/ClosingCta";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
@@ -20,6 +21,7 @@ export default function Home() {
       <HowItWorks />
       <YourWeek />
       <PlanSummary />
+      <About />
       <PastWork />
       <ClosingCta title="What's the task wasting your time?" detail="Twenty minutes, no cost, and no technical knowledge needed." />
     </>

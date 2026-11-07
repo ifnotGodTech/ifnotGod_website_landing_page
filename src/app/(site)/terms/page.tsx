@@ -39,7 +39,8 @@ export default function TermsPage() {
 
       <LegalSection title="Enquiries and services">
         <p>
-          Sending us an enquiry doesn&apos;t create a contract, and we aren&apos;t obliged to take on any project. Any
+          Sending us an enquiry or booking a free audit doesn&apos;t create a contract or commit you to a plan, and we
+          aren&apos;t obliged to take on any project. Any
           services we provide will be covered by a separate written agreement, which will take priority over these terms
           for those services.
         </p>
@@ -49,12 +50,28 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Plans and prices">
+        <p>
+          The plans, services and prices on this website show what each plan usually includes. Before we start work, we
+          confirm in writing the services, price and terms that apply to you, and that written agreement takes priority
+          over anything on this website.
+        </p>
+        <p>
+          Prices are in Nigerian naira. We may change our plans, prices and offers, and offers such as the founding client
+          offer are limited. The price agreed with you in writing is the one that applies to you.
+        </p>
+        <p>
+          Plans are paid monthly, with no minimum term. If you cancel, we keep providing your service until the end of
+          the month you&apos;ve paid for.
+        </p>
+      </LegalSection>
+
       <LegalSection title="Acceptable use">
         <p>You agree not to:</p>
         <ul>
           <li>use the website in a way that breaks any law, or for anything fraudulent or harmful;</li>
           <li>try to gain unauthorised access to the website or the systems behind it, or disrupt them;</li>
-          <li>send spam, malicious code or false information through the contact form; or</li>
+          <li>send spam, malicious code or false information through our forms; or</li>
           <li>copy content from the website in bulk using automated tools, without our written permission.</li>
         </ul>
       </LegalSection>

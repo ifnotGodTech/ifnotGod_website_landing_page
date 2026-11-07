@@ -100,6 +100,11 @@ body {
   }
 }
 
+/* Keeps a section reached by an in-page link, such as /#about, clear of the fixed navigation. */
+html {
+  scroll-padding-top: 6rem;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;

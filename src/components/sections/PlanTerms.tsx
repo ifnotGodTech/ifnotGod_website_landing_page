@@ -20,7 +20,7 @@ const QUESTIONS = [
   },
   {
     question: "Can I cancel?",
-    answer: "Yes. There's no minimum term, so you can stop at the end of any month.",
+    answer: "Yes. There's no minimum term. If you cancel, we keep providing your service until the end of the month you've paid for.",
   },
 ];
 

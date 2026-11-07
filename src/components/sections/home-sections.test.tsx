@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { AUDIT_PATH } from "@/shared/constants";
+import { About } from "./About";
 import { ClosingCta } from "./ClosingCta";
 import { Hero } from "./Hero";
 import { HowItWorks } from "./HowItWorks";
@@ -119,11 +120,26 @@ describe("Plan summary", () => {
   });
 });
 
-describe("Past work", () => {
+describe("About", () => {
   it("is the target of the About link", () => {
-    const { container } = render(<PastWork />);
+    const { container } = render(<About />);
 
     expect(container.querySelector("#about")).toBeInTheDocument();
+  });
+
+  it("tells the company's story", () => {
+    render(<About />);
+
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("Technology with a purpose.");
+    expect(screen.getByText(/created around a simple belief: technology should solve real problems/)).toBeInTheDocument();
+  });
+});
+
+describe("Past work", () => {
+  it("isn't mistaken for the About section", () => {
+    const { container } = render(<PastWork />);
+
+    expect(container.querySelector("#about")).not.toBeInTheDocument();
   });
 
   it("shows past builds and the founding client offer", () => {

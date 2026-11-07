@@ -51,6 +51,22 @@ for (const [name, width] of WIDTHS) {
   });
 }
 
+for (const [name, width] of WIDTHS) {
+  for (const section of ["about", "how-it-works"]) {
+    test(`a link to /#${section} lands with its heading clear of the navigation at ${name} width`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(`/#${section}`);
+
+      const heading = page.locator(`#${section} h2`).first();
+      await expect(heading).toBeInViewport();
+      const nav = await page.locator("nav").first().boundingBox();
+      const box = await heading.boundingBox();
+
+      expect(box!.y).toBeGreaterThanOrEqual(nav!.y + nav!.height);
+    });
+  }
+}
+
 test("legal pages drop their old separate header", async ({ page }) => {
   await page.goto("/terms");
 
@@ -99,6 +115,7 @@ test("the mobile menu opens, navigates and closes", async ({ page }) => {
   await expect(page).toHaveURL(/\/#about$/);
   await expect(page.getByRole("button", { name: "Open menu" })).toHaveAttribute("aria-expanded", "false");
   await expect(page.locator("#about")).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "Technology with a purpose." })).toBeInViewport();
   expect(await page.evaluate(() => document.body.style.overflow)).toBe("");
   expect(await page.locator("main").evaluate((main: HTMLElement) => main.inert)).toBe(false);
 });
