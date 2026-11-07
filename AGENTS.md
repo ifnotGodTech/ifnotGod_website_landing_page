@@ -1,16 +1,15 @@
 # AGENTS.md - IFNOTGOD TECH LTD
 
-Engineering standards for `WEB`, the IFNOTGOD TECH LTD public website: a multi-page, conversion-focused site whose main action is booking a free automation audit.
+Engineering standards for `WEB`, the IFNOTGOD TECH LTD website: a multi-page, conversion-focused public site whose main action is booking a free automation audit, and later the account area where clients subscribe and manage their subscription.
 
-`WEB` is one of three applications:
-- `WEB`: this Next.js public site. It has no login or user accounts, and its only server work is capturing and delivering leads.
-- `dashboard`: for managing plans, services, leads, clients and site text. It isn't built yet.
-- `backend`: the Django API, database and login. It's built last.
+This spec covers `WEB` only. The other projects are built separately, with their own specs:
+- `backend`: the Django APIs used by `WEB` and `dashboard`.
+- `dashboard`: a simple internal tool for our team to log in and manage users, subscriptions and the site's content.
 
-Until the backend exists, content stays in code.
+Until the backend reaches a feature, its data stays in code.
 
 ## Engineering Standards
-- Use TypeScript for all application code.
+- Use TypeScript for all code in this project.
 - Use Next.js App Router (`src/app`) for all route definitions.
 - Add public pages inside the `src/app/(site)` route group, so they share its navigation, footer and floating button. Keep each page composed from section components.
 - Validate incoming data at boundary layers (client form and server route handler).
@@ -51,26 +50,22 @@ Until the backend exists, content stays in code.
   - avoid unnecessary client components
   - use dynamic imports for heavy optional UI (e.g. animation-heavy sections)
 - Optimize images (hero visuals, icons) using Next.js image optimization patterns.
-- Monitor performance regressions in staging before release.
+- Check for performance regressions on the Vercel preview before release.
 
-## Delivery Priorities (MVP)
-1. Page scaffold, layout, navigation (with sticky behavior + mobile hamburger)
-2. Hero + Problem + Solutions sections
-3. AI section + How We Work + Why Us + Who We Help
-4. About + Conversion CTA section
-5. Contact form + submission handling (API route, validation, delivery of leads)
-6. SEO/meta tags, performance pass, full responsive QA
+## Delivery Approach
+- Work in vertical slices: the backend project writes the API, then this project implements it on the interface.
+- Until a slice reaches a feature, keep that feature's data behind one module in `src/lib`, so the API can replace it without page changes.
 
 ## Definition of Done (Feature Level)
 A feature/section is done when:
-- Functional acceptance criteria from the brief are met (copy, CTAs, layout intent)
+- The task's acceptance criteria are met, and it matches the approved design (copy, CTAs, layout intent)
 - Client and server validation checks are in place for any data entry
 - Error, empty, loading, and success states are handled where applicable
 - Tests are implemented and passing for affected modules
 - Documentation is updated if behavior or structure changes
 
 ## Change Management
-- Keep the `ContactSubmission` shape synchronized between client form, validator, and API route.
+- Keep the `ContactSubmission` shape synchronized between client form, validator, and API route. Once a backend API owns a feature, its published schema is the contract, and `src/types` must match it.
 - Any change to the contact/lead capture flow must consider what happens to in-flight or failed submissions (no silent data loss).
 - Update this `AGENTS.md` when section structure, naming, or module boundaries change.
 
@@ -87,13 +82,16 @@ A feature/section is done when:
 - Prefer server-side rendering for static content; keep client-side JS limited to interactivity and animation.
 
 ## Network Rules
-- Use a centralized HTTP/client abstraction for the contact submission call.
+- Use a centralized HTTP/client abstraction for the contact submission call and for all backend API calls.
+- The security policy in `next.config.ts` only allows browser requests to this site's own address. Calling another address from the browser means changing that policy on purpose, so prefer calling the backend from the server.
 - Handle errors with typed exceptions or normalized failures.
 - Normalize the contact form payload before it reaches the API route.
 - Do not let raw request/response shapes leak into presentation code.
 
 ## Caching and Data Ownership Rules
-- Static marketing content is source-of-truth in code (or CMS, if later added) — not duplicated in client state.
+- Site content is source-of-truth in code until the backend takes it over, then in the backend, where the team manages it through `dashboard`. Don't duplicate it in client state.
+- Public pages must stay fast and indexable once content comes from the API: serve cached pages that refresh when content is saved, and keep showing the last good version if the API is unavailable.
+- Pages read plans and services through `src/lib/catalogue`, never directly from content files.
 - Keep any filter/tab UI state (if introduced, e.g. solutions filtering) in local state; use URL state only if it needs to be shareable.
 - Derived UI state should be computed, not redundantly stored.
 
@@ -105,7 +103,7 @@ A feature/section is done when:
 - Keep state minimal.
 - Use local state for isolated interactions (form fields, nav toggle, accordion/tab UI).
 - Use immutable updates.
-- Avoid global state; this site does not need a client store.
+- Avoid global state. Public pages don't need a client store.
 
 ## Error Handling Rules
 - Use exceptions in the data/integration layer (e.g. email/lead delivery failures).
@@ -125,14 +123,14 @@ A feature/section is done when:
 - Use `Container` for page width and side padding.
 - Use reusable components and avoid duplicated UI code (cards, buttons, section headings).
 - UI files must remain focused on presentation and interaction wiring, not business/validation logic.
-- Standardize repeated UI patterns: buttons, inputs, cards, and the section-header pattern used throughout the page.
+- Standardize repeated UI patterns: buttons, inputs, cards, and the section-header pattern used throughout the site.
 - All sections must support adaptive layouts across mobile, tablet, and desktop.
 - Do not build fixed mobile-only layouts.
 - Use responsive primitives: CSS Grid, Flexbox, container constraints, and breakpoint composition.
 - Ensure text remains usable under zoom and larger text settings.
 - Before marking any phase complete, test key flows (nav, scroll, form submission) at mobile, tablet, and desktop widths.
 - Before marking any phase complete, confirm no overflow, clipped CTAs, or inaccessible controls.
-- Use motion sparingly and intentionally, per the brief: fade-in on scroll, slight card movement, smooth section transitions, gentle hero animation.
+- Use motion sparingly and intentionally: fade-in on scroll, slight card movement, smooth section transitions, gentle hero animation.
 - Avoid continuous or decorative motion.
 - Animations must never block interaction.
 - Respect reduced-motion preferences.
@@ -142,13 +140,13 @@ A feature/section is done when:
 ## Brand and CTA Color Rules
 - Brand palette:
   - Maroon/Burgundy `#6B1F2A` — primary brand color; primary CTA background, key accents.
-  - Black `#000000` — primary dark background/base for the site's dark aesthetic.
-  - White `#FFFFFF` — primary text on dark surfaces, CTA text on maroon.
+  - Ink `#0B0706` — primary dark background/base for the site's dark aesthetic.
+  - Paper `#F7F1EC` — primary text on dark surfaces, CTA text on maroon, and the background of light sections.
   - Orange `#E07B2A` — secondary accent; secondary/tertiary CTA background, highlights, icon accents, matches the logo's gradient warmth.
 - Light sections use the `surface-light` class, which also sets their heading and focus colours. On them, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
 - Define all colors as theme tokens (`src/app/globals.css`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
-- Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments per the brief's "avoid overusing neon colours" direction.
-- Keep button/CTA text contrast accessible (minimum WCAG AA): white on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.
+- Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments.
+- Keep button/CTA text contrast accessible (minimum WCAG AA): paper on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.
 
 ## UI File Size and Composition Rules
 - Avoid oversized UI files; split components when a file grows beyond a maintainable size.
@@ -166,6 +164,16 @@ A feature/section is done when:
 - Keep client-safe and server-only environment variables clearly separated.
 - Sensitive actions (sending the contact submission) must go through a trusted server-side route handler, not a direct client-side call to a third-party service.
 - Rate-limit or otherwise guard the contact endpoint against spam/abuse.
+
+## Client Account Rules
+Clients log in on this site to subscribe, and to see, renew, upgrade or cancel their subscription. Details are settled when each slice is built, but these rules apply from the start:
+- Keep account pages in their own route group, separate from `src/app/(site)`.
+- Don't read the session in the `(site)` layout or its pages. That would stop public pages being statically generated.
+- The backend enforces who can see and do what. Hiding something in the UI isn't security.
+- Keep session tokens out of JavaScript-readable storage.
+- Keep account pages out of search results and the sitemap, and never cache one client's page for another.
+- Never handle or store full card details in this project.
+- Update the Privacy Policy and Terms before login or payments go live. The Privacy Policy currently says the site sets no cookies.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
