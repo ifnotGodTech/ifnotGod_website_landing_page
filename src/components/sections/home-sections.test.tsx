@@ -133,6 +133,12 @@ describe("About", () => {
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("Technology with a purpose.");
     expect(screen.getByText(/created around a simple belief: technology should solve real problems/)).toBeInTheDocument();
   });
+
+  it("says where the company is and who it serves, in words a visitor and search engine can read", () => {
+    render(<About />);
+
+    expect(screen.getByText(/based in Lagos, and we work with businesses, creators and organisations across Nigeria/)).toBeInTheDocument();
+  });
 });
 
 describe("Past work", () => {

@@ -8,7 +8,15 @@ import { PlanSummary } from "@/components/sections/PlanSummary";
 import { YourWeek } from "@/components/sections/YourWeek";
 import { Container } from "@/components/ui/Container";
 import { SITE_URL } from "@/shared/constants";
+import { buildPageMetadata } from "@/shared/metadata";
 import { buildOrganizationJsonLd } from "@/shared/structuredData";
+
+export const metadata = buildPageMetadata({
+  title: "AI Automation for Businesses in Nigeria | IFNOTGOD TECH LTD",
+  description:
+    "IFNOTGOD TECH LTD builds and runs AI automations for businesses and creators in Nigeria. Follow up leads, answer customers and cut repetitive work, for one monthly fee.",
+  path: "/",
+});
 
 export default function Home() {
   return (

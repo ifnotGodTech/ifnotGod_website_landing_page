@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import { buildPageMetadata } from "@/shared/metadata";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { CONTACT_INFO, LEGAL_INFO } from "@/shared/constants";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Terms of Use | IFNOTGOD TECH LTD",
-  description: "The terms that apply when you use the IFNOTGOD TECH LTD website.",
-  alternates: { canonical: "/terms" },
-};
+  description:
+    "The terms that apply when you use the IFNOTGOD TECH LTD website.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

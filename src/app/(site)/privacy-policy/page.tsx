@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+import { buildPageMetadata } from "@/shared/metadata";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { CONTACT_INFO, LEGAL_INFO } from "@/shared/constants";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Privacy Policy | IFNOTGOD TECH LTD",
   description:
     "How IFNOTGOD TECH LTD collects, uses and protects personal data, and your rights under the Nigeria Data Protection Act 2023.",
-  alternates: { canonical: "/privacy-policy" },
-};
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
   const email = <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>;

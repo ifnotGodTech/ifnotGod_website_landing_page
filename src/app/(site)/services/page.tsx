@@ -1,20 +1,15 @@
-import type { Metadata } from "next";
+import { buildPageMetadata } from "@/shared/metadata";
 import { ServiceGroups } from "@/components/sections/ServiceGroups";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { AUDIT_PATH } from "@/shared/constants";
 
-const TITLE = "Services | IFNOTGOD TECH LTD";
-const DESCRIPTION =
-  "AI automations, social and content services, and AI agents for businesses and creators. Start with your problem and we'll match the service.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/services" },
-  openGraph: { title: TITLE, description: DESCRIPTION, type: "website", locale: "en_NG" },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
-};
+export const metadata = buildPageMetadata({
+  title: "Business Automation Services in Nigeria | IFNOTGOD TECH LTD",
+  description:
+    "AI automations, social and content services, and AI agents for businesses and creators. Start with your problem and we'll match the service.",
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (

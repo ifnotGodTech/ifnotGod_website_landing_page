@@ -21,6 +21,7 @@ export function About() {
               Our job is to understand the problem, find the opportunity, and build the technology that makes the
               difference.
             </p>
+            <p>We&apos;re based in Lagos, and we work with businesses, creators and organisations across Nigeria.</p>
           </div>
         </RevealOnScroll>
       </Container>

@@ -152,7 +152,7 @@ describe("plan terms and questions", () => {
 
 describe("pricing page metadata", () => {
   it("has its own title and canonical URL, and can be indexed", () => {
-    expect(metadata.title).toContain("Plans and Prices");
+    expect(String(metadata.title)).toContain("Plans and Prices");
     expect(metadata.alternates?.canonical).toBe("/pricing");
     expect(metadata.robots).toBeUndefined();
   });

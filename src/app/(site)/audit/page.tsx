@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { buildPageMetadata } from "@/shared/metadata";
 import { AuditForm } from "@/components/sections/AuditForm";
 import { Container } from "@/components/ui/Container";
 import { getPlans } from "@/lib/catalogue";
@@ -6,17 +6,12 @@ import { cn } from "@/shared/cn";
 import { CONTACT_INFO } from "@/shared/constants";
 import { parsePlanParam } from "@/shared/validators/contact";
 
-const TITLE = "Book a Free Automation Audit | IFNOTGOD TECH LTD";
-const DESCRIPTION =
-  "Tell us what's wasting your time. In a free 20-minute call, we find the three tasks costing you the most time and show how to fix them.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: "/audit" },
-  openGraph: { title: TITLE, description: DESCRIPTION, type: "website", locale: "en_NG" },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
-};
+export const metadata = buildPageMetadata({
+  title: "Book a Free Automation Audit | IFNOTGOD TECH LTD",
+  description:
+    "Tell us what's wasting your time. In a free 20-minute call, we find the three tasks costing you the most time and show how to fix them.",
+  path: "/audit",
+});
 
 const NEXT_STEPS = [
   "We contact you to arrange the call.",

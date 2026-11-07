@@ -8,9 +8,12 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+// "optional" keeps the fallback font if this one hasn't arrived almost at once, as on slow
+// mobile data. Swapping it in later rewraps long text and moves the page (layout shift).
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
   subsets: ["latin"],
+  display: "optional",
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -19,27 +22,12 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+// Site-wide defaults only. Each page sets its own title, description, canonical URL and
+// sharing details through buildPageMetadata, so nothing inherits another page's values.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
-  description:
-    "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-  openGraph: {
-    title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
-    description:
-      "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-    type: "website",
-    locale: "en_NG",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "IFNOTGOD TECH LTD | Every Problem Has a Tech Solution",
-    description:
-      "IFNOTGOD TECH LTD helps businesses and organisations solve real problems with custom software, AI, automation, integrations and digital solutions.",
-  },
-  alternates: {
-    canonical: "/",
-  },
+  title: "IFNOTGOD TECH LTD",
+  description: "IFNOTGOD TECH LTD builds and runs AI automations for businesses and creators in Nigeria. Follow up leads, answer customers and cut repetitive work, for one monthly fee.",
   robots: {
     index: true,
     follow: true,
