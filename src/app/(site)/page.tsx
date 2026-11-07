@@ -19,7 +19,7 @@ export default function Home() {
       <YourWeek />
       <PlanSummary />
       <PastWork />
-      <ClosingCta />
+      <ClosingCta title="What's the task wasting your time?" detail="Twenty minutes, no cost, and no technical knowledge needed." />
     </>
   );
 }

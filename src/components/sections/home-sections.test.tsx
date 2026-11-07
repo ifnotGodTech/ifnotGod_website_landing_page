@@ -137,7 +137,10 @@ describe("Past work", () => {
 
 describe("Closing call to action", () => {
   it("leads to the audit", () => {
-    render(<ClosingCta />);
+    render(<ClosingCta title="A title" detail="A detail" />);
+
+    expect(screen.getByRole("heading", { level: 2, name: "A title" })).toBeInTheDocument();
+    expect(screen.getByText("A detail")).toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: "Book a free automation audit" })).toHaveAttribute("href", AUDIT_PATH);
   });

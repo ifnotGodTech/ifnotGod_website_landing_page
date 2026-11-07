@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Plan, Service, ServiceGroup } from "@/types/catalogue";
-import { allowanceLabel, buildPlanChoices, formatNaira, isIncludedInPlan, planHighlights } from "./rules";
+import { allowanceLabel, buildPlanChoices, formatNaira, formatPlanPrice, isIncludedInPlan, planHighlights } from "./rules";
 
 const group: ServiceGroup = { id: "agents", name: "AI agents", unitSingular: "AI agent", unitPlural: "AI agents" };
 
@@ -32,6 +32,16 @@ const plan = (overrides: Partial<Plan>): Plan => ({
 describe("formatNaira", () => {
   it("shows the naira sign and thousands separators, with no kobo", () => {
     expect(formatNaira(150_000)).toBe("₦150,000");
+  });
+});
+
+describe("formatPlanPrice", () => {
+  it("shows a monthly price", () => {
+    expect(formatPlanPrice(plan({ monthlyPrice: 60_000 }))).toBe("₦60,000 / month");
+  });
+
+  it("invites a conversation when the price is quoted", () => {
+    expect(formatPlanPrice(plan({ monthlyPrice: null }))).toBe("Let's talk");
   });
 });
 

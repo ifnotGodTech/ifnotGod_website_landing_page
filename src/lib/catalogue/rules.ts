@@ -12,6 +12,10 @@ export function formatNaira(amount: number): string {
   return nairaFormat.format(amount);
 }
 
+export function formatPlanPrice(plan: Plan): string {
+  return plan.monthlyPrice === null ? "Let's talk" : `${formatNaira(plan.monthlyPrice)} / month`;
+}
+
 export function isIncludedInPlan(service: Service, planId: PlanId): boolean {
   return PLAN_ORDER.indexOf(planId) >= PLAN_ORDER.indexOf(service.includedFrom);
 }
