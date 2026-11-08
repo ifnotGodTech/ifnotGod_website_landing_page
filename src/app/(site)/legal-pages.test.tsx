@@ -77,9 +77,9 @@ describe("Terms of Use", () => {
 
     expect(screen.getByText(/booking a free audit doesn't create a contract or commit you to a plan/)).toBeInTheDocument();
     expect(screen.getByText(/that written agreement takes priority over anything on this website/)).toBeInTheDocument();
-    expect(screen.getByText(/renew each month until you cancel/)).toBeInTheDocument();
+    expect(screen.getByText(/renew automatically at the end of each paid period until you cancel, and we remind you before each renewal/)).toBeInTheDocument();
     expect(screen.getByText(/payments aren't refundable/)).toHaveTextContent("Nigerian consumer law");
-    expect(screen.getByText(/including your automations and website, keeps working until the end of the month you've paid for, and it won't renew after that/)).toHaveTextContent(
+    expect(screen.getByText(/including your automations and website, keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(
       "Then your automations stop, because they run on our systems. The website we build for you is yours to keep."
     );
   });

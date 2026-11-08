@@ -4,6 +4,7 @@ import { cn } from "@/shared/cn";
 const TERMS = [
   "One-time setup fee of ₦100,000, waived when you pay 6 months upfront.",
   "Pay month by month. There's no minimum term.",
+  "Your plan renews automatically, and we remind you before each renewal.",
   "Pay 12 months upfront and get 2 months free.",
   "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
   "We're alerted the moment anything fails, on every plan.",
@@ -21,7 +22,7 @@ const QUESTIONS = [
   {
     question: "Can I cancel?",
     answer:
-      "Yes. There's no minimum term. Your plan renews each month until you cancel. If you cancel, everything in your plan, including your automations and website, keeps working until the end of the month you've paid for, and it won't renew after that. Then your automations stop, because they run on our systems. Your website is yours to keep.",
+      "Yes. There's no minimum term. Your plan renews automatically until you cancel, and we remind you before each renewal. If you cancel, everything in your plan, including your automations and website, keeps working until the end of the period you've paid for, and it won't renew after that. Then your automations stop, because they run on our systems. Your website is yours to keep.",
   },
 ];
 

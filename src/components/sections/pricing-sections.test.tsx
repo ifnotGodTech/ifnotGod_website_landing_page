@@ -139,13 +139,14 @@ describe("plan terms and questions", () => {
     expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.")).toBeInTheDocument();
     expect(screen.getByText("Pay month by month. There's no minimum term.")).toBeInTheDocument();
     expect(screen.getByText(/2 months free/)).toBeInTheDocument();
+    expect(screen.getByText("Your plan renews automatically, and we remind you before each renewal.")).toBeInTheDocument();
     expect(screen.getByText(/billed at cost/)).toBeInTheDocument();
   });
 
   it("lets clients cancel at the end of any month, with no minimum term", () => {
     const { container } = render(<PlanTerms />);
 
-    expect(screen.getByText(/including your automations and website, keeps working until the end of the month you've paid for, and it won't renew after that/)).toHaveTextContent(
+    expect(screen.getByText(/including your automations and website, keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(
       "Then your automations stop, because they run on our systems. Your website is yours to keep."
     );
     expect(container).not.toHaveTextContent(/3 months|3-month/);
