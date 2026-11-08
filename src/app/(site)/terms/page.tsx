@@ -58,8 +58,8 @@ export default function TermsPage() {
           over anything on this website.
         </p>
         <p>
-          Prices are in Nigerian naira. We may change our plans, prices and offers, and offers such as the founding client
-          offer are limited. The price agreed with you in writing is the one that applies to you.
+          Prices are in Nigerian naira. We may change our plans, prices and offers, and offers such as promotions may be
+          limited. The price agreed with you in writing is the one that applies to you.
         </p>
         <p>
           Plans are paid monthly, with no minimum term, and renew each month until you cancel. If you cancel, everything

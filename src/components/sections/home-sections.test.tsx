@@ -108,10 +108,24 @@ describe("Plan summary", () => {
     ]);
   });
 
+  it("links each plan to its full details on the pricing page, with that plan selected", async () => {
+    await renderSummary();
+
+    for (const [name, id] of [["Starter", "starter"], ["Growth", "growth"], ["Pro", "pro"], ["Custom", "custom"]]) {
+      expect(within(card(name)).getByRole("link", { name: `See everything in ${name}` })).toHaveAttribute(
+        "href",
+        `/pricing?plan=${id}`
+      );
+    }
+  });
+
   it("sends each plan's button to the audit with that plan, and links to pricing", async () => {
     await renderSummary();
 
-    expect(within(card("Growth")).getByRole("link")).toHaveAttribute("href", `${AUDIT_PATH}?plan=growth`);
+    expect(within(card("Growth")).getByRole("link", { name: /Start with an audit/ })).toHaveAttribute(
+      "href",
+      `${AUDIT_PATH}?plan=growth`
+    );
     expect(within(card("Custom")).getByRole("link", { name: "Talk to us: Custom" })).toHaveAttribute(
       "href",
       `${AUDIT_PATH}?plan=custom`
@@ -148,12 +162,15 @@ describe("Past work", () => {
     expect(container.querySelector("#about")).not.toBeInTheDocument();
   });
 
-  it("shows past builds and the founding client offer", () => {
+  it("shows past builds, with no founding client offer", () => {
     render(<PastWork />);
 
     expect(screen.getByText(/TravelMate Global/)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Founding client offer" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Ask about a founding place" })).toHaveAttribute("href", AUDIT_PATH);
+    expect(screen.queryByText(/founding/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Talk to us about a larger build" })).toHaveAttribute(
+      "href",
+      `${AUDIT_PATH}?plan=custom`
+    );
   });
 });
 

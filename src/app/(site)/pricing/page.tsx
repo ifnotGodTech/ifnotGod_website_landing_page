@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { getPlans } from "@/lib/catalogue";
 import { SITE_URL } from "@/shared/constants";
 import { buildPlanOffersJsonLd } from "@/shared/structuredData";
+import { parsePlanParam } from "@/shared/validators/contact";
 
 export const metadata = buildPageMetadata({
   title: "Automation Plans and Prices | IFNOTGOD TECH LTD",
@@ -14,8 +15,10 @@ export const metadata = buildPageMetadata({
   path: "/pricing",
 });
 
-export default async function PricingPage() {
-  const plans = await getPlans();
+// Reads ?plan= on the server, so a link such as "See everything in Pro" opens with that plan
+// selected, with no flash of another plan and nothing to do without JavaScript.
+export default async function PricingPage({ searchParams }: PageProps<"/pricing">) {
+  const [plans, { plan }] = await Promise.all([getPlans(), searchParams]);
 
   return (
     <>
@@ -28,7 +31,7 @@ export default async function PricingPage() {
           Pick a plan to see exactly what you get. The free audit shows which one suits your business or brand.
         </p>
       </Container>
-      <PricingPlans />
+      <PricingPlans selectedPlanId={parsePlanParam(plan)} />
       <PlanTerms />
       <ClosingCta title="Not sure which plan? The audit will tell you." />
     </>

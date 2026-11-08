@@ -30,6 +30,13 @@ describe("plan selector", () => {
     expect(panel("starter")).toHaveClass("hidden");
   });
 
+  it.each(["starter", "pro", "custom"] as const)("opens with %s selected when the link asks for it", async (id) => {
+    render(await PricingPlans({ selectedPlanId: id }));
+
+    expect(panel(id)).toHaveClass("block");
+    expect(panel("growth")).toHaveClass("hidden");
+  });
+
   it("shows only the chosen plan after clicking", async () => {
     const user = userEvent.setup();
     await renderPlans();

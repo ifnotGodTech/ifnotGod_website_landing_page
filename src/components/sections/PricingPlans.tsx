@@ -3,12 +3,12 @@ import { Container } from "@/components/ui/Container";
 import { getPlanChoices, getPlans } from "@/lib/catalogue";
 import { formatPlanPrice } from "@/lib/catalogue/rules";
 import { AUDIT_PATH } from "@/shared/constants";
-import type { Plan, PlanChoice } from "@/types/catalogue";
+import type { Plan, PlanChoice, PlanId } from "@/types/catalogue";
 import { PlanSelector } from "./PlanSelector";
 
 const SHOW_ALL_PANELS = "[data-plan-panel]{display:block!important}";
 
-export async function PricingPlans() {
+export async function PricingPlans({ selectedPlanId }: { selectedPlanId?: PlanId } = {}) {
   const plans = await getPlans();
   const options = await Promise.all(
     plans.map(async (plan) => ({
@@ -19,7 +19,8 @@ export async function PricingPlans() {
       panel: <PlanPanel plan={plan} choices={await getPlanChoices(plan.id)} />,
     }))
   );
-  const initialPlan = plans.find((plan) => plan.recommended) ?? plans[0];
+  const initialPlan =
+    plans.find((plan) => plan.id === selectedPlanId) ?? plans.find((plan) => plan.recommended) ?? plans[0];
 
   return (
     <section aria-label="Plans" className="surface-light">

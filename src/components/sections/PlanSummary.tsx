@@ -75,6 +75,12 @@ function PlanCard({ plan, highlights }: { plan: Plan; highlights: string[] }) {
           <li key={highlight}>{highlight}</li>
         ))}
       </ul>
+      <Link
+        href={`/pricing?plan=${plan.id}`}
+        className={cn("w-fit font-semibold underline", plan.recommended || quoted ? "hover:no-underline" : "text-maroon hover:text-maroon-bright")}
+      >
+        See everything in {plan.name}
+      </Link>
       <Button
         href={`${AUDIT_PATH}?plan=${plan.id}`}
         variant={plan.recommended ? "paper" : quoted ? "ghost" : "outline-maroon"}
