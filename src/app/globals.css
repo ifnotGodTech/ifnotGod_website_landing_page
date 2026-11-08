@@ -41,6 +41,16 @@
   color: var(--color-paper);
 }
 
+/* A dark band inside a light page, such as the top of an account page. */
+.surface-dark {
+  --color-heading: var(--color-paper);
+  --color-focus: var(--color-orange);
+
+  background: var(--color-ink);
+  color: var(--color-paper);
+  color-scheme: dark;
+}
+
 /* A dark card inside a light section. */
 .surface-ink {
   --color-heading: var(--color-paper);

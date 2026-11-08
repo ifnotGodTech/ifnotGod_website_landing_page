@@ -48,7 +48,8 @@ test("the main buttons reach the audit and pricing pages", async ({ page }) => {
   await page.goto("/");
 
   await page.locator("[data-page-hero]").getByRole("link", { name: "See plans and prices" }).click();
-  await expect(page).toHaveURL(/\/pricing$/);
+  // Pricing is built on request, which is slower when every test runner shares one machine.
+  await expect(page).toHaveURL(/\/pricing$/, { timeout: 15_000 });
 
   await page.goto("/");
   await page.locator("main").getByRole("link", { name: "Start with an audit: Growth" }).click();

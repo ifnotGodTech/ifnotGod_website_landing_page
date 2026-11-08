@@ -25,13 +25,16 @@ Until the backend reaches a feature, its data stays in code.
 - `src/app` (App Router: root layout, `api/contact` route handler, metadata files, global styles and theme tokens in `globals.css`)
 - `src/app/(site)` (public pages and their shared layout, which owns `<main>`, so pages must not render their own)
 - `src/components/sections` (Navigation, Footer, the audit page's AuditForm, LegacyContactRedirect for old `/#contact` links, the home page's Hero, HowItWorks, YourWeek, PlanSummary, About and PastWork, the pricing page's PricingPlans, PlanSelector and PlanTerms, the services page's ServiceGroups, and the shared ClosingCta)
-- `src/components/ui` (shared reusable UI primitives: Button, Container, Eyebrow, RevealOnScroll, FloatingCta)
+- `src/components/ui` (shared reusable UI primitives: Button, Container, Eyebrow, FormField, RevealOnScroll, FloatingCta)
 - `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
 - `src/lib` (contact form client, email/notification client, config)
 - `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
+- `src/lib/accounts` (the only route to the account backend: its interface, the stand-in, the login session cookie, and the form actions)
+- `src/app/(account)` (signed-in pages, with their own layout; sign-in pages live in `(site)` and read no session in its layout)
+- `src/components/account` (sign-in forms and account screens)
 - `src/shared` (constants, validators, shared helpers)
-- `src/types` (`ContactSubmission`, plan and service types, and other shared contracts)
+- `src/types` (`ContactSubmission`, plan and service types, account types that form the contract with the backend, and other shared contracts)
 - `e2e` (Playwright browser tests)
 
 ## Next.js Architecture Rules
@@ -56,6 +59,7 @@ Until the backend reaches a feature, its data stays in code.
 
 ## Delivery Approach
 - Work in vertical slices: the backend project writes the API, then this project implements it on the interface.
+- Exception: account screens are built before their API, against `src/lib/accounts` with a stand-in backend, behind the `NEXT_PUBLIC_ACCOUNTS_ENABLED` switch. The stand-in refuses to run in production, and the switch stays off there until the real API is connected.
 - Until a slice reaches a feature, keep that feature's data behind one module in `src/lib`, so the API can replace it without page changes.
 
 ## Definition of Done (Feature Level)
@@ -145,7 +149,7 @@ A feature/section is done when:
   - Ink `#0B0706` — primary dark background/base for the site's dark aesthetic.
   - Paper `#F7F1EC` — primary text on dark surfaces, CTA text on maroon, and the background of light sections.
   - Orange `#E07B2A` — secondary accent; secondary/tertiary CTA background, highlights, icon accents, matches the logo's gradient warmth.
-- Sections and cards with their own background use `surface-light`, `surface-maroon` or `surface-ink`, which also set their heading and focus colours. On light surfaces, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
+- Sections and cards with their own background use `surface-light`, `surface-dark`, `surface-maroon` or `surface-ink`, which also set their heading and focus colours. On light surfaces, use `on-light`, `on-light-dim` or maroon for text: orange and `mute` fail contrast there.
 - Define all colors as theme tokens (`src/app/globals.css`), not hardcoded hex in components; derive hover/active shades from the tokens (e.g. `color-mix` or a small shade scale) rather than inventing new one-off hex values per component.
 - Do not overuse orange as decorative/neon — reserve it for CTAs, highlights, and small accent moments.
 - Keep button/CTA text contrast accessible (minimum WCAG AA): paper on maroon passes for normal-size text. White on orange is only about 3:1 and fails, so use dark ink text on orange. Verify any smaller/lighter text combinations before shipping.

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AUDIT_PATH, CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
+import { ACCOUNTS_ENABLED } from "@/shared/features";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
 
@@ -100,6 +101,14 @@ export function Navigation() {
               {link.label}
             </Link>
           ))}
+          {ACCOUNTS_ENABLED && (
+            <Link
+              href="/login"
+              className="font-mono text-[0.74rem] uppercase tracking-[0.08em] text-paper-dim transition-colors hover:text-orange"
+            >
+              Log in
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-3.5">
@@ -146,6 +155,11 @@ export function Navigation() {
             {link.label}
           </Link>
         ))}
+        {ACCOUNTS_ENABLED && (
+          <Link href="/login" onClick={() => setOpen(false)} className="font-display text-[1.6rem]">
+            Log in
+          </Link>
+        )}
         <div className="mt-3 flex flex-wrap gap-3">
           <Button href={AUDIT_PATH} onClick={() => setOpen(false)}>
             Book a free audit

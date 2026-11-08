@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 const PORT = 3100;
 
-// Run `npm run build` first. These tests check the production server.
+// Run `npm run build:e2e` first, which builds with accounts switched on. These tests check the production server.
 export default defineConfig({
   testDir: "./e2e",
   use: { baseURL: `http://localhost:${PORT}` },

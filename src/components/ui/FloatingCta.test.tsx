@@ -90,7 +90,7 @@ describe("FloatingCta", () => {
     expect(wrapper()).toHaveClass("visible");
   });
 
-  it.each([AUDIT_PATH, "/privacy-policy", "/terms"])("stays hidden on %s, even when nothing is in view", (pathname) => {
+  it.each([AUDIT_PATH, "/privacy-policy", "/terms", "/login", "/signup", "/reset-password"])("stays hidden on %s, even when nothing is in view", (pathname) => {
     navigation.pathname = pathname;
     render(<FloatingCta />);
 

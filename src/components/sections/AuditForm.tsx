@@ -2,8 +2,8 @@
 
 import { useState, type SubmitEvent } from "react";
 import Link from "next/link";
+import { FormField as Field } from "@/components/ui/FormField";
 import { submitContactForm } from "@/lib/contact/client";
-import { cn } from "@/shared/cn";
 import { HONEYPOT_FIELD } from "@/shared/constants";
 import { parseContactSubmission, type ContactFieldErrors } from "@/shared/validators/contact";
 import type { PlanId } from "@/types/catalogue";
@@ -140,64 +140,5 @@ export function AuditForm({ plans, defaultPlan }: AuditFormProps) {
         .
       </p>
     </form>
-  );
-}
-
-type ControlProps = {
-  id: string;
-  name: string;
-  required?: boolean;
-  autoComplete?: string;
-  "aria-invalid"?: true;
-  "aria-describedby"?: string;
-  className: string;
-};
-
-type FieldProps = {
-  id: string;
-  label: string;
-  type?: string;
-  autoComplete?: string;
-  required?: boolean;
-  textarea?: boolean;
-  error?: string;
-  children?: (props: ControlProps) => React.ReactNode;
-};
-
-function Field({ id, label, type = "text", autoComplete, required, textarea, error, children }: FieldProps) {
-  const errorId = `${id}-error`;
-  // text-base (16px) stops iOS Safari zooming in when a field is focused.
-  // The scroll margin keeps a focused field clear of the fixed nav.
-  const props: ControlProps = {
-    id,
-    name: id,
-    required,
-    autoComplete,
-    "aria-invalid": error ? true : undefined,
-    "aria-describedby": error ? errorId : undefined,
-    className: cn(
-      "min-h-11.5 w-full scroll-mt-28 rounded-md border bg-white px-3 py-2.5 font-body text-base text-on-light",
-      error ? "border-2 border-maroon" : "border-on-light-dim/70"
-    ),
-  };
-
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[0.94rem] font-semibold">
-        {label}
-      </label>
-      {children ? (
-        children(props)
-      ) : textarea ? (
-        <textarea {...props} rows={5} className={cn(props.className, "resize-y")} />
-      ) : (
-        <input {...props} type={type} />
-      )}
-      {error && (
-        <span id={errorId} className="text-[0.88rem] font-semibold text-maroon">
-          {error}
-        </span>
-      )}
-    </div>
   );
 }

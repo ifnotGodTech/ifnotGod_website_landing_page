@@ -19,7 +19,13 @@ const contentSecurityPolicy = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
+    // Pages with a visitor's own details must never be stored and shown to someone else.
+    const privatePage = [{ key: "Cache-Control", value: "private, no-store" }];
+
     return [
+      { source: "/account", headers: privatePage },
+      { source: "/account/:path*", headers: privatePage },
+      { source: "/login/:path*", headers: privatePage },
       {
         source: "/:path*",
         headers: [

@@ -10,8 +10,9 @@ import { AUDIT_PATH, CONTACT_INFO } from "@/shared/constants";
 // A page opts its hero in with the data-page-hero attribute.
 const HIDE_OVER = "[data-page-hero], footer";
 
-// The audit page is the button's destination, and on legal pages it would cover text being read.
-const HIDDEN_ON: readonly string[] = [AUDIT_PATH, "/privacy-policy", "/terms"];
+// The audit page is the button's destination. On legal pages it would cover text being read,
+// and on sign-in pages it would distract from the form.
+const HIDDEN_ON: readonly string[] = [AUDIT_PATH, "/privacy-policy", "/terms", "/login", "/signup", "/reset-password"];
 
 export function FloatingCta() {
   const [clearOfCtas, setClearOfCtas] = useState(false);

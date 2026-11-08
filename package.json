@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "build:e2e": "NEXT_PUBLIC_ACCOUNTS_ENABLED=true next build",
     "test:e2e": "playwright test"
   },
   "dependencies": {

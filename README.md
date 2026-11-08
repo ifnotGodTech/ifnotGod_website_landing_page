@@ -21,6 +21,8 @@ Open <http://localhost:3000>.
 | `BREVO_SENDER_EMAIL` | Recommended | Sender address, verified in Brevo. A sender on your own authenticated domain is the most reliable. Defaults to `no-reply@ifnotgod.com`. |
 | `BREVO_SENDER_NAME` | Optional | Sender name. |
 | `NEXT_PUBLIC_SITE_URL` | Recommended | The site's main address, used for the canonical URL, sitemap, sharing image and structured data. Defaults to `https://www.ifnotgod.com`. Takes effect at build time, so redeploy after changing it. |
+| `NEXT_PUBLIC_ACCOUNTS_ENABLED` | Previews only | `true` shows log in, sign up and the account area. Keep it off in production until the real account backend is connected, because accounts use a stand-in until then. Takes effect at build time. |
+| `ACCOUNTS_SESSION_SECRET` | Where accounts are on | A long random string that signs the login cookie. Local development uses a built-in one. |
 
 Running the site locally with a real `BREVO_API_KEY` means form submissions send real email.
 
@@ -33,7 +35,8 @@ Running the site locally with a real `BREVO_API_KEY` means form submissions send
 | `npm start` | Runs the production build |
 | `npm run lint` | Runs ESLint |
 | `npm test` | Runs unit and component tests with Vitest |
-| `npm run test:e2e` | Runs browser tests against the production build. Run `npm run build` first. The first time, also run `npx playwright install chromium`. |
+| `npm run build:e2e` | Builds with accounts switched on, for the browser tests |
+| `npm run test:e2e` | Runs browser tests against the production build. Run `npm run build:e2e` first. The first time, also run `npx playwright install chromium`. |
 
 ## Where things live
 
