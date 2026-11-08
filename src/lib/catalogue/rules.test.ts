@@ -8,8 +8,8 @@ import {
   groupAllowanceSummary,
   isIncludedInPlan,
   listedServices,
-  lowestPlanLabel,
   planHighlights,
+  servicePlansLabel,
 } from "./rules";
 
 const group: ServiceGroup = { id: "agents", name: "AI agents", unitSingular: "AI agent", unitPlural: "AI agents" };
@@ -19,7 +19,7 @@ const service = (overrides: Partial<Service>): Service => ({
   group: "agents",
   name: "Service",
   problem: "A problem.",
-  includedFrom: "starter",
+  plans: ["starter", "growth", "pro"],
   available: true,
   ...overrides,
 });
@@ -33,10 +33,9 @@ const plan = (overrides: Partial<Plan>): Plan => ({
   ctaLabel: "",
   recommended: false,
   allowances: { everyday: 1, social: 1, agents: 1 },
-  website: "",
   changes: "",
+  lines: [],
   monthlyChanges: 1,
-  support: "",
   ...overrides,
 });
 
@@ -62,8 +61,8 @@ describe("isIncludedInPlan", () => {
     ["growth", true],
     ["pro", true],
     ["custom", true],
-  ] as const)("a service from Starter is on %s", (planId, expected) => {
-    expect(isIncludedInPlan(service({ includedFrom: "starter" }), planId)).toBe(expected);
+  ] as const)("a service in every plan is on %s", (planId, expected) => {
+    expect(isIncludedInPlan(service({ plans: ["starter", "growth", "pro"] }), planId)).toBe(expected);
   });
 
   it.each([
@@ -71,8 +70,18 @@ describe("isIncludedInPlan", () => {
     ["growth", false],
     ["pro", true],
     ["custom", true],
-  ] as const)("a service from Pro on %s: %s", (planId, expected) => {
-    expect(isIncludedInPlan(service({ includedFrom: "pro" }), planId)).toBe(expected);
+  ] as const)("a service only in Pro on %s: %s", (planId, expected) => {
+    expect(isIncludedInPlan(service({ plans: ["pro"] }), planId)).toBe(expected);
+  });
+
+  it("follows the ticked plans, even when a higher plan is left out", () => {
+    const starterOnly = service({ plans: ["starter"] });
+
+    expect([isIncludedInPlan(starterOnly, "starter"), isIncludedInPlan(starterOnly, "pro"), isIncludedInPlan(starterOnly, "custom")]).toEqual([
+      true,
+      false,
+      true,
+    ]);
   });
 });
 
@@ -94,15 +103,24 @@ describe("listedServices", () => {
   });
 });
 
-describe("lowestPlanLabel", () => {
-  it("names the lowest plan that includes the service", () => {
-    expect(lowestPlanLabel(service({ includedFrom: "growth" }), [plan({ id: "growth", name: "Growth" })])).toBe(
-      "From Growth"
-    );
-  });
+describe("servicePlansLabel", () => {
+  const plans = [
+    plan({ id: "starter", name: "Starter" }),
+    plan({ id: "growth", name: "Growth" }),
+    plan({ id: "pro", name: "Pro" }),
+    plan({ id: "custom", name: "Custom", monthlyPrice: null }),
+  ];
 
-  it("stays empty when the plan isn't on offer", () => {
-    expect(lowestPlanLabel(service({ includedFrom: "pro" }), [plan({ id: "growth" })])).toBe("");
+  it.each([
+    [["starter", "growth", "pro"], "From Starter"],
+    [["growth", "pro"], "From Growth"],
+    [["pro"], "From Pro"],
+    [["starter"], "Starter only"],
+    [["starter", "pro"], "In Starter and Pro"],
+    [["starter", "growth"], "In Starter and Growth"],
+    [[], ""],
+  ] as const)("describes a service in %j as %j", (ids, label) => {
+    expect(servicePlansLabel(service({ plans: [...ids] }), plans)).toBe(label);
   });
 });
 
@@ -118,15 +136,21 @@ describe("groupAllowanceSummary", () => {
 });
 
 describe("planHighlights", () => {
-  it("lists a plan's allowances, then its website", () => {
-    const growth = plan({ website: "Landing page" });
+  it("lists a plan's allowances, then its website, its first line", () => {
+    const growth = plan({ lines: ["Landing page", "Priority WhatsApp support"] });
     const choices = buildPlanChoices(growth, [group], [service({})]);
 
     expect(planHighlights(growth, choices)).toEqual(["1 AI agent", "Landing page"]);
   });
 
+  it("leaves the website out when a plan lists nothing else", () => {
+    const growth = plan({ lines: [] });
+
+    expect(planHighlights(growth, buildPlanChoices(growth, [group], [service({})]))).toEqual(["1 AI agent"]);
+  });
+
   describe("naming an example service", () => {
-    const pro = plan({ website: "Site", highlightExample: { serviceId: "call", label: "the call agent" } });
+    const pro = plan({ lines: ["Site"], highlightExample: { serviceId: "call", label: "the call agent" } });
 
     it("adds the example to the group that offers it", () => {
       const choices = buildPlanChoices(pro, [group], [service({ id: "call" })]);
@@ -142,7 +166,7 @@ describe("planHighlights", () => {
   });
 
   it("describes a quoted plan in words, not allowances", () => {
-    const custom = plan({ monthlyPrice: null, website: "Larger apps", tag: "Quoted after the audit" });
+    const custom = plan({ monthlyPrice: null, lines: ["Larger apps"], tag: "Quoted after the audit" });
 
     expect(planHighlights(custom, [])).toEqual([
       "Everything agreed around your needs",
@@ -154,8 +178,8 @@ describe("planHighlights", () => {
 
 describe("buildPlanChoices", () => {
   it("offers only services the plan includes", () => {
-    const included = service({ id: "included", includedFrom: "growth" });
-    const higher = service({ id: "higher", includedFrom: "pro" });
+    const included = service({ id: "included", plans: ["growth", "pro"] });
+    const higher = service({ id: "higher", plans: ["pro"] });
 
     const [choice] = buildPlanChoices(plan({}), [group], [included, higher]);
 

@@ -24,7 +24,8 @@ const EXAMPLE_RUN = [
   },
 ];
 
-export function Hero() {
+/** The headline and introduction come from the site text the team edits on the dashboard. */
+export function Hero({ headline, introduction }: { headline: string; introduction: string }) {
   return (
     <section
       data-page-hero
@@ -32,11 +33,10 @@ export function Hero() {
     >
       <div className="flex flex-col items-start gap-6.5">
         <h1 className="hero-rise text-[clamp(2.6rem,5.4vw,4.5rem)] font-extrabold leading-[1.02] tracking-[-0.035em]">
-          Your business, answering back while you sleep.
+          {headline}
         </h1>
         <p style={{ animationDelay: "0.1s" }} className="hero-rise max-w-[34em] text-[clamp(1.05rem,1.5vw,1.25rem)] text-paper-dim">
-          We build and run AI automations that follow up leads, answer customers and handle repetitive work. You
-          pay one monthly fee, and you don&apos;t need to touch any technology.
+          {introduction}
         </p>
         <div style={{ animationDelay: "0.2s" }} className="hero-rise flex flex-wrap gap-3.5">
           <Button href={AUDIT_PATH}>Book a free automation audit</Button>

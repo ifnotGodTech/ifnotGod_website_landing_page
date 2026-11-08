@@ -11,21 +11,21 @@ import { YourWeek } from "./YourWeek";
 
 describe("Hero", () => {
   it("says what the company does, and repeats its philosophy", () => {
-    render(<Hero />);
+    render(<Hero headline="Your business, answering back while you sleep." introduction="We build and run AI automations." />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("answering back while you sleep");
     expect(screen.getByText(/Every problem has a tech solution/)).toBeInTheDocument();
   });
 
   it("leads to the audit and to pricing", () => {
-    render(<Hero />);
+    render(<Hero headline="Your business, answering back while you sleep." introduction="We build and run AI automations." />);
 
     expect(screen.getByRole("link", { name: "Book a free automation audit" })).toHaveAttribute("href", AUDIT_PATH);
     expect(screen.getByRole("link", { name: "See plans and prices" })).toHaveAttribute("href", "/pricing");
   });
 
   it("walks through the example from enquiry to sale", () => {
-    render(<Hero />);
+    render(<Hero headline="Your business, answering back while you sleep." introduction="We build and run AI automations." />);
 
     const steps = within(screen.getByRole("figure")).getAllByRole("listitem");
 
@@ -35,7 +35,7 @@ describe("Hero", () => {
   });
 
   it("marks itself so the floating button stays off it", () => {
-    const { container } = render(<Hero />);
+    const { container } = render(<Hero headline="Your business, answering back while you sleep." introduction="We build and run AI automations." />);
 
     expect(container.querySelector("[data-page-hero]")).toBeInTheDocument();
   });

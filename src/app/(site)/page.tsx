@@ -7,6 +7,7 @@ import { PastWork } from "@/components/sections/PastWork";
 import { PlanSummary } from "@/components/sections/PlanSummary";
 import { YourWeek } from "@/components/sections/YourWeek";
 import { Container } from "@/components/ui/Container";
+import { getSiteText } from "@/lib/catalogue";
 import { SITE_URL } from "@/shared/constants";
 import { buildPageMetadata } from "@/shared/metadata";
 import { buildOrganizationJsonLd } from "@/shared/structuredData";
@@ -18,20 +19,22 @@ export const metadata = buildPageMetadata({
   path: "/",
 });
 
-export default function Home() {
+export default async function Home() {
+  const text = await getSiteText();
+
   return (
     <>
       <LegacyContactRedirect />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: buildOrganizationJsonLd(SITE_URL) }} />
       <Container>
-        <Hero />
+        <Hero headline={text.headline} introduction={text.introduction} />
       </Container>
       <HowItWorks />
       <YourWeek />
       <PlanSummary />
       <About />
       <PastWork />
-      <ClosingCta title="What's the task wasting your time?" detail="Twenty minutes, no cost, and no technical knowledge needed." />
+      <ClosingCta title={text.closingCallToAction} detail="Twenty minutes, no cost, and no technical knowledge needed." />
     </>
   );
 }

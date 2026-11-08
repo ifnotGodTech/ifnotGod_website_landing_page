@@ -7,7 +7,7 @@ const service = (id: string, catchAll = false) => ({
   group: "everyday" as const,
   name: id,
   problem: "",
-  includedFrom: "starter" as const,
+  plans: ["starter" as const],
   available: true,
   catchAll,
 });

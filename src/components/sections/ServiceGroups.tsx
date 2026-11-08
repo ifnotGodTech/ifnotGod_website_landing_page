@@ -1,6 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import { getPlans, getServiceGroups } from "@/lib/catalogue";
-import { groupAllowanceSummary, listedServices, lowestPlanLabel } from "@/lib/catalogue/rules";
+import { groupAllowanceSummary, listedServices, servicePlansLabel } from "@/lib/catalogue/rules";
 import type { Plan, Service, ServiceGroupWithServices } from "@/types/catalogue";
 
 const AGENT_NOTE = "Every agent hands over to a person when it should, and AI usage is billed at cost.";
@@ -55,7 +55,7 @@ function StandardGroup({ group, plans }: GroupProps) {
               <p className="grow text-paper-dim">
                 <ProblemLine service={service} />
               </p>
-              <span className="pt-1 text-[0.88rem] text-paper-dim">{lowestPlanLabel(service, plans)}</span>
+              <span className="pt-1 text-[0.88rem] text-paper-dim">{servicePlansLabel(service, plans)}</span>
             </li>
           ))}
         </ul>
@@ -80,7 +80,7 @@ function AgentGroup({ group, plans }: GroupProps) {
                 <p className="grow">
                   <ProblemLine service={service} />
                 </p>
-                <span className="text-[0.88rem]">{lowestPlanLabel(service, plans)}</span>
+                <span className="text-[0.88rem]">{servicePlansLabel(service, plans)}</span>
               </li>
             ))}
           </ul>

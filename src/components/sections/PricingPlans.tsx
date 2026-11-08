@@ -36,11 +36,14 @@ export async function PricingPlans({ selectedPlanId }: { selectedPlanId?: PlanId
 }
 
 function PlanPanel({ plan, choices }: { plan: Plan; choices: PlanChoice[] }) {
+  // A plan's first line is the website we build. Labelling it keeps clear that the hosting below
+  // is for automations, not websites. Then changes, the plan's other lines, and running it.
+  const [website, ...otherLines] = plan.lines;
   const extras = [
-    { label: "Website we build", value: plan.website },
-    { label: "Changes", value: plan.changes },
-    { label: "Support", value: plan.support },
-    { label: "Running it", value: "Hosting and monitoring for your automations, and a monthly report" },
+    ...(website ? [`Website we build: ${website}`] : []),
+    plan.changes,
+    ...otherLines,
+    "Hosting and monitoring for your automations, and a monthly report",
   ];
 
   return (
@@ -87,14 +90,11 @@ function PlanPanel({ plan, choices }: { plan: Plan; choices: PlanChoice[] }) {
 
       <div className="flex flex-col gap-3 border-t border-line-light pt-6">
         <h3 className="text-[1.25rem] font-extrabold">Also included</h3>
-        <dl className="grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="grid list-disc grid-cols-1 gap-x-10 gap-y-2 pl-5 sm:grid-cols-2">
           {extras.map((extra) => (
-            <div key={extra.label}>
-              <dt className="font-semibold">{extra.label}</dt>
-              <dd className="text-on-light-dim">{extra.value}</dd>
-            </div>
+            <li key={extra}>{extra}</li>
           ))}
-        </dl>
+        </ul>
       </div>
     </div>
   );

@@ -1,31 +1,35 @@
-import { BILLING_TERMS, PLANS } from "@/content/plans";
-import { SERVICE_GROUPS, SERVICES } from "@/content/services";
-import type { BillingTerms, Plan, PlanChoice, PlanId, ServiceGroupWithServices } from "@/types/catalogue";
+import type { BillingTerms, Plan, PlanChoice, PlanId, ServiceGroupWithServices, SiteText } from "@/types/catalogue";
 import { buildPlanChoices } from "./rules";
+import { loadCatalogue, loadSiteText } from "./source";
 
-// The only module that reads the content files. These functions are async so the
-// backend API can replace the content files later without changing any page.
+// The only way pages read plans, services and site text. Where they come from is decided in
+// ./source, so pages never change when the source does.
 
 export async function getPlans(): Promise<Plan[]> {
-  return PLANS;
+  return (await loadCatalogue()).plans;
 }
 
 export async function getPlan(id: PlanId): Promise<Plan | undefined> {
-  return PLANS.find((plan) => plan.id === id);
+  return (await getPlans()).find((plan) => plan.id === id);
 }
 
 export async function getServiceGroups(): Promise<ServiceGroupWithServices[]> {
-  return SERVICE_GROUPS.map((group) => ({
-    ...group,
-    services: SERVICES.filter((service) => service.available && service.group === group.id),
-  })).filter((group) => group.services.length > 0);
+  const { groups, services } = await loadCatalogue();
+  return groups
+    .map((group) => ({ ...group, services: services.filter((service) => service.available && service.group === group.id) }))
+    .filter((group) => group.services.length > 0);
 }
 
 export async function getBillingTerms(): Promise<BillingTerms> {
-  return BILLING_TERMS;
+  return (await loadCatalogue()).billingTerms;
 }
 
 export async function getPlanChoices(id: PlanId): Promise<PlanChoice[]> {
-  const plan = await getPlan(id);
-  return plan ? buildPlanChoices(plan, SERVICE_GROUPS, SERVICES) : [];
+  const { plans, groups, services } = await loadCatalogue();
+  const plan = plans.find((item) => item.id === id);
+  return plan ? buildPlanChoices(plan, groups, services) : [];
+}
+
+export async function getSiteText(): Promise<SiteText> {
+  return loadSiteText();
 }

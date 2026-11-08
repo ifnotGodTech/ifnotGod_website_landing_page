@@ -11,10 +11,9 @@ export const PLANS: Plan[] = [
     ctaLabel: "Start with an audit",
     recommended: false,
     allowances: { everyday: 1, social: 1, agents: 0 },
-    website: "Landing or link-in-bio page",
     changes: "Small fixes and 1 service swap a month",
+    lines: ["Landing or link-in-bio page", "Email support"],
     monthlyChanges: 1,
-    support: "Email",
   },
   {
     id: "growth",
@@ -25,10 +24,9 @@ export const PLANS: Plan[] = [
     ctaLabel: "Start with an audit",
     recommended: true,
     allowances: { everyday: 3, social: 2, agents: 1 },
-    website: "Landing page with more sections",
     changes: "1 change or new build a month",
+    lines: ["Landing page with more sections", "Priority WhatsApp support"],
     monthlyChanges: 1,
-    support: "Priority WhatsApp",
   },
   {
     id: "pro",
@@ -40,10 +38,9 @@ export const PLANS: Plan[] = [
     recommended: false,
     allowances: { everyday: 6, social: 4, agents: 2 },
     highlightExample: { serviceId: "ai-call-agent", label: "the call agent" },
-    website: "Small multi-page site",
     changes: "2 changes or new builds a month",
+    lines: ["Small multi-page site", "Priority WhatsApp support and a monthly review call"],
     monthlyChanges: 2,
-    support: "Priority WhatsApp and monthly review call",
   },
   {
     id: "custom",
@@ -54,10 +51,9 @@ export const PLANS: Plan[] = [
     ctaLabel: "Talk to us",
     recommended: false,
     allowances: { everyday: "agreed", social: "agreed", agents: "agreed" },
-    website: "Larger apps and platforms",
     changes: "Agreed with you",
+    lines: ["Larger apps and platforms", "Support agreed with you"],
     monthlyChanges: "agreed",
-    support: "Agreed with you",
   },
 ];
 

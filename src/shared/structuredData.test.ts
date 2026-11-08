@@ -30,10 +30,9 @@ describe("buildPlanOffersJsonLd", () => {
     ctaLabel: "",
     recommended: true,
     allowances: { everyday: 3, social: 2, agents: 1 },
-    website: "",
     changes: "",
-  monthlyChanges: 1,
-    support: "",
+    lines: [],
+    monthlyChanges: 1,
     ...overrides,
   });
 

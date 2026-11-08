@@ -27,7 +27,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Lead follow-up",
     problem: "We forget to call people back.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -35,7 +35,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Appointment booking and reminders",
     problem: "People book, then don't show up.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -43,7 +43,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Payment reminders and receipts",
     problem: "I'm always chasing money.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -51,7 +51,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Daily business brief",
     problem: "I don't know my numbers until it's too late.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -59,7 +59,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Digital product delivery",
     problem: "I send files and confirm payments by hand.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -67,7 +67,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Brand deal inbox",
     problem: "Sponsorship emails get buried.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -75,7 +75,7 @@ export const SERVICES: Service[] = [
     group: "everyday",
     name: "Any similar-sized task found in your audit",
     problem: "Our problem isn't on your list.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
     catchAll: true,
   },
@@ -84,7 +84,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "Scheduling and posting",
     problem: "Posting takes hours each week.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -92,7 +92,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "Weekly performance report",
     problem: "I don't know what's working.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -100,7 +100,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "Comment-to-DM funnels",
     problem: "People comment and I lose the sale.",
-    includedFrom: "starter",
+    plans: ["starter", "growth", "pro"],
     available: true,
   },
   {
@@ -108,7 +108,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "DM assistant",
     problem: "I can't answer everyone.",
-    includedFrom: "growth",
+    plans: ["growth", "pro"],
     available: true,
   },
   {
@@ -116,7 +116,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "Newsletter from your content",
     problem: "I never get round to writing it.",
-    includedFrom: "growth",
+    plans: ["growth", "pro"],
     available: true,
   },
   {
@@ -124,7 +124,7 @@ export const SERVICES: Service[] = [
     group: "social",
     name: "One video into many posts",
     problem: "I can't post everywhere.",
-    includedFrom: "growth",
+    plans: ["growth", "pro"],
     available: true,
   },
   {
@@ -132,7 +132,7 @@ export const SERVICES: Service[] = [
     group: "agents",
     name: "WhatsApp sales agent",
     problem: "Customers ask at night and buy elsewhere.",
-    includedFrom: "growth",
+    plans: ["growth", "pro"],
     available: true,
   },
   {
@@ -140,7 +140,7 @@ export const SERVICES: Service[] = [
     group: "agents",
     name: "Staff assistant",
     problem: "Everyone keeps asking the same questions.",
-    includedFrom: "growth",
+    plans: ["growth", "pro"],
     available: true,
   },
   {
@@ -148,7 +148,7 @@ export const SERVICES: Service[] = [
     group: "agents",
     name: "Document reader",
     problem: "Staff retype invoices and forms all day.",
-    includedFrom: "pro",
+    plans: ["pro"],
     available: true,
   },
   {
@@ -156,7 +156,7 @@ export const SERVICES: Service[] = [
     group: "agents",
     name: "AI call agent",
     problem: "I miss calls and lose customers.",
-    includedFrom: "pro",
+    plans: ["pro"],
     available: true,
     note: "Minutes billed separately.",
   },

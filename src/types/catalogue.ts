@@ -1,6 +1,7 @@
 export type PlanId = "starter" | "growth" | "pro" | "custom";
 
-export type ServiceGroupId = "everyday" | "social" | "agents";
+/** Groups are records the team can add, so their ids are open-ended. */
+export type ServiceGroupId = string;
 
 /** How many services a client can choose from a group. "agreed" means set per client. */
 export type Allowance = number | "agreed";
@@ -14,14 +15,16 @@ export type Plan = {
   summary: string;
   ctaLabel: string;
   recommended: boolean;
+  /** By group id. A group missing here counts as none. */
   allowances: Record<ServiceGroupId, Allowance>;
   /** A service to name as an example in the plan's summary, shown only while it's on offer. */
   highlightExample?: { serviceId: string; label: string };
-  website: string;
+  /** How changes are described, such as "1 change or new build a month". */
   changes: string;
+  /** Other things the plan lists, in order. The first is the website we build. */
+  lines: string[];
   /** Changes or service swaps a month. "agreed" means set per client. */
   monthlyChanges: number | "agreed";
-  support: string;
 };
 
 export type BillingTerms = {
@@ -46,8 +49,8 @@ export type Service = {
   name: string;
   /** The problem in the client's own words, without quotation marks. */
   problem: string;
-  /** The lowest plan that includes this service. Higher plans include it too. */
-  includedFrom: PlanId;
+  /** Priced plans that include this service. Custom can include any service. */
+  plans: PlanId[];
   /** When false, the service doesn't appear anywhere on the site. */
   available: boolean;
   note?: string;
@@ -65,4 +68,19 @@ export type PlanChoice = {
   allowance: Allowance;
   label: string;
   services: Service[];
+};
+
+/** The home page text the team edits on the dashboard. */
+export type SiteText = {
+  headline: string;
+  introduction: string;
+  closingCallToAction: string;
+};
+
+/** Everything the catalogue holds, as one load. */
+export type CatalogueData = {
+  plans: Plan[];
+  groups: ServiceGroup[];
+  services: Service[];
+  billingTerms: BillingTerms;
 };

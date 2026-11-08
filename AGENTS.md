@@ -30,6 +30,7 @@ Until the backend reaches a feature, its data stays in code.
 - `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
 - `src/lib` (contact form client, email/notification client, config)
 - `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
+- `src/lib/api` (the one server-only client for every backend call: WEB's app key, the visitor's address, timeouts, and failures turned into plain messages)
 - `src/lib/accounts` (the only route to the account backend: its interface, the stand-in, the login session cookie, and the form actions)
 - `src/app/(account)` (signed-in pages, with their own layout; sign-in pages live in `(site)` and read no session in its layout)
 - `src/components/account` (sign-in forms and account screens)
@@ -98,6 +99,7 @@ A feature/section is done when:
 - Site content is source-of-truth in code until the backend takes it over, then in the backend, where the team manages it through `dashboard`. Don't duplicate it in client state.
 - Public pages must stay fast and indexable once content comes from the API: serve cached pages that refresh when content is saved, and keep showing the last good version if the API is unavailable.
 - Pages read plans and services through `src/lib/catalogue`, never directly from content files.
+- `src/lib/catalogue` reads from the backend when `BACKEND_API_URL` is set, cached and tagged `catalogue` so saves can refresh it, and from `src/content` otherwise. A failed backend request throws, so the last good page stays up. `src/content` goes once the backend is live.
 - Keep any filter/tab UI state (if introduced, e.g. solutions filtering) in local state; use URL state only if it needs to be shareable.
 - Derived UI state should be computed, not redundantly stored.
 
