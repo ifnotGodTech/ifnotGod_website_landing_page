@@ -182,9 +182,16 @@ test("a link can't send someone to another website after logging in", async ({ p
 test("repeated failed logins from one address are slowed down", async ({ page }) => {
   await page.goto("/login");
 
+  // Every attempt shows the same message, so each one waits for its own response. React clears
+  // the password after each attempt; typing before that lands would send an empty form, which
+  // is refused before it's counted, so the limit would never be reached.
+  const password = page.getByLabel("Password");
   for (let attempt = 0; attempt < 11; attempt++) {
-    await logIn(page, "ada@example.com", WRONG_PASSWORD);
-    await expect(page.getByRole("status")).not.toBeEmpty();
+    await expect(password).toHaveValue("");
+    await Promise.all([
+      page.waitForResponse((response) => response.request().method() === "POST"),
+      logIn(page, "ada@example.com", WRONG_PASSWORD),
+    ]);
   }
 
   await expect(page.getByRole("status")).toContainText("Too many attempts");
