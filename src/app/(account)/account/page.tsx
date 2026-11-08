@@ -1,6 +1,11 @@
-import Link from "next/link";
+import { AccountBand } from "@/components/account/AccountBand";
+import { ActionForm } from "@/components/account/ActionForm";
+import { NoPlanCard, PaymentsCard, PlanCard } from "@/components/account/AccountSummary";
 import { Container } from "@/components/ui/Container";
 import { requireUser } from "@/lib/accounts";
+import { loadAccount } from "@/lib/accounts/account";
+import { resumeSubscriptionAction } from "@/lib/accounts/subscriptionActions";
+import { formatLongDate } from "@/shared/dates";
 import { buildPageMetadata } from "@/shared/metadata";
 
 export const metadata = buildPageMetadata({
@@ -12,37 +17,48 @@ export const metadata = buildPageMetadata({
 
 const SIGN_IN_METHOD = { password: "Email and password", google: "Google" } as const;
 
-// Phase 11 adds the subscription, services and payments from the mock.
-export default async function AccountPage() {
+const UPDATES: Record<string, string> = {
+  services: "Your services are saved. We'll confirm with you before we switch anything over.",
+  plan: "Your plan change is saved.",
+  cancelled: "Your subscription is cancelled.",
+  resumed: "Your plan will keep renewing as before.",
+};
+
+export default async function AccountPage({ searchParams }: PageProps<"/account">) {
   const user = await requireUser("/account");
-  const firstName = user.fullName.split(" ")[0];
+  const [overview, { updated }] = await Promise.all([loadAccount(user), searchParams]);
+  const { subscription } = overview;
+  const notice = typeof updated === "string" ? UPDATES[updated] : undefined;
 
   return (
     <>
-      <div className="surface-dark">
-        <Container className="flex flex-col gap-1.5 pb-14 pt-10">
-          <h1 className="text-[clamp(2.1rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-0.03em]">
-            Hello, {firstName}
-          </h1>
-          <p className="text-[1.15rem] text-paper-dim">
-            {user.businessName ? `${user.businessName} · ` : ""}
-            {user.email}
-          </p>
-        </Container>
-      </div>
+      <AccountBand
+        title={`Hello, ${user.fullName.split(" ")[0]}`}
+        intro={`${user.businessName ? `${user.businessName} · ` : ""}${user.email}`}
+      />
 
       <Container className="flex flex-col gap-7 pb-22 pt-10">
-        <section aria-labelledby="plan-heading" className="flex flex-col items-start gap-3 rounded-xl border border-line-light bg-white p-7">
-          <h2 id="plan-heading" className="text-[1.5rem] font-extrabold">
-            Your plan
-          </h2>
-          <p className="text-on-light-dim">You haven&apos;t subscribed yet. Choose a plan to get started.</p>
-          <Link href="/pricing" className="rounded-md bg-maroon px-5 py-3 font-bold text-paper hover:bg-maroon-bright">
-            See plans
-          </Link>
-        </section>
+        {notice && (
+          <p role="status" className="rounded-lg border border-[#1d5a33]/40 bg-[#e6f2ea] px-5 py-3.5 font-semibold text-[#1d5a33]">
+            {notice}
+          </p>
+        )}
 
-        <section aria-labelledby="details-heading" className="flex flex-col gap-3 rounded-xl border border-line-light bg-white p-7">
+        {subscription?.status === "cancelled" && (
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-xl border border-orange bg-[#fff4e8] px-6 py-5">
+            <p className="max-w-[46em]">
+              <strong>Your subscription is cancelled.</strong> Everything keeps working until{" "}
+              {formatLongDate(subscription.currentPeriodEnd)}. Then your automations stop, and your website is yours to
+              keep.
+            </p>
+            <ActionForm action={resumeSubscriptionAction} label="Keep my plan" submitLabel="Keep my plan" pendingLabel="Saving…" />
+          </div>
+        )}
+
+        {subscription ? <PlanCard overview={overview} /> : <NoPlanCard />}
+        <PaymentsCard payments={overview.payments} />
+
+        <section aria-labelledby="details-heading" className="flex flex-col gap-3 rounded-xl border border-line-light bg-white p-6 sm:p-8">
           <h2 id="details-heading" className="text-[1.5rem] font-extrabold">
             Your details
           </h2>

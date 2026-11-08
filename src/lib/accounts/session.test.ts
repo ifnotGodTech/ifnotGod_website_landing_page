@@ -27,7 +27,7 @@ describe("session cookie", () => {
 
   it("rejects a cookie whose contents were changed", () => {
     const [, signature] = encodeSession(user, "secret").split(".");
-    const forged = Buffer.from(JSON.stringify({ user: { ...user, id: "admin" }, exp: Date.now() + DAY })).toString("base64url");
+    const forged = Buffer.from(JSON.stringify({ data: { ...user, id: "admin" }, exp: Date.now() + DAY })).toString("base64url");
 
     expect(decodeSession(`${forged}.${signature}`, "secret")).toBeNull();
   });

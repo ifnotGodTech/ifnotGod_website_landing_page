@@ -19,7 +19,18 @@ export type Plan = {
   highlightExample?: { serviceId: string; label: string };
   website: string;
   changes: string;
+  /** Changes or service swaps a month. "agreed" means set per client. */
+  monthlyChanges: number | "agreed";
   support: string;
+};
+
+export type BillingTerms = {
+  /** In naira, charged once on a client's first monthly subscription. */
+  setupFee: number;
+  /** Paying at least this many months upfront waives the setup fee. */
+  setupFeeWaivedFromMonths: number;
+  /** Free months when paying 12 months upfront. */
+  freeMonthsOnTwelve: number;
 };
 
 export type ServiceGroup = {

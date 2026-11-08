@@ -23,6 +23,15 @@ describe("plans", () => {
     expect((await getPlan(id))?.monthlyPrice).toBe(price);
   });
 
+  it.each([
+    ["starter", 1],
+    ["growth", 1],
+    ["pro", 2],
+    ["custom", "agreed"],
+  ] as const)("%s allows %s changes a month", async (id, changes) => {
+    expect((await getPlan(id))?.monthlyChanges).toBe(changes);
+  });
+
   it("recommends only Growth", async () => {
     const recommended = (await getPlans()).filter((plan) => plan.recommended);
 

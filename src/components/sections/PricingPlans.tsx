@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { getPlanChoices, getPlans } from "@/lib/catalogue";
 import { formatPlanPrice } from "@/lib/catalogue/rules";
 import { AUDIT_PATH } from "@/shared/constants";
+import { ACCOUNTS_ENABLED } from "@/shared/features";
 import type { Plan, PlanChoice, PlanId } from "@/types/catalogue";
 import { PlanSelector } from "./PlanSelector";
 
@@ -51,9 +52,18 @@ function PlanPanel({ plan, choices }: { plan: Plan; choices: PlanChoice[] }) {
           </h2>
           <p className="text-on-light-dim">{plan.summary}</p>
         </div>
-        <Button href={`${AUDIT_PATH}?plan=${plan.id}`} aria-label={`${plan.ctaLabel}: ${plan.name}`}>
-          {plan.ctaLabel}
-        </Button>
+        {ACCOUNTS_ENABLED && plan.monthlyPrice !== null ? (
+          <div className="flex flex-wrap gap-3">
+            <Button href={`/account/subscribe?plan=${plan.id}`}>Subscribe to {plan.name}</Button>
+            <Button href={`${AUDIT_PATH}?plan=${plan.id}`} variant="outline-maroon" aria-label={`${plan.ctaLabel}: ${plan.name}`}>
+              {plan.ctaLabel}
+            </Button>
+          </div>
+        ) : (
+          <Button href={`${AUDIT_PATH}?plan=${plan.id}`} aria-label={`${plan.ctaLabel}: ${plan.name}`}>
+            {plan.ctaLabel}
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2 xl:grid-cols-3">

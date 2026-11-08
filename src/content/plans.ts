@@ -1,4 +1,4 @@
-import type { Plan } from "@/types/catalogue";
+import type { BillingTerms, Plan } from "@/types/catalogue";
 
 // Listed from lowest to highest, which is also the order shown on the site.
 export const PLANS: Plan[] = [
@@ -13,6 +13,7 @@ export const PLANS: Plan[] = [
     allowances: { everyday: 1, social: 1, agents: 0 },
     website: "Landing or link-in-bio page",
     changes: "Small fixes and 1 service swap a month",
+    monthlyChanges: 1,
     support: "Email",
   },
   {
@@ -26,6 +27,7 @@ export const PLANS: Plan[] = [
     allowances: { everyday: 3, social: 2, agents: 1 },
     website: "Landing page with more sections",
     changes: "1 change or new build a month",
+    monthlyChanges: 1,
     support: "Priority WhatsApp",
   },
   {
@@ -40,6 +42,7 @@ export const PLANS: Plan[] = [
     highlightExample: { serviceId: "ai-call-agent", label: "the call agent" },
     website: "Small multi-page site",
     changes: "2 changes or new builds a month",
+    monthlyChanges: 2,
     support: "Priority WhatsApp and monthly review call",
   },
   {
@@ -53,6 +56,13 @@ export const PLANS: Plan[] = [
     allowances: { everyday: "agreed", social: "agreed", agents: "agreed" },
     website: "Larger apps and platforms",
     changes: "Agreed with you",
+    monthlyChanges: "agreed",
     support: "Agreed with you",
   },
 ];
+
+export const BILLING_TERMS: BillingTerms = {
+  setupFee: 100_000,
+  setupFeeWaivedFromMonths: 6,
+  freeMonthsOnTwelve: 2,
+};

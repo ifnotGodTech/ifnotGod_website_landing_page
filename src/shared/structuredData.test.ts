@@ -32,6 +32,7 @@ describe("buildPlanOffersJsonLd", () => {
     allowances: { everyday: 3, social: 2, agents: 1 },
     website: "",
     changes: "",
+  monthlyChanges: 1,
     support: "",
     ...overrides,
   });

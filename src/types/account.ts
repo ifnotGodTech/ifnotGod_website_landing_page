@@ -26,7 +26,11 @@ export type Subscription = {
   /** Service ids from the catalogue. */
   serviceIds: string[];
   changesLeftThisMonth: number;
+  /** A plan change waiting for the next renewal. */
+  pendingPlanId?: PlanId;
 };
+
+export type Checkout = { planId: PlanId; billingPeriod: BillingPeriod };
 
 export type Payment = {
   id: string;
@@ -37,7 +41,16 @@ export type Payment = {
   amount: number;
 };
 
-export type AccountErrorCode = "INVALID_CREDENTIALS" | "EMAIL_TAKEN" | "TOO_MANY_ATTEMPTS" | "UNAVAILABLE";
+export type AccountErrorCode =
+  | "INVALID_CREDENTIALS"
+  | "EMAIL_TAKEN"
+  | "TOO_MANY_ATTEMPTS"
+  | "UNAVAILABLE"
+  | "NOT_SUBSCRIBED"
+  | "ALREADY_SUBSCRIBED"
+  | "INVALID_SELECTION"
+  | "NO_CHANGES_LEFT"
+  | "PAYMENT_NOT_FOUND";
 
 export type AccountResult<T> = { ok: true; value: T } | { ok: false; error: AccountErrorCode };
 

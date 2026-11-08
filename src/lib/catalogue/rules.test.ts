@@ -35,6 +35,7 @@ const plan = (overrides: Partial<Plan>): Plan => ({
   allowances: { everyday: 1, social: 1, agents: 1 },
   website: "",
   changes: "",
+  monthlyChanges: 1,
   support: "",
   ...overrides,
 });

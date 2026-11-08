@@ -1,6 +1,6 @@
-import { PLANS } from "@/content/plans";
+import { BILLING_TERMS, PLANS } from "@/content/plans";
 import { SERVICE_GROUPS, SERVICES } from "@/content/services";
-import type { Plan, PlanChoice, PlanId, ServiceGroupWithServices } from "@/types/catalogue";
+import type { BillingTerms, Plan, PlanChoice, PlanId, ServiceGroupWithServices } from "@/types/catalogue";
 import { buildPlanChoices } from "./rules";
 
 // The only module that reads the content files. These functions are async so the
@@ -19,6 +19,10 @@ export async function getServiceGroups(): Promise<ServiceGroupWithServices[]> {
     ...group,
     services: SERVICES.filter((service) => service.available && service.group === group.id),
   })).filter((group) => group.services.length > 0);
+}
+
+export async function getBillingTerms(): Promise<BillingTerms> {
+  return BILLING_TERMS;
 }
 
 export async function getPlanChoices(id: PlanId): Promise<PlanChoice[]> {
