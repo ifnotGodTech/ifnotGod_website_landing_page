@@ -116,6 +116,7 @@ describe("what each plan shows", () => {
     await renderPlans();
 
     expect(panel("starter")).toHaveTextContent("Landing or link-in-bio page");
+    expect(panel("starter")).toHaveTextContent("Small fixes and 1 service swap a month");
     expect(panel("growth")).toHaveTextContent("Priority WhatsApp");
     expect(panel("pro")).toHaveTextContent("Priority WhatsApp and monthly review call");
     expect(panel("custom")).toHaveTextContent("Larger apps and platforms");

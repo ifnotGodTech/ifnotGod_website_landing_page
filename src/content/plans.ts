@@ -12,7 +12,7 @@ export const PLANS: Plan[] = [
     recommended: false,
     allowances: { everyday: 1, social: 1, agents: 0 },
     website: "Landing or link-in-bio page",
-    changes: "Small fixes only",
+    changes: "Small fixes and 1 service swap a month",
     support: "Email",
   },
   {
