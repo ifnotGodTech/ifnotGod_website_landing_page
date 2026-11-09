@@ -1,6 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
+import { ADA, CLIENT_PASSWORD, SOMEONE_ELSE } from "./backend";
 
-// Uses the stand-in backend and its stand-in payment page. No money is ever taken.
+// Accounts use the real backend. Subscriptions still use the stand-in and its stand-in payment page,
+// kept in each browser's own cookies. No money is ever taken.
 
 let nextAddress = 0;
 test.beforeEach(async ({ page }, testInfo) => {
@@ -9,8 +11,8 @@ test.beforeEach(async ({ page }, testInfo) => {
 });
 
 async function logIn(page: Page) {
-  await page.getByLabel("Email").fill("ada.obi@example.com");
-  await page.getByLabel("Password").fill("a secret");
+  await page.getByLabel("Email").fill(ADA);
+  await page.getByLabel("Password").fill(CLIENT_PASSWORD);
   await page.getByRole("button", { name: "Log in" }).click();
 }
 
@@ -134,8 +136,8 @@ test("the subscription belongs to the signed-in client only", async ({ page, con
   await context.clearCookies({ name: "ifng_session" });
 
   await page.goto("/login");
-  await page.getByLabel("Email").fill("someone.else@example.com");
-  await page.getByLabel("Password").fill("a secret");
+  await page.getByLabel("Email").fill(SOMEONE_ELSE);
+  await page.getByLabel("Password").fill(CLIENT_PASSWORD);
   await page.getByRole("button", { name: "Log in" }).click();
 
   await expect(page.getByText("You haven't subscribed yet.")).toBeVisible();

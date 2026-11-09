@@ -1,27 +1,13 @@
 import { getBillingTerms, getPlanChoices, getPlans } from "@/lib/catalogue";
 import { addMonths, todayInLagos } from "@/shared/dates";
-import type { AccountUser, Checkout } from "@/types/account";
+import type { Checkout } from "@/types/account";
 import { fail, ok, type AccountsBackend } from "./backend";
 import { BILLING_PERIODS, buildQuote, isBillingPeriod, periodMonths } from "./billing";
 import { checkServiceSelection, selfServiceChoices } from "./serviceSelection";
 import { cookieStubStore, type StubStore } from "./stubStore";
 
-// A stand-in backend until the real one exists (phase 12). Any email and password logs in,
-// and a few fixed values show each error, for previews and tests:
-export const STUB_RULES = {
-  takenEmail: "taken@example.com",
-  lockedEmail: "locked@example.com",
-  wrongPassword: "wrong-password",
-} as const;
-
-function stubUser(user: Omit<AccountUser, "id">): AccountUser {
-  return { id: `stub-${Buffer.from(user.email.toLowerCase()).toString("base64url")}`, ...user };
-}
-
-function nameFromEmail(email: string): string {
-  const local = email.split("@")[0].replace(/[._-]+/g, " ").trim();
-  return local.replace(/\b\w/g, (letter) => letter.toUpperCase()) || "Client";
-}
+// A stand-in for subscriptions and payments until backend phases 5 and 6. Accounts use the real API.
+// Each client's subscription is kept in a cookie in their own browser, keyed by their account id.
 
 export const encodeReference = (checkout: Checkout) => Buffer.from(JSON.stringify(checkout)).toString("base64url");
 
@@ -42,22 +28,6 @@ async function pricedPlan(planId: string) {
 
 export function createStubBackend(store: StubStore = cookieStubStore, today = () => todayInLagos()): AccountsBackend {
   return {
-    async signUp({ fullName, businessName, email }) {
-      if (email.toLowerCase() === STUB_RULES.takenEmail) return fail("EMAIL_TAKEN");
-      return ok(stubUser({ fullName, businessName, email, signInMethod: "password" }));
-    },
-    async logIn({ email, password }) {
-      if (email.toLowerCase() === STUB_RULES.lockedEmail) return fail("TOO_MANY_ATTEMPTS");
-      if (password === STUB_RULES.wrongPassword) return fail("INVALID_CREDENTIALS");
-      return ok(stubUser({ fullName: nameFromEmail(email), email, signInMethod: "password" }));
-    },
-    async signInWithGoogle() {
-      return ok(stubUser({ fullName: "Ada Obi", email: "ada@example.com", signInMethod: "google" }));
-    },
-    async requestPasswordReset() {
-      return ok(null);
-    },
-
     async getSubscription(user) {
       return ok((await store.read(user.id)).subscription);
     },

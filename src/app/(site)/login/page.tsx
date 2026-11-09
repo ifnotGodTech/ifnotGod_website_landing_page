@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { LogInForm } from "@/components/account/AuthForms";
 import { AuthLink, AuthShell } from "@/components/account/AuthShell";
 import { getCurrentUser } from "@/lib/accounts";
+import { accountErrorMessage } from "@/lib/accounts/messages";
 import { logInAction } from "@/lib/accounts/actions";
 import { safeNextPath, withNext } from "@/lib/accounts/paths";
 import { AUDIT_PATH } from "@/shared/constants";
@@ -17,8 +18,10 @@ export const metadata = buildPageMetadata({
 
 export default async function LogInPage({ searchParams }: PageProps<"/login">) {
   if (!ACCOUNTS_ENABLED) notFound();
-  const next = safeNextPath((await searchParams).next);
+  const { next: requested, error } = await searchParams;
+  const next = safeNextPath(requested);
   if (await getCurrentUser()) redirect(next);
+  const notice = error === "google" ? accountErrorMessage("GOOGLE_FAILED") : null;
 
   return (
     <AuthShell
@@ -35,7 +38,7 @@ export default async function LogInPage({ searchParams }: PageProps<"/login">) {
         </>
       }
     >
-      <LogInForm action={logInAction} next={next} />
+      <LogInForm action={logInAction} next={next} notice={notice} />
     </AuthShell>
   );
 }

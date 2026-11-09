@@ -1,21 +1,9 @@
-import type {
-  AccountResult,
-  AccountUser,
-  Checkout,
-  LogInInput,
-  Payment,
-  SignUpInput,
-  Subscription,
-} from "@/types/account";
+import type { AccountResult, AccountUser, Checkout, Payment, Subscription } from "@/types/account";
 import type { PlanId } from "@/types/catalogue";
 
-/** What the screens need from an account backend. The stand-in and, later, the real API both provide it. */
+/** What the subscription screens need, until backend phases 5 and 6 build it. The stand-in provides it.
+ * Accounts themselves already use the real API: see api.ts. */
 export type AccountsBackend = {
-  signUp(input: SignUpInput): Promise<AccountResult<AccountUser>>;
-  logIn(input: LogInInput): Promise<AccountResult<AccountUser>>;
-  signInWithGoogle(): Promise<AccountResult<AccountUser>>;
-  requestPasswordReset(email: string): Promise<AccountResult<null>>;
-
   getSubscription(user: AccountUser): Promise<AccountResult<Subscription | null>>;
   getPayments(user: AccountUser): Promise<AccountResult<Payment[]>>;
   /** Whether the client has paid a setup fee before, so it isn't charged twice. */

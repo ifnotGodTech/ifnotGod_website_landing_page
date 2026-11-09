@@ -11,3 +11,9 @@ export function safeNextPath(value: unknown): string {
 export function withNext(path: string, next: string): string {
   return next === ACCOUNT_HOME ? path : `${path}?next=${encodeURIComponent(next)}`;
 }
+
+/** Log in again, saying why, such as "google" when Google sign-in didn't work. */
+export function loginWithError(next: string, error: "google"): string {
+  const path = withNext("/login", next);
+  return `${path}${path.includes("?") ? "&" : "?"}error=${error}`;
+}

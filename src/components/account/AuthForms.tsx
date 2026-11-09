@@ -4,6 +4,7 @@ import { useActionState, type ReactNode } from "react";
 import Link from "next/link";
 import { FormField } from "@/components/ui/FormField";
 import { INITIAL_AUTH_STATE, type AuthFormState } from "@/lib/accounts/formState";
+import { MIN_PASSWORD_LENGTH } from "@/shared/validators/account";
 import { GoogleButton } from "./GoogleButton";
 
 type AuthAction = (state: AuthFormState, form: FormData) => Promise<AuthFormState>;
@@ -28,11 +29,17 @@ function AuthForm({ label, action, children }: { label: string; action: (form: F
   );
 }
 
-export function LogInForm({ action, next }: { action: AuthAction; next: string }) {
+/** `notice` explains why they're back here, such as Google sign-in not working. */
+export function LogInForm({ action, next, notice = null }: { action: AuthAction; next: string; notice?: string | null }) {
   const [state, formAction, pending] = useActionState(action, INITIAL_AUTH_STATE);
 
   return (
     <AuthForm label="Log in" action={formAction}>
+      {notice && state.status === "idle" && (
+        <p role="alert" className="font-semibold text-maroon">
+          {notice}
+        </p>
+      )}
       <GoogleButton label="Continue with Google" next={next} />
       <input type="hidden" name="next" value={next} />
       <FormField id="email" label="Email" type="email" autoComplete="email" required error={state.fieldErrors.email} defaultValue={state.values.email} />
@@ -77,7 +84,7 @@ export function SignUpForm({ action, next }: { action: AuthAction; next: string 
           describedBy="password-hint"
         />
         <span id="password-hint" className="text-[0.88rem] text-on-light-dim">
-          At least 8 characters.
+          At least {MIN_PASSWORD_LENGTH} characters.
         </span>
       </div>
       <button type="submit" disabled={pending} className={SUBMIT}>
@@ -121,6 +128,36 @@ export function ResetPasswordForm({ action }: { action: AuthAction }) {
       <FormField id="email" label="Email" type="email" autoComplete="email" required error={state.fieldErrors.email} defaultValue={state.values.email} />
       <button type="submit" disabled={pending} className={SUBMIT}>
         {pending ? "Sending…" : "Send reset link"}
+      </button>
+      <FormMessage state={state} />
+    </AuthForm>
+  );
+}
+
+/** "Set a new password", opened from the reset email's link. The link's parts travel as hidden fields. */
+export function SetPasswordForm({ action, uid, token }: { action: AuthAction; uid: string; token: string }) {
+  const [state, formAction, pending] = useActionState(action, INITIAL_AUTH_STATE);
+
+  return (
+    <AuthForm label="Set a new password" action={formAction}>
+      <input type="hidden" name="uid" value={uid} />
+      <input type="hidden" name="token" value={token} />
+      <div className="flex flex-col gap-1.5">
+        <FormField
+          id="password"
+          label="New password"
+          type="password"
+          autoComplete="new-password"
+          required
+          error={state.fieldErrors.password}
+          describedBy="new-password-hint"
+        />
+        <span id="new-password-hint" className="text-[0.88rem] text-on-light-dim">
+          At least {MIN_PASSWORD_LENGTH} characters. You&apos;ll be logged out everywhere else.
+        </span>
+      </div>
+      <button type="submit" disabled={pending} className={SUBMIT}>
+        {pending ? "Saving…" : "Save and log in"}
       </button>
       <FormMessage state={state} />
     </AuthForm>

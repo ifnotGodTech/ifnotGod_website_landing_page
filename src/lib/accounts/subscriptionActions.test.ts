@@ -14,8 +14,10 @@ vi.mock("@/shared/features", () => ({
   },
 }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-vi.mock("./session", () => ({ readSession: async () => mocks.user }));
-vi.mock("./index", () => ({ getAccountsBackend: () => mocks.backend }));
+vi.mock("./index", () => ({
+  getAccountsBackend: () => mocks.backend,
+  readAccountSession: async () => (mocks.user ? { status: "active", user: mocks.user, token: "t0ken" } : { status: "none" }),
+}));
 
 import { createStubBackend } from "./stub";
 import { memoryStubStore } from "./stubStore";

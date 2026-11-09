@@ -5,9 +5,8 @@ import { ACCOUNTS_ENABLED } from "@/shared/features";
 import type { AccountErrorCode, AccountResult, AccountUser } from "@/types/account";
 import type { PlanId } from "@/types/catalogue";
 import { isBillingPeriod } from "./billing";
-import { getAccountsBackend } from "./index";
+import { getAccountsBackend, readAccountSession } from "./index";
 import { accountErrorMessage } from "./messages";
-import { readSession } from "./session";
 
 // Form actions can be called directly with a POST, so each one checks the session itself.
 
@@ -17,9 +16,10 @@ const failed = (error: AccountErrorCode): SubscriptionFormState => ({ formError:
 
 async function signedInUser(returnTo: string): Promise<AccountUser> {
   if (!ACCOUNTS_ENABLED) redirect("/");
-  const user = await readSession();
-  if (!user) redirect(`/login?next=${encodeURIComponent(returnTo)}`);
-  return user;
+  const session = await readAccountSession();
+  if (session.status === "unavailable") throw new Error("Accounts aren't available right now.");
+  if (session.status !== "active") redirect(`/login?next=${encodeURIComponent(returnTo)}`);
+  return session.user;
 }
 
 async function callBackend<T>(call: () => Promise<AccountResult<T>>): Promise<AccountResult<T>> {

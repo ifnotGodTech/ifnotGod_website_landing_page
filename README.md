@@ -21,8 +21,10 @@ Open <http://localhost:3000>.
 | `BREVO_SENDER_EMAIL` | Recommended | Sender address, verified in Brevo. A sender on your own authenticated domain is the most reliable. Defaults to `no-reply@ifnotgod.com`. |
 | `BREVO_SENDER_NAME` | Optional | Sender name. |
 | `NEXT_PUBLIC_SITE_URL` | Recommended | The site's main address, used for the canonical URL, sitemap, sharing image and structured data. Defaults to `https://www.ifnotgod.com`. Takes effect at build time, so redeploy after changing it. |
-| `NEXT_PUBLIC_ACCOUNTS_ENABLED` | Previews only | `true` shows log in, sign up and the account area. Keep it off in production until the real account backend is connected, because accounts use a stand-in until then. Takes effect at build time. |
-| `ACCOUNTS_SESSION_SECRET` | Where accounts are on | A long random string that signs the login cookie. Local development uses a built-in one. |
+| `NEXT_PUBLIC_ACCOUNTS_ENABLED` | Previews only | `true` shows log in, sign up and the account area. Keep it off in production until subscriptions use the real backend too: they still use a stand-in. Takes effect at build time. |
+| `ACCOUNTS_SESSION_SECRET` | Where accounts are on | A long random string that encrypts the login cookie, which holds the backend's token. Local development uses a built-in one. |
+| `BACKEND_API_URL`, `BACKEND_APP_KEY` | Where accounts are on | The backend's address and WEB's key for it. Accounts (sign-up, log in, Google, password resets) use the real backend. |
+| `GOOGLE_CLIENT_ID` | For Google sign-in | The OAuth client id from Google Cloud. The backend holds the client secret. |
 
 Running the site locally with a real `BREVO_API_KEY` means form submissions send real email.
 
@@ -36,7 +38,12 @@ Running the site locally with a real `BREVO_API_KEY` means form submissions send
 | `npm run lint` | Runs ESLint |
 | `npm test` | Runs unit and component tests with Vitest |
 | `npm run build:e2e` | Builds with accounts switched on, for the browser tests |
-| `npm run test:e2e` | Runs browser tests against the production build. Run `npm run build:e2e` first. The first time, also run `npx playwright install chromium`. |
+| `npm run test:e2e` | Runs browser tests against the production build and a real backend. Run `npm run build:e2e` first. The first time, also run `npx playwright install chromium`. |
+
+The browser tests start a throwaway backend themselves, with `backend/scripts/serve_for_e2e.sh`: a fresh
+database with a few client accounts, and emails written to `backend/.outbox-e2e-web/`, where the tests read
+password reset links. They need PostgreSQL running and the backend repo next to this one, or `BACKEND_DIR`
+pointing at it.
 
 ## Where things live
 

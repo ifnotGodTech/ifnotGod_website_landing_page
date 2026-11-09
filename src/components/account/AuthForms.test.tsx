@@ -68,7 +68,7 @@ describe("sign up form", () => {
   it("describes the password rule and links to the Terms and Privacy Policy", () => {
     render(<SignUpForm action={returning({})} next="/account" />);
 
-    expect(screen.getByLabelText("Password")).toHaveAccessibleDescription("At least 8 characters.");
+    expect(screen.getByLabelText("Password")).toHaveAccessibleDescription("At least 10 characters.");
     expect(screen.getByRole("link", { name: "Terms" })).toHaveAttribute("href", "/terms");
     expect(screen.getByRole("link", { name: "Privacy Policy" })).toHaveAttribute("href", "/privacy-policy");
   });

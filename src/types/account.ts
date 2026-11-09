@@ -41,9 +41,15 @@ export type Payment = {
   amount: number;
 };
 
+/** After signing in: the backend's token, kept only inside the encrypted session cookie. */
+export type SignedIn = { token: string; user: AccountUser };
+
 export type AccountErrorCode =
   | "INVALID_CREDENTIALS"
   | "EMAIL_TAKEN"
+  | "WEAK_PASSWORD"
+  | "RESET_LINK_INVALID"
+  | "GOOGLE_FAILED"
   | "TOO_MANY_ATTEMPTS"
   | "UNAVAILABLE"
   | "NOT_SUBSCRIBED"
@@ -57,3 +63,8 @@ export type AccountResult<T> = { ok: true; value: T } | { ok: false; error: Acco
 export type SignUpInput = { fullName: string; businessName?: string; email: string; password: string };
 
 export type LogInInput = { email: string; password: string };
+
+export type SetPasswordInput = { uid: string; token: string; password: string };
+
+/** What WEB passes on from Google's redirect back. */
+export type GoogleSignInInput = { code: string; redirectUri: string; codeVerifier: string };

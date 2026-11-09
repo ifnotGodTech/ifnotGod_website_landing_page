@@ -9,7 +9,8 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock("@/shared/features", () => ({ ACCOUNTS_ENABLED: true }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: vi.fn(), usePathname: () => "/" }));
-vi.mock("@/lib/accounts/session", () => ({ readSession: async () => mocks.user }));
+vi.mock("@/lib/accounts/session", () => ({ readSession: async () => (mocks.user ? { user: mocks.user, token: "t0ken" } : null) }));
+vi.mock("@/lib/accounts/api", () => ({ getSignedInUser: async () => ({ ok: true, data: mocks.user }) }));
 vi.mock("@/lib/accounts/actions", () => ({ logInAction: vi.fn(), signUpAction: vi.fn(), logOutAction: vi.fn() }));
 vi.mock("@/lib/accounts/account", () => ({
   loadAccount: async () => ({ subscription: null, plan: null, pendingPlan: null, choices: [], payments: [], setupFeePaid: false }),
@@ -39,6 +40,13 @@ describe("with accounts switched on", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "Welcome back" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Create an account" })).toHaveAttribute("href", "/signup?next=%2Faccount%2Fservices");
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("explains when Google sign-in didn't work", async () => {
+    render(await LogInPage({ params: Promise.resolve({}), searchParams: Promise.resolve({ error: "google" }) }));
+
+    expect(screen.getByRole("alert")).toHaveTextContent("We couldn't sign you in with Google.");
   });
 
   it("sends signed-in visitors straight on", async () => {

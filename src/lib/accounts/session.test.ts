@@ -7,7 +7,7 @@ vi.mock("next/headers", () => ({ cookies: async () => jar }));
 import { decodeSession, encodeSession, endSession, readSession, SESSION_COOKIE, startSession } from "./session";
 
 const user: AccountUser = { id: "u1", fullName: "Ada Obi", email: "ada@example.com", signInMethod: "password" };
-const DAY = 24 * 60 * 60 * 1000;
+const session = { user, token: "backend-token" };
 
 describe("session cookie", () => {
   afterEach(() => {
@@ -17,60 +17,57 @@ describe("session cookie", () => {
     jar.delete.mockReset();
   });
 
-  it("round-trips the user", () => {
-    expect(decodeSession(encodeSession(user, "secret"), "secret")).toEqual(user);
+  it("round-trips the user and the backend's token", () => {
+    expect(decodeSession(encodeSession(session, "secret"), "secret")).toEqual(session);
   });
 
-  it("rejects a cookie signed with another secret", () => {
-    expect(decodeSession(encodeSession(user, "secret"), "other")).toBeNull();
+  it("keeps the token out of sight: the cookie is encrypted, not just signed", () => {
+    const value = encodeSession(session, "secret");
+
+    expect(Buffer.from(value, "base64url").toString("latin1")).not.toContain("backend-token");
+    expect(value).not.toContain("ada");
   });
 
-  it("rejects a cookie whose contents were changed", () => {
-    const [, signature] = encodeSession(user, "secret").split(".");
-    const forged = Buffer.from(JSON.stringify({ data: { ...user, id: "admin" }, exp: Date.now() + DAY })).toString("base64url");
+  it("rejects a cookie sealed with another secret, a changed one, and junk", () => {
+    const value = encodeSession(session, "secret");
+    const bytes = Buffer.from(value, "base64url");
+    bytes[bytes.length - 1] ^= 1;
 
-    expect(decodeSession(`${forged}.${signature}`, "secret")).toBeNull();
+    expect(decodeSession(value, "other")).toBeNull();
+    expect(decodeSession(bytes.toString("base64url"), "secret")).toBeNull();
+    expect(decodeSession("forged.value", "secret")).toBeNull();
   });
 
-  it.each(["", "abc", "a.b.c", "not.base64!"])("rejects the malformed value %j", (value) => {
-    expect(decodeSession(value, "secret")).toBeNull();
-  });
+  it("sets an HTTP-only cookie that outlasts the backend's 7 idle days", async () => {
+    await startSession(session);
 
-  it("expires after 7 days", () => {
-    const now = Date.now();
-    const value = encodeSession(user, "secret", now);
-
-    expect(decodeSession(value, "secret", now + 6 * DAY)).toEqual(user);
-    expect(decodeSession(value, "secret", now + 7 * DAY)).toBeNull();
-  });
-
-  it("sets a cookie scripts can't read, kept for 7 days", async () => {
-    await startSession(user);
-
-    const [name, , options] = jar.set.mock.calls[0];
+    const [name, value, options] = jar.set.mock.calls[0];
     expect(name).toBe(SESSION_COOKIE);
-    expect(options).toMatchObject({ httpOnly: true, sameSite: "lax", path: "/", maxAge: 7 * 24 * 60 * 60 });
+    expect(decodeSession(value, "local-development-only-session-secret")).toEqual(session);
+    expect(options).toMatchObject({ httpOnly: true, sameSite: "lax", path: "/", maxAge: 30 * 24 * 60 * 60 });
   });
 
-  it("reads back the signed-in user, or no one", async () => {
-    await startSession(user);
-    jar.get.mockReturnValueOnce({ value: jar.set.mock.calls[0][1] });
-    expect(await readSession()).toEqual(user);
+  it("is secure in production, and needs its secret set there", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_ENV", "production");
+
+    await expect(startSession(session)).rejects.toThrow("ACCOUNTS_SESSION_SECRET");
+    vi.stubEnv("ACCOUNTS_SESSION_SECRET", "a-real-secret");
+    await startSession(session);
+    expect(jar.set.mock.calls[0][2]).toMatchObject({ secure: true });
+  });
+
+  it("reads the session back, or nothing", async () => {
+    jar.get.mockReturnValueOnce({ value: encodeSession(session, "local-development-only-session-secret") });
+    expect(await readSession()).toEqual(session);
 
     jar.get.mockReturnValueOnce(undefined);
     expect(await readSession()).toBeNull();
   });
 
-  it("deletes the cookie on log out", async () => {
+  it("ends the session", async () => {
     await endSession();
 
     expect(jar.delete).toHaveBeenCalledWith(SESSION_COOKIE);
-  });
-
-  it("refuses to sign sessions in production without its own secret", async () => {
-    vi.stubEnv("VERCEL_ENV", "production");
-    vi.stubEnv("ACCOUNTS_SESSION_SECRET", "");
-
-    await expect(startSession(user)).rejects.toThrow("ACCOUNTS_SESSION_SECRET must be set");
   });
 });

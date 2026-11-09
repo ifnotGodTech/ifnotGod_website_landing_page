@@ -31,12 +31,12 @@ Until the backend reaches a feature, its data stays in code.
 - `src/lib` (contact form client, email/notification client, config)
 - `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
 - `src/lib/api` (the one server-only client for every backend call: WEB's app key, the visitor's address, timeouts, and failures turned into plain messages)
-- `src/lib/accounts` (the only route to the account backend: its interface, the stand-in, the login session cookie, and the form actions)
+- `src/lib/accounts` (the only route to the account backend: `api.ts` for accounts on the real API, Google sign-in, the encrypted login session cookie, the form actions, and the stand-in for subscriptions until the backend has them)
 - `src/app/(account)` (signed-in pages, with their own layout; sign-in pages live in `(site)` and read no session in its layout)
 - `src/components/account` (sign-in forms and account screens)
 - `src/shared` (constants, validators, shared helpers)
 - `src/types` (`ContactSubmission`, plan and service types, account types that form the contract with the backend, and other shared contracts)
-- `e2e` (Playwright browser tests)
+- `e2e` (Playwright browser tests, with accounts against a real backend started by `backend/scripts/serve_for_e2e.sh`)
 
 ## Next.js Architecture Rules
 - Keep route concerns in `src/app`; keep section composition and any submission logic in `src/components/sections` and `src/lib`.
@@ -178,7 +178,7 @@ Clients log in on this site to subscribe, and to see, renew, upgrade or cancel t
 - Keep account pages in their own route group, separate from `src/app/(site)`.
 - Don't read the session in the `(site)` layout or its pages. That would stop public pages being statically generated.
 - The backend enforces who can see and do what. Hiding something in the UI isn't security.
-- Keep session tokens out of JavaScript-readable storage.
+- Keep session tokens out of JavaScript-readable storage. The login cookie is encrypted and HTTP-only, and account pages confirm its token with the backend.
 - Keep account pages out of search results and the sitemap, and never cache one client's page for another.
 - Never handle or store full card details in this project.
 - Update the Privacy Policy and Terms before login or payments go live. The Privacy Policy currently says the site sets no cookies.

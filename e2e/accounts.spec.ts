@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
+import { ADA, CLIENT_PASSWORD, latestResetLink, TAKEN, uniqueEmail } from "./backend";
 
-// Uses the stand-in backend: any email logs in, and a few fixed values show errors.
-const TAKEN_EMAIL = "taken@example.com";
-const WRONG_PASSWORD = "wrong-password";
+// Uses the real backend, with the client accounts serve_for_e2e.sh creates.
+const WRONG_PASSWORD = "not the password";
 
 test.beforeAll(async ({ request }) => {
   const response = await request.get("/login");
@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   await page.setExtraHTTPHeaders({ "x-forwarded-for": address });
 });
 
-async function logIn(page: Page, email = "ada.obi@example.com", password = "a secret") {
+async function logIn(page: Page, email = ADA, password = CLIENT_PASSWORD) {
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Log in" }).click();
@@ -54,19 +54,29 @@ test("the navigation offers Log in", async ({ page }) => {
   await expect(page).toHaveURL(/\/login$/);
 });
 
-test("signing up starts a session and opens the account", async ({ page }) => {
+async function signUp(page: Page, email: string, password = "a long new password") {
   await page.goto("/signup");
-
   await page.getByLabel("Full name").fill("Ada Obi");
   await page.getByLabel("Business or brand name (optional)").fill("Obi Logistics");
-  await page.getByLabel("Email").fill("ada@example.com");
-  await page.getByLabel("Password").fill("long enough");
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Create account" }).click();
+}
+
+test("signing up starts a session and opens the account", async ({ page }) => {
+  const email = uniqueEmail("ada");
+  await signUp(page, email);
 
   await expect(page).toHaveURL(/\/account$/);
   await expect(page.getByRole("heading", { level: 1, name: "Hello, Ada" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 1, name: "Hello, Ada" })).toHaveCSS("color", "rgb(247, 241, 236)");
-  await expect(page.getByText("Obi Logistics · ada@example.com")).toBeVisible();
+  await expect(page.getByText(`Obi Logistics · ${email}`)).toBeVisible();
+});
+
+test("a password the backend finds too weak is explained", async ({ page }) => {
+  await signUp(page, uniqueEmail("weak"), "1234567890");
+
+  await expect(page.getByRole("status")).toContainText("stronger password");
 });
 
 test("an account page sends signed-out visitors to log in, then back", async ({ page }) => {
@@ -79,14 +89,20 @@ test("an account page sends signed-out visitors to log in, then back", async ({ 
   await expect(page.getByRole("heading", { level: 1, name: "Hello, Ada" })).toBeVisible();
 });
 
-test("logging out ends the session", async ({ page }) => {
+test("logging out ends the session everywhere, even if an old session cookie comes back", async ({ page, context }) => {
   await page.goto("/login");
   await logIn(page);
   await expect(page).toHaveURL(/\/account$/);
+  const before = (await context.cookies()).find((cookie) => cookie.name === "ifng_session")!;
 
   await page.getByRole("button", { name: "Log out" }).click();
   await expect(page).toHaveURL(/\/$/);
 
+  await page.goto("/account");
+  await expect(page).toHaveURL(/\/login$/);
+
+  // A copy of the cookie still holds the token, but the backend revoked it on log out.
+  await context.addCookies([before]);
   await page.goto("/account");
   await expect(page).toHaveURL(/\/login$/);
 });
@@ -122,10 +138,10 @@ test("signed-in visitors skip the log in page", async ({ page }) => {
 test("a wrong password is explained, and the email is kept", async ({ page }) => {
   await page.goto("/login");
 
-  await logIn(page, "ada@example.com", WRONG_PASSWORD);
+  await logIn(page, "wrong.password@example.com", WRONG_PASSWORD);
 
   await expect(page.getByRole("status")).toContainText("don't match");
-  await expect(page.getByLabel("Email")).toHaveValue("ada@example.com");
+  await expect(page.getByLabel("Email")).toHaveValue("wrong.password@example.com");
   await expect(page.getByLabel("Password")).toHaveValue("");
 });
 
@@ -143,8 +159,8 @@ test("an email that's already registered is explained", async ({ page }) => {
   await page.goto("/signup");
 
   await page.getByLabel("Full name").fill("Ada Obi");
-  await page.getByLabel("Email").fill(TAKEN_EMAIL);
-  await page.getByLabel("Password").fill("long enough");
+  await page.getByLabel("Email").fill(TAKEN);
+  await page.getByLabel("Password").fill("a long new password");
   await page.getByRole("button", { name: "Create account" }).click();
 
   await expect(page.getByRole("status")).toContainText("already an account");
@@ -156,19 +172,62 @@ test("a password reset is confirmed", async ({ page }) => {
   await page.getByRole("link", { name: "Forgot password?" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Reset your password" })).toBeVisible();
 
-  await page.getByLabel("Email").fill("ada@example.com");
+  await page.getByLabel("Email").fill("nobody@example.com");
   await page.getByRole("button", { name: "Send reset link" }).click();
 
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
 });
 
-test("Google sign-in returns to where the visitor was going", async ({ page }) => {
-  await page.goto("/login?next=/account");
-
-  await page.getByRole("link", { name: "Continue with Google" }).click();
-
+test("a reset link sets a new password once, and logs the client in", async ({ page, context }) => {
+  const email = uniqueEmail("reset");
+  await signUp(page, email);
   await expect(page).toHaveURL(/\/account$/);
-  await expect(page.getByText("Google", { exact: true })).toBeVisible();
+  await context.clearCookies();
+
+  await page.goto("/reset-password");
+  await page.getByLabel("Email").fill(email);
+  await page.getByRole("button", { name: "Send reset link" }).click();
+  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
+
+  const link = await latestResetLink(email);
+  await page.goto(link);
+  await expect(page.getByRole("heading", { level: 1, name: "Set a new password" })).toBeVisible();
+  await page.getByLabel("New password", { exact: true }).fill("another long password");
+  await page.getByRole("button", { name: "Save and log in" }).click();
+  await expect(page).toHaveURL(/\/account$/);
+
+  // The link works once.
+  await context.clearCookies();
+  await page.goto(link);
+  await page.getByLabel("New password", { exact: true }).fill("a third long password");
+  await page.getByRole("button", { name: "Save and log in" }).click();
+  await expect(page.getByRole("status")).toContainText("expired or has already been used");
+
+  await page.goto("/login");
+  await logIn(page, email, "another long password");
+  await expect(page).toHaveURL(/\/account$/);
+});
+
+test("Google sign-in sends the visitor to Google, coming back to our callback", async ({ page }) => {
+  await page.goto("/login?next=/account/services");
+  await expect(page.getByRole("link", { name: "Continue with Google" })).toHaveAttribute("href", "/login/google?next=%2Faccount%2Fservices");
+
+  // Read where it sends the visitor without following it: the tests never go to Google.
+  const response = await page.request.get("/login/google?next=/account/services", { maxRedirects: 0 });
+
+  expect(response.status()).toBe(307);
+  const url = new URL(response.headers()["location"]);
+  expect(url.origin + url.pathname).toBe("https://accounts.google.com/o/oauth2/v2/auth");
+  expect(url.searchParams.get("redirect_uri")).toBe("http://localhost:3100/login/google/callback");
+  expect(url.searchParams.get("code_challenge_method")).toBe("S256");
+  expect(response.headers()["set-cookie"]).toContain("ifng_google=");
+});
+
+test("a Google callback that this browser didn't start is refused and explained", async ({ page }) => {
+  await page.goto("/login/google/callback?code=made-up&state=made-up");
+
+  await expect(page).toHaveURL(/\/login\?error=google$/);
+  await expect(page.getByRole("form", { name: "Log in" }).getByRole("alert")).toContainText("We couldn't sign you in with Google");
 });
 
 test("a link can't send someone to another website after logging in", async ({ page }) => {
@@ -190,7 +249,7 @@ test("repeated failed logins from one address are slowed down", async ({ page })
     await expect(password).toHaveValue("");
     await Promise.all([
       page.waitForResponse((response) => response.request().method() === "POST"),
-      logIn(page, "ada@example.com", WRONG_PASSWORD),
+      logIn(page, "repeated.failures@example.com", WRONG_PASSWORD),
     ]);
   }
 
@@ -201,9 +260,9 @@ test("the keyboard can complete log in", async ({ page }) => {
   await page.goto("/login");
 
   await page.getByLabel("Email").focus();
-  await page.keyboard.type("ada@example.com");
+  await page.keyboard.type(ADA);
   await page.keyboard.press("Tab");
-  await page.keyboard.type("a secret");
+  await page.keyboard.type(CLIENT_PASSWORD);
   await page.keyboard.press("Enter");
 
   await expect(page).toHaveURL(/\/account$/);

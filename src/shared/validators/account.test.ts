@@ -15,10 +15,10 @@ describe("account form validation", () => {
     expect(result.success === false && result.errors.email).toBe("Enter a valid email address.");
   });
 
-  it("asks for a password of at least 8 characters when signing up", () => {
+  it("asks for a password of at least 10 characters when signing up", () => {
     const result = parseForm(signUpSchema, { fullName: "Ada Obi", email: "ada@example.com", password: "short" });
 
-    expect(result.success === false && result.errors.password).toBe("Use at least 8 characters.");
+    expect(result.success === false && result.errors.password).toBe("Use at least 10 characters.");
   });
 
   it("treats an empty business name as none, and trims names", () => {

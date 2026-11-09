@@ -2,6 +2,11 @@ import { z } from "zod";
 
 const email = z.string().trim().min(1, "Enter your email address.").email("Enter a valid email address.");
 
+/** Matches the backend's minimum. The backend also refuses common and all-number passwords. */
+export const MIN_PASSWORD_LENGTH = 10;
+const newPassword = () =>
+  z.string().min(MIN_PASSWORD_LENGTH, `Use at least ${MIN_PASSWORD_LENGTH} characters.`).max(128, "Use 128 characters or fewer.");
+
 export const logInSchema = z.object({
   email,
   password: z.string().min(1, "Enter your password."),
@@ -16,10 +21,16 @@ export const signUpSchema = z.object({
     .optional()
     .transform((value) => value || undefined),
   email,
-  password: z.string().min(8, "Use at least 8 characters.").max(128, "Use 128 characters or fewer."),
+  password: newPassword(),
 });
 
 export const resetPasswordSchema = z.object({ email });
+
+export const setPasswordSchema = z.object({
+  uid: z.string().min(1).max(64),
+  token: z.string().min(1).max(128),
+  password: newPassword(),
+});
 
 export type FieldErrors = Record<string, string>;
 
