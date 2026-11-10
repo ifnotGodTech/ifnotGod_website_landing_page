@@ -21,7 +21,12 @@ const subscriptionSchema: z.ZodType<Subscription> = z.object({
     .enum(PLAN_IDS)
     .nullable()
     .transform((value) => value ?? undefined),
+  paymentDue: z
+    .object({ amount: z.number().nullable(), workingUntil: z.string(), payUrl: z.string().url().nullable() })
+    .nullable()
+    .transform((value) => value ?? undefined),
 });
+const confirmedSchema = z.object({ subscription: subscriptionSchema, renewal: z.boolean() });
 const accountSubscriptionSchema = z.object({ subscription: subscriptionSchema.nullable(), setupFeePaid: z.boolean() });
 const paymentSchema: z.ZodType<Payment> = z.object({ id: z.string(), paidOn: z.string(), description: z.string(), amount: z.number() });
 const paymentPageSchema = z.object({ items: z.array(paymentSchema) });
@@ -49,9 +54,13 @@ export function startCheckout(token: string, checkout: Checkout): Promise<Accoun
   return call("/account/subscription/checkout/", token, { method: "POST", body: checkout, schema: checkoutSchema });
 }
 
-/** After Flutterwave sends the client back: the backend checks the payment with Flutterwave and starts the plan. */
-export function confirmPayment(token: string, reference: string, transactionId: number | null): Promise<AccountResult<Subscription>> {
-  return call("/account/subscription/confirm/", token, { method: "POST", body: { reference, transactionId }, schema: subscriptionSchema });
+/** After Flutterwave sends the client back: the backend checks the payment, then starts or renews the plan. */
+export function confirmPayment(
+  token: string,
+  reference: string,
+  transactionId: number | null
+): Promise<AccountResult<{ subscription: Subscription; renewal: boolean }>> {
+  return call("/account/subscription/confirm/", token, { method: "POST", body: { reference, transactionId }, schema: confirmedSchema });
 }
 
 export function updateServices(token: string, serviceIds: string[]): Promise<AccountResult<Subscription>> {

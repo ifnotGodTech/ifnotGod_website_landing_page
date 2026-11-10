@@ -28,6 +28,17 @@ export type Subscription = {
   changesLeftThisMonth: number;
   /** A plan change waiting for the next renewal. */
   pendingPlanId?: PlanId;
+  /** A renewal that hasn't been paid yet, while the plan keeps working for a few days. */
+  paymentDue?: PaymentDue;
+};
+
+export type PaymentDue = {
+  /** In naira. Null before the first try has been made. */
+  amount: number | null;
+  /** ISO date: the last day the plan keeps working unpaid. */
+  workingUntil: string;
+  /** Where to pay, or confirm the card payment, when the client must. */
+  payUrl: string | null;
 };
 
 export type Checkout = { planId: PlanId; billingPeriod: BillingPeriod };

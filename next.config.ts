@@ -4,7 +4,10 @@ const isDev = process.env.NODE_ENV === "development";
 
 // Choosing a plan sends the form's result on to Flutterwave's payment page. The browser tests' fake
 // Flutterwave is allowed only in their own build (npm run build:e2e).
-const paymentPages = ["https://*.flutterwave.com", process.env.E2E_FAKE_FLUTTERWAVE_ORIGIN].filter(Boolean).join(" ");
+// Flutterwave's test mode uses dev-flutterwave.com, for previews.
+const paymentPages = ["https://*.flutterwave.com", "https://*.dev-flutterwave.com", process.env.E2E_FAKE_FLUTTERWAVE_ORIGIN]
+  .filter(Boolean)
+  .join(" ");
 
 // The page is statically generated, so nonces aren't available and Next.js needs
 // 'unsafe-inline' for its inline scripts. React needs 'unsafe-eval' only in development.

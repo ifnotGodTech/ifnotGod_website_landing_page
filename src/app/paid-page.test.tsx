@@ -18,8 +18,16 @@ const props = (searchParams: Record<string, string>) => ({ params: Promise.resol
 describe("back from Flutterwave", () => {
   beforeEach(() => mocks.confirmPayment.mockReset());
 
+  it("sends a renewed client back to their account", async () => {
+    mocks.confirmPayment.mockResolvedValueOnce({ ok: true, value: { subscription: {}, renewal: true } });
+
+    await expect(PaidPage(props({ status: "successful", tx_ref: "ifng-2", transaction_id: "778" }))).rejects.toThrow(
+      "REDIRECT /account?updated=renewed"
+    );
+  });
+
   it("has the backend confirm the payment, then goes on to choosing services", async () => {
-    mocks.confirmPayment.mockResolvedValueOnce({ ok: true, value: {} });
+    mocks.confirmPayment.mockResolvedValueOnce({ ok: true, value: { subscription: {}, renewal: false } });
 
     await expect(PaidPage(props({ status: "successful", tx_ref: "ifng-1", transaction_id: "777" }))).rejects.toThrow(
       "REDIRECT /account/services?welcome=1"

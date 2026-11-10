@@ -1,6 +1,7 @@
 import { AccountBand } from "@/components/account/AccountBand";
 import { ActionForm } from "@/components/account/ActionForm";
 import { NoPlanCard, PaymentsCard, PlanCard } from "@/components/account/AccountSummary";
+import { PaymentDueNotice } from "@/components/account/PaymentDueNotice";
 import { Container } from "@/components/ui/Container";
 import { requireSession } from "@/lib/accounts";
 import { loadAccount } from "@/lib/accounts/account";
@@ -22,6 +23,7 @@ const UPDATES: Record<string, string> = {
   plan: "Your plan change is saved.",
   cancelled: "Your subscription is cancelled.",
   resumed: "Your plan will keep renewing as before.",
+  renewed: "Payment received. Your plan has renewed.",
 };
 
 export default async function AccountPage({ searchParams }: PageProps<"/account">) {
@@ -43,6 +45,8 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
             {notice}
           </p>
         )}
+
+        {subscription?.paymentDue && <PaymentDueNotice due={subscription.paymentDue} />}
 
         {subscription?.status === "cancelled" && (
           <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-xl border border-orange bg-[#fff4e8] px-6 py-5">

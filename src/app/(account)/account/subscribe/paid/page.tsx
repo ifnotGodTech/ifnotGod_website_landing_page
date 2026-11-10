@@ -17,7 +17,8 @@ export const metadata = buildPageMetadata({
 
 const one = (value: string | string[] | undefined) => (typeof value === "string" ? value : "");
 
-// Flutterwave sends the client back here after paying, with our reference and its transaction id.
+// Flutterwave sends the client back here after paying, for a new plan or a renewal, with our reference and
+// its transaction id.
 // The backend checks the payment with Flutterwave before starting the plan: this address alone proves nothing.
 export default async function PaidPage({ searchParams }: PageProps<"/account/subscribe/paid">) {
   const { token } = await requireSession("/account");
@@ -28,7 +29,7 @@ export default async function PaidPage({ searchParams }: PageProps<"/account/sub
   let problem: AccountErrorCode | "CANCELLED" = "CANCELLED";
   if (reference && one(query.status) !== "cancelled") {
     const result = await confirmPayment(token, reference, transactionId);
-    if (result.ok) redirect("/account/services?welcome=1");
+    if (result.ok) redirect(result.value.renewal ? "/account?updated=renewed" : "/account/services?welcome=1");
     problem = result.error;
   }
 

@@ -13,6 +13,7 @@ const subscription = {
   serviceIds: ["lead-follow-up"],
   changesLeftThisMonth: 1,
   pendingPlanId: null,
+  paymentDue: null,
 };
 const sent = (n = 0) => {
   const [url, options] = fetchMock.mock.calls[n];
@@ -38,7 +39,7 @@ describe("subscription API", () => {
 
     expect(await getAccountSubscription("t0ken")).toEqual({
       ok: true,
-      value: { subscription: { ...subscription, pendingPlanId: undefined }, setupFeePaid: true },
+      value: { subscription: { ...subscription, pendingPlanId: undefined, paymentDue: undefined }, setupFeePaid: true },
     });
     expect(sent()).toMatchObject({ url: "https://api.example.com/api/v1/account/subscription/", headers: { authorization: "Bearer t0ken" } });
   });
@@ -54,13 +55,13 @@ describe("subscription API", () => {
   it("starts checkout and confirms the payment", async () => {
     fetchMock
       .mockResolvedValueOnce(json(201, { redirectTo: "https://checkout.flutterwave.com/v3/hosted/pay/x" }))
-      .mockResolvedValueOnce(json(200, subscription));
+      .mockResolvedValueOnce(json(200, { subscription, renewal: false }));
 
     expect(await startCheckout("t0ken", { planId: "growth", billingPeriod: "monthly" })).toEqual({
       ok: true,
       value: { redirectTo: "https://checkout.flutterwave.com/v3/hosted/pay/x" },
     });
-    expect(await confirmPayment("t0ken", "ifng-1", 777)).toMatchObject({ ok: true, value: { planId: "growth" } });
+    expect(await confirmPayment("t0ken", "ifng-1", 777)).toMatchObject({ ok: true, value: { subscription: { planId: "growth" }, renewal: false } });
     expect(sent(1)).toMatchObject({ url: "https://api.example.com/api/v1/account/subscription/confirm/", body: { reference: "ifng-1", transactionId: 777 } });
   });
 
