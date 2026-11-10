@@ -25,6 +25,7 @@ Open <http://localhost:3000>.
 | `ACCOUNTS_SESSION_SECRET` | Where accounts are on | A long random string that encrypts the login cookie, which holds the backend's token. Local development uses a built-in one. |
 | `BACKEND_API_URL`, `BACKEND_APP_KEY` | Where accounts are on | The backend's address and WEB's key for it. Accounts, subscriptions and payments all use the real backend; payments go through Flutterwave's own page. |
 | `GOOGLE_CLIENT_ID` | For Google sign-in | The OAuth client id from Google Cloud. The backend holds the client secret. |
+| `WEB_REFRESH_SECRET` | Where the backend is used | Shared with the backend, which calls `/api/revalidate` after the team saves site content so pages refresh within moments. Without it, pages catch up within the hour. |
 
 Running the site locally with a real `BREVO_API_KEY` means form submissions send real email.
 
