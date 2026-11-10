@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 const sendContactNotification = vi.fn();
@@ -156,6 +156,55 @@ describe("POST /api/contact", () => {
     const response = await POST(makeRequest(validPayload, { "content-length": String(64 * 1024) }));
 
     expect(response.status).toBe(413);
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/contact with the backend", () => {
+  const fetchMock = vi.fn();
+  const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+
+  beforeEach(() => {
+    vi.stubEnv("BACKEND_API_URL", "https://api.example.com");
+    vi.stubEnv("BACKEND_APP_KEY", "web-key");
+    vi.stubGlobal("fetch", fetchMock);
+    fetchMock.mockReset();
+    sendContactNotification.mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it("saves the request in the backend instead of emailing directly", async () => {
+    fetchMock.mockResolvedValueOnce(json(201, { received: true }));
+
+    const response = await POST(makeRequest({ ...validPayload, plan: "growth" }));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true });
+    const [url, options] = fetchMock.mock.calls[0];
+    expect(url).toBe("https://api.example.com/api/v1/leads/");
+    expect(JSON.parse(options.body)).toMatchObject({ fullName: "Ada Obi", email: "ada@obilogistics.com", plan: "growth" });
+    expect(options.headers).toMatchObject({ "x-app-key": "web-key" });
+    expect(sendContactNotification).not.toHaveBeenCalled();
+  });
+
+  it("passes on the backend's field messages, a limit, and an outage", async () => {
+    fetchMock
+      .mockResolvedValueOnce(json(400, { code: "VALIDATION", message: "Check the highlighted fields.", errors: { email: ["Enter a valid email address."] } }))
+      .mockResolvedValueOnce(json(429, { code: "RATE_LIMITED", message: "Too many submissions.", errors: {} }))
+      .mockRejectedValueOnce(new Error("network"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const invalid = await POST(makeRequest(validPayload));
+    const limited = await POST(makeRequest(validPayload));
+    const down = await POST(makeRequest(validPayload));
+
+    expect([invalid.status, await invalid.json()]).toEqual([400, { ok: false, errors: { email: "Enter a valid email address." } }]);
+    expect(limited.status).toBe(429);
+    expect(down.status).toBe(502);
     expect(sendContactNotification).not.toHaveBeenCalled();
   });
 });

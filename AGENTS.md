@@ -28,7 +28,7 @@ Until the backend reaches a feature, its data stays in code.
 - `src/components/ui` (shared reusable UI primitives: Button, Container, Eyebrow, FormField, RevealOnScroll, FloatingCta)
 - `src/components/legal` (shared layout for the Privacy Policy and Terms pages, which live at `src/app/(site)/privacy-policy` and `src/app/(site)/terms`. Update the Privacy Policy whenever the site adds cookies, analytics, a new data recipient or a new use of personal data.)
 - `src/content` (plans and services data, read only by `src/lib/catalogue`, which a lint rule enforces)
-- `src/lib` (contact form client, email/notification client, config)
+- `src/lib` (contact form client, email/notification client, config; `leads` sends audit requests to the backend when it's set up)
 - `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
 - `src/lib/api` (the one server-only client for every backend call: WEB's app key, the visitor's address, timeouts, and failures turned into plain messages)
 - `src/lib/accounts` (the only route to the account backend: `api.ts` for accounts and `subscriptions.ts` for plans and payments, on the real API; Google sign-in; the encrypted login session cookie; and the form actions)

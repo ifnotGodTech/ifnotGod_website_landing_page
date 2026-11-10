@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { latestEmailWithSubject } from "./backend";
 
 const form = (page: Page) => page.getByRole("form", { name: "Book your free audit" });
 const planField = (page: Page) => page.getByLabel("Interested in a plan? (optional)");
@@ -71,6 +72,21 @@ test("sends the request with the chosen plan, and confirms it", async ({ page })
 
   await expect(page.getByText(/we've got your request/i)).toBeVisible();
   expect(body).toMatchObject({ fullName: "Ada Obi", plan: "growth" });
+});
+
+test("a real request is saved by the backend and emailed to the team", async ({ page }) => {
+  const name = `Audit Tester ${Date.now()}`;
+  await page.goto("/audit?plan=pro");
+
+  await page.getByLabel("Full name").fill(name);
+  await page.getByLabel("Email").fill("tester@example.com");
+  await page.getByLabel("What task or problem is wasting your time?").fill("We confirm every delivery by phone.");
+  await page.getByRole("button", { name: "Book my free audit" }).click();
+
+  await expect(page.getByText(/we've got your request/i)).toBeVisible();
+  const email = await latestEmailWithSubject(`New audit request from ${name}`);
+  expect(email).toContain("Interested in: Pro");
+  expect(email).toContain("Reply-To: tester@example.com");
 });
 
 test("error messages are readable on the light form", async ({ page }) => {

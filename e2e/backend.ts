@@ -36,3 +36,8 @@ export async function latestResetLink(email: string): Promise<string> {
   if (!link) throw new Error(`No reset link has been emailed to ${email}`);
   return link;
 }
+
+/** The latest email the backend has written with this subject, or null. */
+export async function latestEmailWithSubject(subject: string): Promise<string | null> {
+  return (await emails()).filter((message) => message.includes(`Subject: ${subject}`)).at(-1) ?? null;
+}

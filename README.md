@@ -16,7 +16,7 @@ Open <http://localhost:3000>.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `BREVO_API_KEY` | Yes, for the form to deliver | Sends contact form leads by email. Without it, the form shows visitors an error asking them to use WhatsApp or email. |
+| `BREVO_API_KEY` | Yes, for the form to deliver, until the backend is live | Sends audit requests by email. With `BACKEND_API_URL` set, the form sends them to the backend instead, which saves them for the dashboard and emails the team. Without either, the form shows visitors an error asking them to use WhatsApp or email. |
 | `CONTACT_RECIPIENT_EMAIL` | Recommended | The inbox that receives leads. Defaults to the public contact email in `src/shared/constants.ts`. |
 | `BREVO_SENDER_EMAIL` | Recommended | Sender address, verified in Brevo. A sender on your own authenticated domain is the most reliable. Defaults to `no-reply@ifnotgod.com`. |
 | `BREVO_SENDER_NAME` | Optional | Sender name. |

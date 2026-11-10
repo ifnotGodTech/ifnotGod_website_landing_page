@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseContactSubmission } from "@/shared/validators/contact";
 import { sendContactNotification, EmailNotConfiguredError } from "@/lib/notifications/email";
+import { apiBaseUrl } from "@/lib/api/config";
+import { sendLeadToBackend } from "@/lib/leads/backend";
 import { createRateLimiter } from "@/lib/rateLimit";
 import { HONEYPOT_FIELD } from "@/shared/constants";
 
 // 5 submissions per IP per 10 minutes. Vercel overwrites x-forwarded-for,
-// so visitors can't fake their IP to get around this.
+// so visitors can't fake their IP to get around this. The backend limits the same way; this one stays
+// while the form can still email the team directly, until the backend is live (phase 10).
 const limiter = createRateLimiter({
   windowMs: 10 * 60 * 1000,
   maxRequests: 5,
@@ -69,6 +72,18 @@ export async function POST(request: NextRequest) {
   const result = parseContactSubmission(body);
   if (!result.success) {
     return NextResponse.json({ ok: false, errors: result.errors }, { status: 400 });
+  }
+
+  // With the backend, the request is saved there, then emailed to the team, so it can't be lost.
+  // Without it (until launch), it's emailed straight to the team through Brevo, as before.
+  if (apiBaseUrl()) {
+    const sent = await sendLeadToBackend(result.data);
+    if (sent.ok) return NextResponse.json({ ok: true });
+    if (sent.reason === "invalid") return NextResponse.json({ ok: false, errors: sent.errors }, { status: 400 });
+    if (sent.reason === "rate-limited") {
+      return NextResponse.json({ ok: false, error: "Too many submissions. Please try again in a few minutes." }, { status: 429 });
+    }
+    return NextResponse.json({ ok: false, error: "Something went wrong sending your message. Please try again." }, { status: 502 });
   }
 
   try {
