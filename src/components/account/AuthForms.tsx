@@ -113,7 +113,7 @@ export function ResetPasswordForm({ action }: { action: AuthAction }) {
     return (
       <div role="status" className={CARD}>
         <h2 className="text-[1.6rem] font-extrabold tracking-[-0.02em]">Check your email</h2>
-        <p className="text-on-light-dim">
+        <p className="text-on-light-dim [overflow-wrap:anywhere]">
           If there&apos;s an account for {state.values.email}, we&apos;ve sent a link to reset your password.
         </p>
         <a href="/reset-password" className="w-fit font-semibold text-maroon underline hover:text-maroon-bright">

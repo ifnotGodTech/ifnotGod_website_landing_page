@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AccountBand } from "@/components/account/AccountBand";
 import { ServicesForm } from "@/components/account/ServicesForm";
 import { Container } from "@/components/ui/Container";
-import { requireUser } from "@/lib/accounts";
+import { requireSession } from "@/lib/accounts";
 import { loadAccount } from "@/lib/accounts/account";
 import { updateServicesAction } from "@/lib/accounts/subscriptionActions";
 import { buildPageMetadata } from "@/shared/metadata";
@@ -15,8 +15,8 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function ServicesPage({ searchParams }: PageProps<"/account/services">) {
-  const user = await requireUser("/account/services");
-  const [{ subscription, plan, choices }, { welcome }] = await Promise.all([loadAccount(user), searchParams]);
+  const { token } = await requireSession("/account/services");
+  const [{ subscription, plan, choices }, { welcome }] = await Promise.all([loadAccount(token), searchParams]);
   if (subscription?.status !== "active" || !plan) redirect("/account");
 
   const firstTime = subscription.serviceIds.length === 0;

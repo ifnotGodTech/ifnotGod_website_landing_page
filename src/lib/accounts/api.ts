@@ -43,6 +43,13 @@ export function accountErrorFor(error: ApiError): AccountErrorCode {
       return "RESET_LINK_INVALID";
     case "GOOGLE_FAILED":
       return "GOOGLE_FAILED";
+    case "NOT_SUBSCRIBED":
+    case "ALREADY_SUBSCRIBED":
+    case "INVALID_SELECTION":
+    case "NO_CHANGES_LEFT":
+    case "PAYMENT_NOT_FOUND":
+    case "PAYMENT_NOT_COMPLETED":
+      return error.detailCode;
   }
   return error.code === "RATE_LIMITED" ? "TOO_MANY_ATTEMPTS" : "UNAVAILABLE";
 }

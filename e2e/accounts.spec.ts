@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }, testInfo) => {
 
 async function logIn(page: Page, email = ADA, password = CLIENT_PASSWORD) {
   await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
+  await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Log in" }).click();
 }
 
@@ -59,7 +59,7 @@ async function signUp(page: Page, email: string, password = "a long new password
   await page.getByLabel("Full name").fill("Ada Obi");
   await page.getByLabel("Business or brand name (optional)").fill("Obi Logistics");
   await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
+  await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Create account" }).click();
 }
 
@@ -107,6 +107,23 @@ test("logging out ends the session everywhere, even if an old session cookie com
   await expect(page).toHaveURL(/\/login$/);
 });
 
+test("the menu offers the account once logged in, and Log in again after logging out", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 800 });
+  await page.goto("/login");
+  await logIn(page);
+  await expect(page).toHaveURL(/\/account$/);
+
+  await page.goto("/pricing");
+  const menu = page.locator("nav").first();
+  await expect(menu.getByRole("link", { name: "Your account" })).toHaveAttribute("href", "/account");
+  await expect(menu.getByRole("link", { name: "Log in" })).toHaveCount(0);
+
+  await page.goto("/account");
+  await page.getByRole("button", { name: "Log out" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator("nav").first().getByRole("link", { name: "Log in" })).toBeVisible();
+});
+
 test("the session cookie can't be read by scripts on the page", async ({ page, context }) => {
   await page.goto("/login");
   await logIn(page);
@@ -142,7 +159,7 @@ test("a wrong password is explained, and the email is kept", async ({ page }) =>
 
   await expect(page.getByRole("status")).toContainText("don't match");
   await expect(page.getByLabel("Email")).toHaveValue("wrong.password@example.com");
-  await expect(page.getByLabel("Password")).toHaveValue("");
+  await expect(page.getByLabel("Password", { exact: true })).toHaveValue("");
 });
 
 test("empty fields are explained, with focus kept on the page", async ({ page }) => {
@@ -160,7 +177,7 @@ test("an email that's already registered is explained", async ({ page }) => {
 
   await page.getByLabel("Full name").fill("Ada Obi");
   await page.getByLabel("Email").fill(TAKEN);
-  await page.getByLabel("Password").fill("a long new password");
+  await page.getByLabel("Password", { exact: true }).fill("a long new password");
   await page.getByRole("button", { name: "Create account" }).click();
 
   await expect(page.getByRole("status")).toContainText("already an account");
@@ -244,7 +261,7 @@ test("repeated failed logins from one address are slowed down", async ({ page })
   // Every attempt shows the same message, so each one waits for its own response. React clears
   // the password after each attempt; typing before that lands would send an empty form, which
   // is refused before it's counted, so the limit would never be reached.
-  const password = page.getByLabel("Password");
+  const password = page.getByLabel("Password", { exact: true });
   for (let attempt = 0; attempt < 11; attempt++) {
     await expect(password).toHaveValue("");
     await Promise.all([

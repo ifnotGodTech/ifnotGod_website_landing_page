@@ -31,7 +31,7 @@ Until the backend reaches a feature, its data stays in code.
 - `src/lib` (contact form client, email/notification client, config)
 - `src/lib/catalogue` (async functions for reading plans and services, plus the rules for what each plan includes)
 - `src/lib/api` (the one server-only client for every backend call: WEB's app key, the visitor's address, timeouts, and failures turned into plain messages)
-- `src/lib/accounts` (the only route to the account backend: `api.ts` for accounts on the real API, Google sign-in, the encrypted login session cookie, the form actions, and the stand-in for subscriptions until the backend has them)
+- `src/lib/accounts` (the only route to the account backend: `api.ts` for accounts and `subscriptions.ts` for plans and payments, on the real API; Google sign-in; the encrypted login session cookie; and the form actions)
 - `src/app/(account)` (signed-in pages, with their own layout; sign-in pages live in `(site)` and read no session in its layout)
 - `src/components/account` (sign-in forms and account screens)
 - `src/shared` (constants, validators, shared helpers)
@@ -60,7 +60,7 @@ Until the backend reaches a feature, its data stays in code.
 
 ## Delivery Approach
 - Work in vertical slices: the backend project writes the API, then this project implements it on the interface.
-- Exception: account screens are built before their API, against `src/lib/accounts` with a stand-in backend, behind the `NEXT_PUBLIC_ACCOUNTS_ENABLED` switch. The stand-in refuses to run in production, and the switch stays off there until the real API is connected.
+- Account screens are behind the `NEXT_PUBLIC_ACCOUNTS_ENABLED` switch, which stays off in production until the backend is live and the Privacy Policy and Terms are updated.
 - Until a slice reaches a feature, keep that feature's data behind one module in `src/lib`, so the API can replace it without page changes.
 
 ## Definition of Done (Feature Level)

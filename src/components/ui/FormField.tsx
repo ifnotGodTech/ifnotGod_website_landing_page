@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/shared/cn";
+import { PasswordInput } from "./PasswordInput";
 
 export type ControlProps = {
   id: string;
@@ -64,6 +65,8 @@ export function FormField({
         children(props)
       ) : textarea ? (
         <textarea {...props} rows={5} className={cn(props.className, "resize-y")} />
+      ) : type === "password" ? (
+        <PasswordInput {...props} />
       ) : (
         <input {...props} type={type} />
       )}

@@ -2,7 +2,7 @@ import { AccountBand } from "@/components/account/AccountBand";
 import { ActionForm } from "@/components/account/ActionForm";
 import { NoPlanCard, PaymentsCard, PlanCard } from "@/components/account/AccountSummary";
 import { Container } from "@/components/ui/Container";
-import { requireUser } from "@/lib/accounts";
+import { requireSession } from "@/lib/accounts";
 import { loadAccount } from "@/lib/accounts/account";
 import { resumeSubscriptionAction } from "@/lib/accounts/subscriptionActions";
 import { formatLongDate } from "@/shared/dates";
@@ -25,8 +25,8 @@ const UPDATES: Record<string, string> = {
 };
 
 export default async function AccountPage({ searchParams }: PageProps<"/account">) {
-  const user = await requireUser("/account");
-  const [overview, { updated }] = await Promise.all([loadAccount(user), searchParams]);
+  const { user, token } = await requireSession("/account");
+  const [overview, { updated }] = await Promise.all([loadAccount(token), searchParams]);
   const { subscription } = overview;
   const notice = typeof updated === "string" ? UPDATES[updated] : undefined;
 

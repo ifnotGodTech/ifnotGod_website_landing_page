@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "build:e2e": "NEXT_PUBLIC_ACCOUNTS_ENABLED=true next build",
+    "build:e2e": "NEXT_PUBLIC_ACCOUNTS_ENABLED=true E2E_FAKE_FLUTTERWAVE_ORIGIN=http://127.0.0.1:8101 next build",
     "test:e2e": "playwright test"
   },
   "dependencies": {

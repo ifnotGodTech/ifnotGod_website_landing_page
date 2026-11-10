@@ -2,19 +2,10 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { AccountUser } from "@/types/account";
 import { getSignedInUser } from "./api";
-import type { AccountsBackend } from "./backend";
 import { withNext } from "./paths";
 import { readSession } from "./session";
-import { createStubBackend } from "./stub";
 
-// The only way screens reach subscriptions, which still use the stand-in until backend phases 5 and 6.
-// Accounts themselves (sign-up, log in, Google, resets) use the real API in ./api.ts.
-export function getAccountsBackend(): AccountsBackend {
-  if (process.env.VERCEL_ENV === "production") {
-    throw new Error("The stand-in subscriptions backend must never run in production. Connect the real API first.");
-  }
-  return createStubBackend();
-}
+// Who is signed in, confirmed with the backend. Accounts are in ./api.ts, subscriptions in ./subscriptions.ts.
 
 export type AccountSession =
   | { status: "active"; user: AccountUser; token: string }
@@ -40,10 +31,14 @@ export async function getCurrentUser(): Promise<AccountUser | null> {
   return session.status === "active" ? session.user : null;
 }
 
-/** For account pages and actions: the signed-in client, or a redirect to log in and come back to `path`. */
-export async function requireUser(path: string): Promise<AccountUser> {
+/** For account pages and actions: the signed-in client and their token, or a redirect to log in and come back to `path`. */
+export async function requireSession(path: string): Promise<{ user: AccountUser; token: string }> {
   const session = await readAccountSession();
-  if (session.status === "active") return session.user;
+  if (session.status === "active") return { user: session.user, token: session.token };
   if (session.status === "unavailable") throw new Error(ACCOUNTS_UNAVAILABLE);
   redirect(withNext("/login", path));
+}
+
+export async function requireUser(path: string): Promise<AccountUser> {
+  return (await requireSession(path)).user;
 }

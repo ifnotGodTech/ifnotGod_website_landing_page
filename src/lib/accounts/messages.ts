@@ -14,6 +14,8 @@ const MESSAGES: Record<AccountErrorCode, string> = {
   INVALID_SELECTION: "That choice isn't part of your plan. Check your selection and try again.",
   NO_CHANGES_LEFT: "You've used this month's changes. You can make more next month, or move to a bigger plan.",
   PAYMENT_NOT_FOUND: "We couldn't find that payment. Please start again from your account.",
+  PAYMENT_NOT_COMPLETED:
+    "Your payment hasn't gone through. If money left your account, your plan will start once Flutterwave confirms it. Otherwise, please try again.",
 };
 
 export function accountErrorMessage(code: AccountErrorCode): string {

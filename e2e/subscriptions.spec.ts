@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
-import { ADA, CLIENT_PASSWORD, SOMEONE_ELSE } from "./backend";
+import { ADA, CLIENT_PASSWORD, SOMEONE_ELSE, uniqueEmail } from "./backend";
 
-// Accounts use the real backend. Subscriptions still use the stand-in and its stand-in payment page,
-// kept in each browser's own cookies. No money is ever taken.
+// Uses the real backend. Payments go to the fake Flutterwave the test backend serves, so no money is ever
+// taken. A client has one plan, so each test that subscribes signs up its own account.
 
 let nextAddress = 0;
 test.beforeEach(async ({ page }, testInfo) => {
@@ -12,21 +12,28 @@ test.beforeEach(async ({ page }, testInfo) => {
 
 async function logIn(page: Page) {
   await page.getByLabel("Email").fill(ADA);
-  await page.getByLabel("Password").fill(CLIENT_PASSWORD);
+  await page.getByLabel("Password", { exact: true }).fill(CLIENT_PASSWORD);
   await page.getByRole("button", { name: "Log in" }).click();
 }
 
-async function subscribe(page: Page, plan = "Growth", period = "Monthly") {
-  await page.goto("/login?next=/account/subscribe");
-  await logIn(page);
+async function signUpAndChoose(page: Page, plan: string, period: string) {
+  await page.goto("/signup?next=/account/subscribe");
+  await page.getByLabel("Full name").fill("Ada Obi");
+  await page.getByLabel("Email").fill(uniqueEmail("subscriber"));
+  await page.getByLabel("Password", { exact: true }).fill("a long new password");
+  await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Choose your plan" })).toBeVisible();
 
   await page.getByRole("radio", { name: new RegExp(plan) }).check();
   await page.getByRole("radio", { name: new RegExp(period) }).check();
   await page.getByRole("button", { name: /with Flutterwave/ }).click();
+  // The fake Flutterwave's payment page.
+  await expect(page.getByRole("heading", { level: 1, name: "Test payment" })).toBeVisible();
+}
 
-  await expect(page.getByRole("heading", { level: 1, name: "Payment" })).toBeVisible();
-  await page.getByRole("button", { name: /^Pay ₦/ }).click();
+async function subscribe(page: Page, plan = "Growth", period = "Monthly") {
+  await signUpAndChoose(page, plan, period);
+  await page.getByRole("button", { name: "Pay", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Choose your services" })).toBeVisible();
 }
 
@@ -75,6 +82,17 @@ test("paying starts the plan, then the client chooses services", async ({ page }
   await expect(page.getByText("Renews automatically")).toBeVisible();
   await expect(page.getByRole("listitem").filter({ hasText: "WhatsApp sales agent" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "₦240,000" })).toBeVisible();
+});
+
+test("Flutterwave is asked for the right amount, and cancelling there charges nothing", async ({ page }) => {
+  await signUpAndChoose(page, "Growth", "12 months upfront");
+  await expect(page.getByText("Amount: NGN 400000")).toBeVisible();
+
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+
+  await expect(page.getByRole("heading", { level: 1, name: "Payment cancelled" })).toBeVisible();
+  await page.getByRole("link", { name: "Go to your account" }).click();
+  await expect(page.getByText("You haven't subscribed yet.")).toBeVisible();
 });
 
 test("swapping a service uses a monthly change", async ({ page }) => {
@@ -137,7 +155,7 @@ test("the subscription belongs to the signed-in client only", async ({ page, con
 
   await page.goto("/login");
   await page.getByLabel("Email").fill(SOMEONE_ELSE);
-  await page.getByLabel("Password").fill(CLIENT_PASSWORD);
+  await page.getByLabel("Password", { exact: true }).fill(CLIENT_PASSWORD);
   await page.getByRole("button", { name: "Log in" }).click();
 
   await expect(page.getByText("You haven't subscribed yet.")).toBeVisible();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,13 @@ import { cn } from "@/shared/cn";
 const MOBILE_MENU_ID = "mobile-menu";
 const DESKTOP_NAV_QUERY = "(min-width: 80rem)"; // Tailwind's xl, where the menu is hidden.
 const BEHIND_MENU = "main, footer, [data-testid='floating-cta']";
+// Set at log in next to the real session cookie (see src/lib/accounts/session.ts). It holds only "1".
+const SIGNED_IN_COOKIE = "ifng_signed_in";
+
+const noSubscription = () => () => {};
+const readSignedIn = () => document.cookie.split("; ").includes(`${SIGNED_IN_COOKIE}=1`);
+// Public pages are built ahead of time, so the server always renders "Log in"; the browser corrects it.
+const signedOutOnServer = () => false;
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -19,6 +26,9 @@ export function Navigation() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const [lastPathname, setLastPathname] = useState(pathname);
+  // Read again on every render, which includes every page change, so it follows log in and log out.
+  const signedIn = useSyncExternalStore(noSubscription, readSignedIn, signedOutOnServer);
+  const account = signedIn ? { href: "/account", label: "Your account" } : { href: "/login", label: "Log in" };
 
   // This component stays mounted between pages, so close the menu when the page
   // changes, including through the browser's back button.
@@ -103,10 +113,10 @@ export function Navigation() {
           ))}
           {ACCOUNTS_ENABLED && (
             <Link
-              href="/login"
+              href={account.href}
               className="font-mono text-[0.74rem] uppercase tracking-[0.08em] text-paper-dim transition-colors hover:text-orange"
             >
-              Log in
+              {account.label}
             </Link>
           )}
         </div>
@@ -156,8 +166,8 @@ export function Navigation() {
           </Link>
         ))}
         {ACCOUNTS_ENABLED && (
-          <Link href="/login" onClick={() => setOpen(false)} className="font-display text-[1.6rem]">
-            Log in
+          <Link href={account.href} onClick={() => setOpen(false)} className="font-display text-[1.6rem]">
+            {account.label}
           </Link>
         )}
         <div className="mt-3 flex flex-wrap gap-3">

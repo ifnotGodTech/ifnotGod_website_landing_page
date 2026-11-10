@@ -56,7 +56,8 @@ export type AccountErrorCode =
   | "ALREADY_SUBSCRIBED"
   | "INVALID_SELECTION"
   | "NO_CHANGES_LEFT"
-  | "PAYMENT_NOT_FOUND";
+  | "PAYMENT_NOT_FOUND"
+  | "PAYMENT_NOT_COMPLETED";
 
 export type AccountResult<T> = { ok: true; value: T } | { ok: false; error: AccountErrorCode };
 

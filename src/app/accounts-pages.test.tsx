@@ -35,6 +35,15 @@ describe("with accounts switched on", () => {
     screen.getAllByRole("link", { name: "Log in", hidden: true }).forEach((link) => expect(link).toHaveAttribute("href", "/login"));
   });
 
+  it("offers a signed-in client their account instead of Log in", () => {
+    document.cookie = "ifng_signed_in=1; path=/";
+    render(<Navigation />);
+    document.cookie = "ifng_signed_in=; max-age=0; path=/";
+
+    screen.getAllByRole("link", { name: "Your account", hidden: true }).forEach((link) => expect(link).toHaveAttribute("href", "/account"));
+    expect(screen.queryByRole("link", { name: "Log in", hidden: true })).not.toBeInTheDocument();
+  });
+
   it("shows the log in form to signed-out visitors", async () => {
     render(await LogInPage(withNext("/account/services")));
 

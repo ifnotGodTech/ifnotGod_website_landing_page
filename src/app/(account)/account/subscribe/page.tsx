@@ -3,7 +3,7 @@ import { AccountBand } from "@/components/account/AccountBand";
 import { ActionForm } from "@/components/account/ActionForm";
 import { SubscribeForm } from "@/components/account/SubscribeForm";
 import { Container } from "@/components/ui/Container";
-import { requireUser } from "@/lib/accounts";
+import { requireSession } from "@/lib/accounts";
 import { getBillingTerms, getSubscribablePlans, loadAccount } from "@/lib/accounts/account";
 import { BILLING_PERIODS, buildQuote, isBillingPeriod, type Quote } from "@/lib/accounts/billing";
 import { changePlanAction, startSubscriptionAction } from "@/lib/accounts/subscriptionActions";
@@ -22,8 +22,8 @@ export const metadata = buildPageMetadata({
 export default async function SubscribePage({ searchParams }: PageProps<"/account/subscribe">) {
   const { plan: planParam, period: periodParam } = await searchParams;
   const requested = parsePlanParam(planParam);
-  const user = await requireUser(requested ? `/account/subscribe?plan=${requested}` : "/account/subscribe");
-  const [overview, plans, terms] = await Promise.all([loadAccount(user), getSubscribablePlans(), getBillingTerms()]);
+  const { token } = await requireSession(requested ? `/account/subscribe?plan=${requested}` : "/account/subscribe");
+  const [overview, plans, terms] = await Promise.all([loadAccount(token), getSubscribablePlans(), getBillingTerms()]);
   const { subscription } = overview;
 
   // A cancelled plan is still running, so it's kept from the account page, not bought again.

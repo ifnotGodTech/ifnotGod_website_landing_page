@@ -12,7 +12,7 @@ vi.mock("./session", () => ({ readSession: async () => mocks.session }));
 vi.mock("./api", () => ({ getSignedInUser: mocks.getSignedInUser }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 
-import { ACCOUNTS_UNAVAILABLE, getAccountsBackend, getCurrentUser, requireUser } from "./index";
+import { ACCOUNTS_UNAVAILABLE, getCurrentUser, requireSession, requireUser } from "./index";
 
 const user = { id: "7", fullName: "Ada Obi", email: "ada@example.com", signInMethod: "password" };
 
@@ -22,13 +22,6 @@ describe("accounts module", () => {
     mocks.getSignedInUser.mockReset();
   });
   afterEach(() => vi.unstubAllEnvs());
-
-  it("uses the stand-in for subscriptions outside production, and refuses it in production", () => {
-    expect(getAccountsBackend().getSubscription).toBeTypeOf("function");
-
-    vi.stubEnv("VERCEL_ENV", "production");
-    expect(() => getAccountsBackend()).toThrow("must never run in production");
-  });
 
   it("sends signed-out visitors to log in, then back, without calling the backend", async () => {
     await expect(requireUser("/account/services")).rejects.toThrow("REDIRECT /login?next=%2Faccount%2Fservices");
@@ -40,6 +33,7 @@ describe("accounts module", () => {
     mocks.getSignedInUser.mockResolvedValue({ ok: true, data: user });
 
     expect(await requireUser("/account")).toEqual(user);
+    expect(await requireSession("/account")).toEqual({ user, token: "t0ken" });
     expect(mocks.getSignedInUser).toHaveBeenCalledWith("t0ken");
   });
 

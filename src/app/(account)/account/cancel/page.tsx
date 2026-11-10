@@ -4,7 +4,7 @@ import { AccountBand } from "@/components/account/AccountBand";
 import { ActionForm } from "@/components/account/ActionForm";
 import { PRIMARY_BUTTON } from "@/components/account/buttonStyles";
 import { Container } from "@/components/ui/Container";
-import { requireUser } from "@/lib/accounts";
+import { requireSession } from "@/lib/accounts";
 import { loadAccount } from "@/lib/accounts/account";
 import { cancelSubscriptionAction } from "@/lib/accounts/subscriptionActions";
 import { CONTACT_INFO } from "@/shared/constants";
@@ -27,8 +27,8 @@ const REASONS = [
 ];
 
 export default async function CancelPage() {
-  const user = await requireUser("/account/cancel");
-  const { subscription, plan } = await loadAccount(user);
+  const { token } = await requireSession("/account/cancel");
+  const { subscription, plan } = await loadAccount(token);
   if (subscription?.status !== "active" || !plan) redirect("/account");
 
   const date = formatLongDate(subscription.currentPeriodEnd);

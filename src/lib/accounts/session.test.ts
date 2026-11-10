@@ -42,6 +42,8 @@ describe("session cookie", () => {
     await startSession(session);
 
     const [name, value, options] = jar.set.mock.calls[0];
+    // Also a marker the menu can read, holding nothing but "1".
+    expect(jar.set.mock.calls[1]).toEqual(["ifng_signed_in", "1", expect.objectContaining({ httpOnly: false, maxAge: 30 * 24 * 60 * 60 })]);
     expect(name).toBe(SESSION_COOKIE);
     expect(decodeSession(value, "local-development-only-session-secret")).toEqual(session);
     expect(options).toMatchObject({ httpOnly: true, sameSite: "lax", path: "/", maxAge: 30 * 24 * 60 * 60 });
@@ -69,5 +71,6 @@ describe("session cookie", () => {
     await endSession();
 
     expect(jar.delete).toHaveBeenCalledWith(SESSION_COOKIE);
+    expect(jar.delete).toHaveBeenCalledWith("ifng_signed_in");
   });
 });
