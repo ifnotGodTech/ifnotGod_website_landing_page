@@ -34,6 +34,16 @@ describe("apiRequest", () => {
     expect(options).toMatchObject({ method: "GET", cache: "no-store", headers: { "x-app-key": "web-key" } });
   });
 
+  it("gives cached reads time for a sleeping backend to wake, and visitors' requests 10 seconds", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout");
+    fetchMock.mockResolvedValue(json(200, { name: "Ada" }));
+
+    await apiRequest("/catalogue/", { schema, cacheFor: { revalidate: 3600, tags: ["catalogue"] } });
+    await apiRequest("/auth/me/", { schema });
+
+    expect(timeout.mock.calls).toEqual([[70_000], [10_000]]);
+  });
+
   it("sends the visitor's own address, and leaves it out when there isn't one", async () => {
     requestHeaders.value = new Headers({ "x-forwarded-for": "102.89.1.10, 76.76.21.1" });
     fetchMock.mockResolvedValue(json(200, { name: "Ada" }));

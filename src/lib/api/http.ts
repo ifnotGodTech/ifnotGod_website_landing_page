@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { API_PREFIX, API_TIMEOUT_MS, apiAppKey, apiBaseUrl } from "./config";
+import { API_PREFIX, API_TIMEOUT_MS, CACHED_API_TIMEOUT_MS, apiAppKey, apiBaseUrl } from "./config";
 import { apiError, codeForStatus, type ApiResult } from "./errors";
 import { visitorIp } from "./visitor";
 
@@ -63,7 +63,7 @@ export async function apiRequest<T>(
       },
       body: body === undefined ? undefined : JSON.stringify(body),
       ...(cacheFor ? { next: cacheFor } : { cache: "no-store" as const }),
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+      signal: AbortSignal.timeout(cacheFor ? CACHED_API_TIMEOUT_MS : API_TIMEOUT_MS),
     });
   } catch (error) {
     console.error(`[api] ${method} ${path} could not reach the backend`, error instanceof Error ? error.name : "");

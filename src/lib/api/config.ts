@@ -13,3 +13,8 @@ export function apiAppKey(): string | null {
 
 export const API_PREFIX = "/api/v1";
 export const API_TIMEOUT_MS = 10_000;
+/**
+ * Cached reads (plans, services, site text) run during builds and background refreshes, where no
+ * visitor waits, so they allow time for a sleeping backend on Render's free plan to wake (up to a minute).
+ */
+export const CACHED_API_TIMEOUT_MS = 70_000;
