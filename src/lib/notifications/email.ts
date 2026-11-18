@@ -1,3 +1,4 @@
+import { getPlan } from "@/lib/catalogue";
 import { config } from "@/lib/config";
 import type { ContactSubmission } from "@/types/contact";
 
@@ -18,18 +19,19 @@ export class EmailNotConfiguredError extends Error {
   }
 }
 
-function buildContent(submission: ContactSubmission): { subject: string; html: string } {
+async function buildContent(submission: ContactSubmission): Promise<{ subject: string; html: string }> {
+  const plan = submission.plan ? await getPlan(submission.plan) : undefined;
   const rows: Array<[string, string]> = [
     ["Full name", submission.fullName],
-    ["Organisation", submission.organisation || "—"],
+    ["Business or brand", submission.organisation || "—"],
     ["Email", submission.email],
     ["Phone / WhatsApp", submission.phone || "—"],
-    ["Challenge", submission.challenge],
-    ["Desired outcome", submission.desiredOutcome || "—"],
+    ["Task or problem", submission.challenge],
+    ["Interested in", plan?.name ?? "Not sure yet"],
   ];
 
   const html = `
-    <h2>New challenge submitted via ifnotgod.com</h2>
+    <h2>New free audit request via ifnotgod.com</h2>
     <table cellpadding="6" cellspacing="0">
       ${rows
         .map(
@@ -41,7 +43,7 @@ function buildContent(submission: ContactSubmission): { subject: string; html: s
   `;
 
   return {
-    subject: `New challenge from ${submission.fullName}${submission.organisation ? ` (${submission.organisation})` : ""}`
+    subject: `New audit request from ${submission.fullName}${submission.organisation ? ` (${submission.organisation})` : ""}`
       .replace(/\s+/g, " "),
     html,
   };
@@ -66,7 +68,7 @@ export async function sendContactNotification(submission: ContactSubmission): Pr
     throw new EmailNotConfiguredError();
   }
 
-  const { subject, html } = buildContent(submission);
+  const { subject, html } = await buildContent(submission);
 
   let response: Response;
   try {

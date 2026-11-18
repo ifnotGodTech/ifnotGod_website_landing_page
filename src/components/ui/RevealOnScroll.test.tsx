@@ -14,9 +14,9 @@ describe("server-rendered content visibility", () => {
   });
 
   it("does not hide the hero with inline styles", () => {
-    const html = renderToStaticMarkup(<Hero />);
+    const html = renderToStaticMarkup(<Hero headline="Your business, answering back while you sleep." introduction="We build and run AI automations." />);
 
-    expect(html).toContain("Every Problem Has");
+    expect(html).toContain("answering back while you sleep");
     expect(html).not.toMatch(/opacity:\s*0/);
   });
 });

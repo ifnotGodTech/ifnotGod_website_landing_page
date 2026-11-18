@@ -1,19 +1,41 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AUDIT_PATH, CONTACT_INFO, NAV_LINKS } from "@/shared/constants";
+import { ACCOUNTS_ENABLED } from "@/shared/features";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/shared/cn";
 
 const MOBILE_MENU_ID = "mobile-menu";
 const DESKTOP_NAV_QUERY = "(min-width: 80rem)"; // Tailwind's xl, where the menu is hidden.
 const BEHIND_MENU = "main, footer, [data-testid='floating-cta']";
+// Set at log in next to the real session cookie (see src/lib/accounts/session.ts). It holds only "1".
+const SIGNED_IN_COOKIE = "ifng_signed_in";
+
+const noSubscription = () => () => {};
+const readSignedIn = () => document.cookie.split("; ").includes(`${SIGNED_IN_COOKIE}=1`);
+// Public pages are built ahead of time, so the server always renders "Log in"; the browser corrects it.
+const signedOutOnServer = () => false;
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const [lastPathname, setLastPathname] = useState(pathname);
+  // Read again on every render, which includes every page change, so it follows log in and log out.
+  const signedIn = useSyncExternalStore(noSubscription, readSignedIn, signedOutOnServer);
+  const account = signedIn ? { href: "/account", label: "Your account" } : { href: "/login", label: "Log in" };
+
+  // This component stays mounted between pages, so close the menu when the page
+  // changes, including through the browser's back button.
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -59,10 +81,10 @@ export function Navigation() {
       <nav
         className={cn(
           "fixed inset-x-0 top-0 z-100 flex items-center justify-between px-5 py-4.5 transition-[background-color,border-color,padding] duration-300 sm:px-8 lg:px-16",
-          scrolled ? "border-b border-line bg-ink/86 py-3.5 backdrop-blur-md" : "border-b border-transparent"
+          scrolled ? "border-b border-line bg-ink/95 py-3.5 backdrop-blur-md" : "border-b border-transparent"
         )}
       >
-        <a href="#top" className="flex items-center gap-2.5">
+        <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
           <Image
             src="/ifnotgod-icon.png"
             alt="IFNOTGOD TECH LTD logo"
@@ -77,29 +99,32 @@ export function Navigation() {
               EVERY PROBLEM HAS A TECH SOLUTION
             </small>
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8.5 xl:flex">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="font-mono text-[0.74rem] uppercase tracking-[0.08em] text-paper-dim transition-colors hover:text-orange"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
+          {ACCOUNTS_ENABLED && (
+            <Link
+              href={account.href}
+              className="font-mono text-[0.74rem] uppercase tracking-[0.08em] text-paper-dim transition-colors hover:text-orange"
+            >
+              {account.label}
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-3.5">
-          <div className="hidden xl:block">
-            <Button href="#solutions" variant="ghost" size="sm">
-              Explore Our Solutions
-            </Button>
-          </div>
           <div className="hidden lg:block">
-            <Button href="#contact" size="sm">
-              Tell Us Your Challenge
+            <Button href={AUDIT_PATH} size="sm">
+              Book a free audit
             </Button>
           </div>
           <button
@@ -131,18 +156,23 @@ export function Navigation() {
         )}
       >
         {NAV_LINKS.map((link) => (
-          <a
+          <Link
             key={link.href}
             href={link.href}
             onClick={() => setOpen(false)}
             className="font-display text-[1.6rem]"
           >
             {link.label}
-          </a>
+          </Link>
         ))}
+        {ACCOUNTS_ENABLED && (
+          <Link href={account.href} onClick={() => setOpen(false)} className="font-display text-[1.6rem]">
+            {account.label}
+          </Link>
+        )}
         <div className="mt-3 flex flex-wrap gap-3">
-          <Button href="#contact" onClick={() => setOpen(false)}>
-            Tell Us Your Challenge
+          <Button href={AUDIT_PATH} onClick={() => setOpen(false)}>
+            Book a free audit
           </Button>
           <Button href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer" variant="outline-orange">
             Chat on WhatsApp

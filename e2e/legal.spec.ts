@@ -31,14 +31,14 @@ test("the footer reaches both legal pages from the home page", async ({ page }) 
 
 test("footer links return to home page sections from a legal page", async ({ page }) => {
   await page.goto("/terms");
-  await page.locator("footer").getByRole("link", { name: "Contact" }).click();
+  await page.locator("footer").getByRole("link", { name: "How it works" }).click();
 
-  await expect(page).toHaveURL(/\/#contact$/);
-  await expect(page.locator("#contact form")).toBeVisible();
+  await expect(page).toHaveURL(/\/#how-it-works$/);
+  await expect(page.locator("#how-it-works")).toBeVisible();
 });
 
 test("the contact form links to the Privacy Policy", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/audit");
 
   await expect(page.locator("form").getByRole("link", { name: "Privacy Policy" })).toHaveAttribute(
     "href",
