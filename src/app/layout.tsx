@@ -47,7 +47,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
-        <SiteAnalytics />
+        {/* Only on Vercel, which serves the analytics script. Elsewhere, as in local and browser-test builds, it doesn't exist. */}
+        {process.env.VERCEL === "1" && <SiteAnalytics />}
       </body>
     </html>
   );

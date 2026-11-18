@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getBillingTerms, getPlan } from "@/lib/catalogue";
-import { buildQuote, isBillingPeriod } from "./billing";
+import { buildQuote, describeBillingTerms, isBillingPeriod } from "./billing";
 
 const growth = (await getPlan("growth"))!;
 const BILLING_TERMS = await getBillingTerms();
@@ -41,6 +41,33 @@ describe("buildQuote", () => {
       { label: "Setup fee", amount: "Waived" },
     ]);
     expect(quote.optionNote).toBe("2 months free, and no setup fee.");
+  });
+
+  it("follows the terms the team sets: a lower fee, no fee, a waiver only for 12 months, and 1 free month", () => {
+    const lower = buildQuote(growth, "monthly", { ...BILLING_TERMS, setupFee: 50_000 });
+    const none = buildQuote(growth, "monthly", { ...BILLING_TERMS, setupFee: 0 });
+    const sixPays = buildQuote(growth, "six-months", { ...BILLING_TERMS, setupFeeWaivedFromMonths: 12 });
+    const oneFree = buildQuote(growth, "twelve-months", { ...BILLING_TERMS, freeMonthsOnTwelve: 1 });
+    const noOffers = buildQuote(growth, "twelve-months", { setupFee: 0, setupFeeWaivedFromMonths: 6, freeMonthsOnTwelve: 0 });
+
+    expect([lower.dueToday, lower.optionNote]).toEqual([90_000, "Plus a one-time setup fee of ₦50,000. Cancel any time."]);
+    expect([none.dueToday, none.optionNote, none.lines.length]).toEqual([40_000, "Cancel any time.", 1]);
+    expect([sixPays.dueToday, sixPays.optionNote]).toEqual([340_000, "Plus a one-time setup fee of ₦100,000."]);
+    expect(oneFree.lines).toContainEqual({ label: "1 month free", amount: "−₦40,000" });
+    expect(oneFree.optionNote).toBe("1 month free, and no setup fee.");
+    expect([noOffers.dueToday, noOffers.optionNote, noOffers.lines.length]).toEqual([480_000, "Cancel any time.", 1]);
+  });
+
+  it("describes the terms for the pricing page", () => {
+    expect(describeBillingTerms(BILLING_TERMS)).toEqual({
+      setupFee: "One-time setup fee of ₦100,000, waived when you pay 6 or 12 months upfront.",
+      freeMonths: "Pay 12 months upfront and get 2 months free.",
+    });
+    expect(describeBillingTerms({ setupFee: 0, setupFeeWaivedFromMonths: 12, freeMonthsOnTwelve: 0 })).toEqual({ setupFee: "No setup fee.", freeMonths: null });
+    expect(describeBillingTerms({ setupFee: 25_000, setupFeeWaivedFromMonths: 12, freeMonthsOnTwelve: 1 })).toEqual({
+      setupFee: "One-time setup fee of ₦25,000, waived when you pay 12 months upfront.",
+      freeMonths: "Pay 12 months upfront and get 1 month free.",
+    });
   });
 
   it("recognises billing periods", () => {

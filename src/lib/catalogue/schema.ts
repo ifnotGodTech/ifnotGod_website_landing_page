@@ -38,7 +38,8 @@ export const catalogueSchema: z.ZodType<CatalogueData> = z
     groups: z.array(z.object({ id: z.string(), name: z.string(), unitSingular: z.string(), unitPlural: z.string() })),
     services: z.array(service),
     billingTerms: z.object({
-      setupFee: z.number().int().positive(),
+      // 0 when the team removes the setup fee.
+      setupFee: z.number().int().min(0),
       setupFeeWaivedFromMonths: z.number().int().positive(),
       freeMonthsOnTwelve: z.number().int().min(0),
     }),
