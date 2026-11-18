@@ -74,6 +74,12 @@ export default function PrivacyPolicyPage() {
             form submissions and sign-in attempts.
           </li>
           <li>
+            <strong>Visit statistics:</strong> the pages you visit (without anything after the page&apos;s address),
+            the site that sent you, your approximate location (country, region and city), and your device type,
+            operating system and browser. These are counted anonymously, without cookies, as described under Cookies
+            and tracking.
+          </li>
+          <li>
             <strong>Security records:</strong> sign-in attempts, kept as scrambled values rather than your email or IP
             address, so we can stop repeated guessing.
           </li>
@@ -100,6 +106,11 @@ export default function PrivacyPolicyPage() {
             <strong>To record who changed your subscription and when</strong>, including our team, so we can answer
             questions and resolve disputes. We rely on our legitimate interest in keeping accurate records (section
             25(1)(b)(v)).
+          </li>
+          <li>
+            <strong>To understand how the website is used</strong>, such as which pages people read and how they find
+            us, so we can improve it. We rely on our legitimate interest in running a useful website (section
+            25(1)(b)(v)), and we only see totals, never individual visitors.
           </li>
           <li>
             <strong>To keep the website and your account secure, and protect our forms from spam and abuse.</strong>{" "}
@@ -129,8 +140,8 @@ export default function PrivacyPolicyPage() {
         <p>We don&apos;t sell your personal data. These recipients have access only for the purposes described:</p>
         <ul>
           <li>
-            <strong>Vercel</strong> hosts this website and processes technical data, form submissions and the cookies
-            that keep you signed in.
+            <strong>Vercel</strong> hosts this website, processes technical data, form submissions and the cookies
+            that keep you signed in, and counts visits for our visit statistics.
           </li>
           <li>
             <strong>Render</strong> runs the server behind the website, which processes your account, subscription and
@@ -190,6 +201,10 @@ export default function PrivacyPolicyPage() {
             <strong>Emails we send:</strong> we keep a record that an email was sent, without its content, for 30 days.
           </li>
           <li>
+            <strong>Visit statistics:</strong> kept only as totals. The value that recognises a returning visitor is
+            discarded after 24 hours.
+          </li>
+          <li>
             <strong>Technical data:</strong> for the limited period set by our hosting and email providers. IP addresses
             used to limit repeated attempts are kept as scrambled values for up to 1 day.
           </li>
@@ -234,8 +249,11 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="Cookies and tracking">
         <p>
           This website uses only the cookies needed to sign you in and keep you signed in. They are set only when you
-          sign in, and the rest of the website sets none. We don&apos;t use analytics, advertising trackers or similar
-          tools. If that changes, we will update this policy and ask for your consent where the law requires it.
+          sign in, and the rest of the website sets none. We count visits with Vercel Web Analytics, which uses no
+          cookies: it recognises a returning visitor for up to 24 hours by a scrambled value made from your visit,
+          then discards it, and it can&apos;t follow you to other websites. We don&apos;t use advertising trackers or
+          similar tools. If that changes, we will update this policy and ask for your consent where the law requires
+          it.
         </p>
         <ul>
           <li>

@@ -169,6 +169,7 @@ A feature/section is done when:
 ## Frontend Security Rules
 - Never trust client input; validate the contact form again at the server boundary.
 - Never expose secrets (email API keys, webhook URLs) in the client bundle.
+- Visit statistics come only from Vercel Web Analytics (`src/components/SiteAnalytics.tsx`, in the root layout), which sets no cookies. It sends each page's address without its query or fragment (`src/shared/analytics.ts`), because reset links and payment returns carry tokens and references there. Add no other analytics or trackers without updating the Privacy Policy first.
 - Keep client-safe and server-only environment variables clearly separated.
 - Sensitive actions (sending the contact submission) must go through a trusted server-side route handler, not a direct client-side call to a third-party service.
 - Rate-limit or otherwise guard the contact endpoint against spam/abuse.
