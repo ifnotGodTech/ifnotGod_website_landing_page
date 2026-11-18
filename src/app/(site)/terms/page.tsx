@@ -6,7 +6,7 @@ import { CONTACT_INFO, LEGAL_INFO } from "@/shared/constants";
 export const metadata = buildPageMetadata({
   title: "Terms of Use | IFNOTGOD TECH LTD",
   description:
-    "The terms that apply when you use the IFNOTGOD TECH LTD website.",
+    "The terms that apply when you use the IFNOTGOD TECH LTD website, open an account or subscribe to a plan.",
   path: "/terms",
 });
 
@@ -16,8 +16,9 @@ export default function TermsPage() {
       title="Terms of Use"
       intro={
         <p>
-          These terms apply when you use this website, which is operated by {LEGAL_INFO.companyName}. By using the
-          website, you agree to them. If you don&apos;t agree, please don&apos;t use the website.
+          These terms apply when you use this website, which is operated by {LEGAL_INFO.companyName}, and when you open
+          an account or subscribe to a plan on it. By using the website, you agree to them. If you don&apos;t agree,
+          please don&apos;t use the website.
         </p>
       }
     >
@@ -41,9 +42,9 @@ export default function TermsPage() {
       <LegalSection title="Enquiries and services">
         <p>
           Sending us an enquiry or booking a free audit doesn&apos;t create a contract or commit you to a plan, and we
-          aren&apos;t obliged to take on any project. Any
-          services we provide will be covered by a separate written agreement, which will take priority over these terms
-          for those services.
+          aren&apos;t obliged to take on any project. A plan you subscribe to on this website is covered by these
+          terms. Custom work, including Custom plans, is covered by a separate written agreement, which takes priority
+          over these terms for that work.
         </p>
         <p>
           Please make sure what you send us is accurate, and that you are entitled to share it. Please don&apos;t send
@@ -51,26 +52,88 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Your account">
+        <p>
+          Keep your password safe, and tell us straight away if you think someone else has used your account. You are
+          responsible for what is done through your account, unless it happened because of our failure.
+        </p>
+      </LegalSection>
+
       <LegalSection title="Plans and prices">
         <p>
-          The plans, services and prices on this website show what each plan usually includes. Before we start work, we
-          confirm in writing the services, price and terms that apply to you, and that written agreement takes priority
-          over anything on this website.
-        </p>
-        <p>
+          When you subscribe on this website, you agree to these terms for your plan, at the price shown when you pay.
           Prices are in Nigerian naira. We may change our plans, prices and offers, and offers such as promotions may be
-          limited. The price agreed with you in writing is the one that applies to you.
+          limited.
         </p>
         <p>
-          Plans are paid monthly, or for several months upfront, with no minimum term. They renew automatically at the
-          end of each paid period until you cancel, and we remind you before each renewal. If you cancel, everything in
-          your plan, including your automations and website, keeps working until the end of the period you&apos;ve paid
-          for, and it won&apos;t renew after that. Then your automations stop, because they run on our systems. The
-          website we build for you is yours to keep.
+          A new price applies to new subscribers straight away. If you already subscribe, it applies from your next
+          renewal, and your renewal reminder shows the new price.
         </p>
         <p>
-          Plans are subscriptions, so payments aren&apos;t refundable, including for the rest of a paid period after you cancel.
-          This doesn&apos;t affect any right you have under Nigerian consumer law.
+          If we stop offering a service, clients who already have it keep it until we contact them and agree how to
+          move them on.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Paying">
+        <ul>
+          <li>
+            You can pay monthly, for 6 months upfront, or for 12 months upfront. Paying 12 months upfront gives you 2
+            months free.
+          </li>
+          <li>
+            A one-off setup fee is charged on your first monthly subscription. It is waived if you pay 6 or more months
+            upfront, and never charged twice.
+          </li>
+          <li>
+            Payments are taken by Flutterwave. Your plan starts once Flutterwave confirms your payment to us.
+          </li>
+        </ul>
+      </LegalSection>
+
+      <LegalSection title="Renewals">
+        <p>
+          Plans have no minimum term. They renew automatically at the end of each paid period until you cancel.
+        </p>
+        <ul>
+          <li>We email you a reminder 3 days before each renewal, with the amount.</li>
+          <li>
+            If you paid by card, we charge the same card at renewal. Your bank may ask you to confirm the payment, and if
+            so, we email you a link to do it. If you paid another way, we email you a payment link.
+          </li>
+          <li>
+            If a renewal payment doesn&apos;t go through, we try again up to 3 times, and your plan keeps working for 3
+            days meanwhile. If it still hasn&apos;t been paid after that, your plan ends.
+          </li>
+        </ul>
+      </LegalSection>
+
+      <LegalSection title="Changing your plan and services">
+        <ul>
+          <li>
+            A change of plan starts at your next renewal, at the new plan&apos;s price. Nothing is charged on the day.
+          </li>
+          <li>
+            Your plan includes a set number of services from each group. Choosing them the first time is free. After
+            that, each service you swap uses one of your plan&apos;s changes for the month, which reset each calendar
+            month.
+          </li>
+          <li>
+            Our team can make these changes for you when you ask. The same rules apply, and we email you to confirm.
+          </li>
+        </ul>
+      </LegalSection>
+
+      <LegalSection title="Cancelling and refunds">
+        <p>
+          If you cancel, everything in your plan, including your automations and website, keeps working until the end
+          of the period you&apos;ve paid for, and it won&apos;t renew after that. You can undo the cancellation at any
+          time until then. After that, your automations stop, because they run on our systems. The website we build for
+          you is yours to keep.
+        </p>
+        <p>
+          Plans are subscriptions, so payments aren&apos;t refundable, including for the rest of a paid period after
+          you cancel. This doesn&apos;t affect any right you have under Nigerian consumer law.
         </p>
       </LegalSection>
 

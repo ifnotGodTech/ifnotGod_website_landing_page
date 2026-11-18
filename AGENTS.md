@@ -181,7 +181,7 @@ Clients log in on this site to subscribe, and to see, renew, upgrade or cancel t
 - Keep session tokens out of JavaScript-readable storage. The login cookie is encrypted and HTTP-only, and account pages confirm its token with the backend.
 - Keep account pages out of search results and the sitemap, and never cache one client's page for another.
 - Never handle or store full card details in this project.
-- Update the Privacy Policy and Terms before login or payments go live. The Privacy Policy currently says the site sets no cookies.
+- Keep the Privacy Policy and Terms in step with accounts and payments. The Privacy Policy lists each cookie the sign-in sets (`ifng_session`, `ifng_signed_in`, `ifng_google`), so update it if a cookie is added or changed.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

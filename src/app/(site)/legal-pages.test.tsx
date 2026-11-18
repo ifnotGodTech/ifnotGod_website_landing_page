@@ -24,6 +24,22 @@ describe("Privacy Policy", () => {
     expect(screen.getByRole("heading", { level: 2, name: heading })).toBeInTheDocument();
   });
 
+  it("lists each cookie the sign-in sets", () => {
+    render(<PrivacyPolicyPage />);
+
+    for (const cookie of ["ifng_session", "ifng_signed_in", "ifng_google"]) {
+      expect(screen.getByText(cookie)).toBeInTheDocument();
+    }
+    expect(screen.getByText(/We don't use analytics, advertising trackers/)).toBeInTheDocument();
+  });
+
+  it("names the payment provider and says card numbers are never stored", () => {
+    render(<PrivacyPolicyPage />);
+
+    expect(screen.getByText(/We never receive or store your full card number or security code/)).toBeInTheDocument();
+    expect(screen.getByText("Flutterwave")).toBeInTheDocument();
+  });
+
   it("names the regulator and links to it", () => {
     render(<PrivacyPolicyPage />);
 
@@ -63,24 +79,43 @@ describe("company details", () => {
 });
 
 describe("Terms of Use", () => {
-  it.each(["Enquiries and services", "Plans and prices", "Acceptable use", "Availability and liability", "Governing law"])(
-    "covers %s",
-    (heading) => {
-      render(<TermsPage />);
-
-      expect(screen.getByRole("heading", { level: 2, name: heading })).toBeInTheDocument();
-    }
-  );
-
-  it("says booking an audit doesn't commit anyone to a plan, and the written agreement comes first", () => {
+  it.each([
+    "Enquiries and services",
+    "Your account",
+    "Plans and prices",
+    "Paying",
+    "Renewals",
+    "Changing your plan and services",
+    "Cancelling and refunds",
+    "Acceptable use",
+    "Availability and liability",
+    "Governing law",
+  ])("covers %s", (heading) => {
     render(<TermsPage />);
 
-    expect(screen.getByText(/booking a free audit doesn't create a contract or commit you to a plan/)).toBeInTheDocument();
-    expect(screen.getByText(/that written agreement takes priority over anything on this website/)).toBeInTheDocument();
-    expect(screen.getByText(/renew automatically at the end of each paid period until you cancel, and we remind you before each renewal/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: heading })).toBeInTheDocument();
+  });
+
+  it("says an audit commits no one, plans bought on the site follow these terms, and custom work has its own agreement", () => {
+    render(<TermsPage />);
+
+    expect(screen.getByText(/booking a free audit doesn't create a contract or commit you to a plan/)).toHaveTextContent(
+      "A plan you subscribe to on this website is covered by these terms."
+    );
+    expect(screen.getByText(/Custom work, including Custom plans, is covered by a separate written agreement/)).toBeInTheDocument();
+  });
+
+  it("states the subscription rules the backend enforces", () => {
+    render(<TermsPage />);
+
+    expect(screen.getByText(/renew automatically at the end of each paid period until you cancel/)).toBeInTheDocument();
+    expect(screen.getByText("We email you a reminder 3 days before each renewal, with the amount.")).toBeInTheDocument();
+    expect(screen.getByText(/we try again up to 3 times, and your plan keeps working for 3 days meanwhile/)).toBeInTheDocument();
+    expect(screen.getByText(/waived if you pay 6 or more months upfront, and never charged twice/)).toBeInTheDocument();
+    expect(screen.getByText(/A change of plan starts at your next renewal/)).toBeInTheDocument();
     expect(screen.getByText(/payments aren't refundable/)).toHaveTextContent("Nigerian consumer law");
-    expect(screen.getByText(/including your automations and website, keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(
-      "Then your automations stop, because they run on our systems. The website we build for you is yours to keep."
+    expect(screen.getByText(/keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(
+      "You can undo the cancellation at any time until then."
     );
   });
 

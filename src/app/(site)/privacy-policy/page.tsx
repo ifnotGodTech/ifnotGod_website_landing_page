@@ -18,8 +18,9 @@ export default function PrivacyPolicyPage() {
       title="Privacy Policy"
       intro={
         <p>
-          This policy explains what personal data {LEGAL_INFO.companyName} collects through this website, why we
-          collect it, who receives it and the rights you have under the Nigeria Data Protection Act 2023.
+          This policy explains what personal data {LEGAL_INFO.companyName} collects through this website, including
+          when you open an account and subscribe to a plan, why we collect it, who receives it and the rights you have
+          under the Nigeria Data Protection Act 2023.
         </p>
       }
     >
@@ -49,13 +50,32 @@ export default function PrivacyPolicyPage() {
             interested in are optional.
           </li>
           <li>
+            <strong>Your account:</strong> your full name, email address, an optional business name and your password,
+            which we store only in a form that can&apos;t be read back. If you sign in with Google, Google gives us your
+            name, email address and Google account id, and no password.
+          </li>
+          <li>
+            <strong>Your subscription:</strong> your plan, how often you pay, the services you choose, your renewal
+            dates and the changes you make.
+          </li>
+          <li>
+            <strong>Payments:</strong> the amount, date, reference and payment method of each payment. You enter card
+            details on Flutterwave&apos;s payment page, not ours. Flutterwave gives us a token to charge your card at
+            renewal, with the card brand, last 4 digits and expiry date so you can recognise it. We never receive or
+            store your full card number or security code.
+          </li>
+          <li>
             <strong>What you send us directly:</strong> anything you include when you email, call or message us on
             WhatsApp.
           </li>
           <li>
             <strong>Technical data:</strong> your IP address, browser details and the time of your visit, which are
-            recorded by our hosting provider when you use the website. We also use your IP address to limit repeated
-            form submissions.
+            recorded by our hosting providers when you use the website. We also use your IP address to limit repeated
+            form submissions and sign-in attempts.
+          </li>
+          <li>
+            <strong>Security records:</strong> sign-in attempts, kept as scrambled values rather than your email or IP
+            address, so we can stop repeated guessing.
           </li>
         </ul>
         <p>
@@ -72,8 +92,18 @@ export default function PrivacyPolicyPage() {
             on our legitimate interest in responding to people who contact us (section 25(1)(b)(v)).
           </li>
           <li>
-            <strong>To keep the website secure and protect the form from spam and abuse.</strong> We rely on our
-            legitimate interest in operating a safe website (section 25(1)(b)(v)).
+            <strong>To open and run your account, take payments, renew your plan and email you about it</strong>, such
+            as receipts, renewal reminders and changes to your plan. This is necessary to perform our contract with you
+            (section 25(1)(b)(i)).
+          </li>
+          <li>
+            <strong>To record who changed your subscription and when</strong>, including our team, so we can answer
+            questions and resolve disputes. We rely on our legitimate interest in keeping accurate records (section
+            25(1)(b)(v)).
+          </li>
+          <li>
+            <strong>To keep the website and your account secure, and protect our forms from spam and abuse.</strong>{" "}
+            We rely on our legitimate interest in operating a safe website (section 25(1)(b)(v)).
           </li>
           <li>
             <strong>To meet our legal obligations and keep required records.</strong> This is necessary to comply with
@@ -88,8 +118,10 @@ export default function PrivacyPolicyPage() {
 
       <LegalSection title="How we process your data">
         <p>
-          Your form details are checked by our website, sent to us as an email and read by our team. We don&apos;t make
-          decisions about you based solely on automated processing, and we don&apos;t use profiling.
+          Your form details are checked by our website, saved in our database, sent to us as an email and read by our
+          team. Your account and subscription are kept in the same database. Our team can see them through a private
+          dashboard, which records each time they open or change your details. We don&apos;t make decisions about you
+          based solely on automated processing, and we don&apos;t use profiling.
         </p>
       </LegalSection>
 
@@ -97,13 +129,27 @@ export default function PrivacyPolicyPage() {
         <p>We don&apos;t sell your personal data. These recipients have access only for the purposes described:</p>
         <ul>
           <li>
-            <strong>Vercel</strong> hosts this website and processes technical data and form submissions.
+            <strong>Vercel</strong> hosts this website and processes technical data, form submissions and the cookies
+            that keep you signed in.
           </li>
           <li>
-            <strong>Brevo</strong> delivers form submissions to us by email.
+            <strong>Render</strong> runs the server behind the website, which processes your account, subscription and
+            enquiries.
           </li>
           <li>
-            <strong>Google</strong> provides the email inbox where we receive and answer enquiries.
+            <strong>Supabase</strong> hosts our database, which stores your account, subscription, payment records and
+            enquiries.
+          </li>
+          <li>
+            <strong>Flutterwave</strong> takes your payments, and processes the card or bank details you enter on its
+            payment page.
+          </li>
+          <li>
+            <strong>Brevo</strong> sends the emails we send you and the team.
+          </li>
+          <li>
+            <strong>Google</strong> signs you in if you choose to continue with Google, and provides the email inbox
+            where we receive and answer enquiries.
           </li>
           <li>
             <strong>WhatsApp (Meta)</strong> processes your messages if you choose to contact us on WhatsApp, under
@@ -118,8 +164,9 @@ export default function PrivacyPolicyPage() {
 
       <LegalSection title="Transfers outside Nigeria">
         <p>
-          Our service providers may process your data outside Nigeria, including in the United States and the European
-          Union. Where a transfer takes place, we rely on protections that give an adequate level of protection under
+          Our server and database are hosted in the European Union, in Frankfurt, Germany. Our other service providers
+          may process your data outside Nigeria, including in the United States and the European Union. Where a transfer
+          takes place, we rely on protections that give an adequate level of protection under
           section 41 of the Act, such as contractual clauses. Where those don&apos;t apply, we rely on a condition in
           section 43, such as the transfer being necessary to take steps you have requested before a contract.
         </p>
@@ -132,11 +179,19 @@ export default function PrivacyPolicyPage() {
             contract.
           </li>
           <li>
-            <strong>Client records:</strong> for the length of our contract and any further period the law requires.
+            <strong>Your account, subscription and payment records:</strong> while your account is open, and then for
+            any further period the law requires, such as for tax and accounting records.
+          </li>
+          <li>
+            <strong>Sign-in records:</strong> emailed sign-in codes and failed attempts are deleted after 1 day, and
+            ended sign-in sessions after 30 days.
+          </li>
+          <li>
+            <strong>Emails we send:</strong> we keep a record that an email was sent, without its content, for 30 days.
           </li>
           <li>
             <strong>Technical data:</strong> for the limited period set by our hosting and email providers. IP addresses
-            used to limit form submissions are held temporarily in memory and are not stored permanently.
+            used to limit repeated attempts are kept as scrambled values for up to 1 day.
           </li>
         </ul>
         <p>We delete data earlier when we no longer need it and have no other lawful basis to keep it.</p>
@@ -156,8 +211,8 @@ export default function PrivacyPolicyPage() {
           <li>receive or transfer your data to another organisation, as data portability rules provide.</li>
         </ul>
         <p>
-          To use any of these rights, email {email}. We will respond without unreasonable delay, and we may need to
-          confirm your identity first.
+          To use any of these rights, or to close your account, email {email}. We will respond without unreasonable
+          delay, and we may need to confirm your identity first.
         </p>
       </LegalSection>
 
@@ -178,15 +233,30 @@ export default function PrivacyPolicyPage() {
 
       <LegalSection title="Cookies and tracking">
         <p>
-          This website doesn&apos;t use cookies, analytics, advertising trackers or similar tools. If that changes, we
-          will update this policy and ask for your consent where the law requires it.
+          This website uses only the cookies needed to sign you in and keep you signed in. They are set only when you
+          sign in, and the rest of the website sets none. We don&apos;t use analytics, advertising trackers or similar
+          tools. If that changes, we will update this policy and ask for your consent where the law requires it.
         </p>
+        <ul>
+          <li>
+            <strong>ifng_session</strong> keeps you signed in. It is encrypted and can&apos;t be read by scripts on the
+            page. It lasts 30 days, but you are signed out after 7 days without activity.
+          </li>
+          <li>
+            <strong>ifng_signed_in</strong> tells the page to show &quot;My account&quot; instead of &quot;Log in&quot;.
+            It holds no personal data and lasts 30 days.
+          </li>
+          <li>
+            <strong>ifng_google</strong> protects a sign-in with Google while it completes. It lasts 10 minutes.
+          </li>
+        </ul>
       </LegalSection>
 
       <LegalSection title="Security">
         <p>
           We use appropriate technical and organisational measures to protect personal data, including encrypted
-          connections and access limited to those who need it. No system is completely secure. If a breach is likely to
+          connections, passwords stored only in a form that can&apos;t be read back, a sign-in code for our team on
+          top of their password, and access limited to those who need it. No system is completely secure. If a breach is likely to
           put your rights at high risk, we will tell you promptly, and we will notify the Commission as the law requires.
         </p>
       </LegalSection>
