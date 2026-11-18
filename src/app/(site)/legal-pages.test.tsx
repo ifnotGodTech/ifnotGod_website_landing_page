@@ -30,7 +30,14 @@ describe("Privacy Policy", () => {
     for (const cookie of ["ifng_session", "ifng_signed_in", "ifng_google"]) {
       expect(screen.getByText(cookie)).toBeInTheDocument();
     }
-    expect(screen.getByText(/We don't use analytics, advertising trackers/)).toBeInTheDocument();
+    expect(screen.getByText(/We don't use advertising trackers/)).toBeInTheDocument();
+  });
+
+  it("describes the cookie-free visit statistics", () => {
+    render(<PrivacyPolicyPage />);
+
+    expect(screen.getByText(/We count visits with Vercel Web Analytics, which uses no\s+cookies/)).toBeInTheDocument();
+    expect(screen.getByText(/To understand how the website is used/)).toBeInTheDocument();
   });
 
   it("names the payment provider and says card numbers are never stored", () => {

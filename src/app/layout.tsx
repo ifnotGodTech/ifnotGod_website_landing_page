@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Public_Sans, IBM_Plex_Mono } from "next/font/google";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { SITE_URL } from "@/shared/constants";
 import "./globals.css";
 
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
+        <SiteAnalytics />
       </body>
     </html>
   );
