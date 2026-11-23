@@ -3,7 +3,7 @@ import { ClosingCta } from "@/components/sections/ClosingCta";
 import { PlanTerms } from "@/components/sections/PlanTerms";
 import { PricingPlans } from "@/components/sections/PricingPlans";
 import { Container } from "@/components/ui/Container";
-import { getPlans } from "@/lib/catalogue";
+import { getBillingTerms, getPlans } from "@/lib/catalogue";
 import { SITE_URL } from "@/shared/constants";
 import { buildPlanOffersJsonLd } from "@/shared/structuredData";
 import { parsePlanParam } from "@/shared/validators/contact";
@@ -18,7 +18,7 @@ export const metadata = buildPageMetadata({
 // Reads ?plan= on the server, so a link such as "See everything in Pro" opens with that plan
 // selected, with no flash of another plan and nothing to do without JavaScript.
 export default async function PricingPage({ searchParams }: PageProps<"/pricing">) {
-  const [plans, { plan }] = await Promise.all([getPlans(), searchParams]);
+  const [plans, terms, { plan }] = await Promise.all([getPlans(), getBillingTerms(), searchParams]);
 
   return (
     <>
@@ -32,7 +32,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/pricing"
         </p>
       </Container>
       <PricingPlans selectedPlanId={parsePlanParam(plan)} />
-      <PlanTerms />
+      <PlanTerms terms={terms} />
       <ClosingCta title="Not sure which plan? The audit will tell you." />
     </>
   );

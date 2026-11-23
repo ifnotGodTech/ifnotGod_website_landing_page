@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { metadata } from "@/app/(site)/pricing/page";
 import { AUDIT_PATH } from "@/shared/constants";
 import { PlanTerms } from "./PlanTerms";
+
+const TERMS = { setupFee: 100_000, setupFeeWaivedFromMonths: 6 as const, freeMonthsOnTwelve: 2 };
 import { PricingPlans } from "./PricingPlans";
 
 const renderPlans = async () => render(await PricingPlans());
@@ -135,17 +137,24 @@ describe("what each plan shows", () => {
 
 describe("plan terms and questions", () => {
   it("shows the fee, term and billing terms", () => {
-    render(<PlanTerms />);
+    render(<PlanTerms terms={TERMS} />);
 
-    expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.")).toBeInTheDocument();
+    expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 or 12 months upfront.")).toBeInTheDocument();
     expect(screen.getByText("Pay month by month. There's no minimum term.")).toBeInTheDocument();
     expect(screen.getByText(/2 months free/)).toBeInTheDocument();
     expect(screen.getByText("Your plan renews automatically, and we remind you before each renewal.")).toBeInTheDocument();
     expect(screen.getByText(/billed at cost/)).toBeInTheDocument();
   });
 
+  it("follows the setup fee and offers the team sets", () => {
+    render(<PlanTerms terms={{ setupFee: 0, setupFeeWaivedFromMonths: 12, freeMonthsOnTwelve: 0 }} />);
+
+    expect(screen.getByText("No setup fee.")).toBeInTheDocument();
+    expect(screen.queryByText(/months? free/)).not.toBeInTheDocument();
+  });
+
   it("lets clients cancel at the end of any month, with no minimum term", () => {
-    const { container } = render(<PlanTerms />);
+    const { container } = render(<PlanTerms terms={TERMS} />);
 
     expect(screen.getByText(/including your automations and website, keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(
       "Then your automations stop, because they run on our systems. Your website is yours to keep."
@@ -154,7 +163,7 @@ describe("plan terms and questions", () => {
   });
 
   it("answers questions with native disclosure elements, with no placeholders", () => {
-    const { container } = render(<PlanTerms />);
+    const { container } = render(<PlanTerms terms={TERMS} />);
 
     expect(container.querySelectorAll("details")).toHaveLength(3);
     expect(container).not.toHaveTextContent("TERMS TO CONFIRM");
