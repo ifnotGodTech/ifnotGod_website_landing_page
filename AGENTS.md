@@ -182,7 +182,7 @@ A feature/section is done when:
 - `/api/chat` checks the origin, size and format, limits each visitor's messages, and turns every failure into a plain message. Never log what visitors type.
 - Each tab has one conversation: its id (n8n's memory key) and messages live in `sessionStorage`, never a cookie.
 - Replies are shown as text, with simple lists, bold and links parsed in `src/shared/chat.ts`. Never render them as HTML.
-- The assistant reads today's prices from `/api/pricing` (`src/lib/catalogue/publicPricing.ts`): public, read-only and keyless, so it must only ever hold what the pricing page shows. n8n never calls the backend.
+- The assistant reads today's prices, and each service with the problem it solves, from `/api/pricing` (`src/lib/catalogue/publicPricing.ts`): public, read-only and keyless, so it must only ever hold what the pricing page shows. n8n never calls the backend.
 - The chat says its answers can be wrong. The site never states that something was booked or sent because of a chat reply.
 
 ## Client Account Rules
