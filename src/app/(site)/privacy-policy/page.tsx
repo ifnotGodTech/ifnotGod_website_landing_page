@@ -65,6 +65,11 @@ export default function PrivacyPolicyPage() {
             store your full card number or security code.
           </li>
           <li>
+            <strong>Chats with our AI assistant:</strong> what you type into the chat on this website, the
+            assistant&apos;s replies, and a random id that keeps your conversation together. We don&apos;t ask for your
+            name or contact details in the chat.
+          </li>
+          <li>
             <strong>What you send us directly:</strong> anything you include when you email, call or message us on
             WhatsApp.
           </li>
@@ -96,6 +101,10 @@ export default function PrivacyPolicyPage() {
             <strong>To respond to your enquiry and discuss how we might help.</strong> This is necessary to take steps
             you have asked for before a possible contract (section 25(1)(b)(i) of the Act). Where it isn&apos;t, we rely
             on our legitimate interest in responding to people who contact us (section 25(1)(b)(v)).
+          </li>
+          <li>
+            <strong>To answer your questions in the chat</strong> about our services, plans and prices. We rely on our
+            legitimate interest in answering questions from people interested in our services (section 25(1)(b)(v)).
           </li>
           <li>
             <strong>To open and run your account, take payments, renew your plan and email you about it</strong>, such
@@ -134,6 +143,13 @@ export default function PrivacyPolicyPage() {
           dashboard, which records each time they open or change your details. We don&apos;t make decisions about you
           based solely on automated processing, and we don&apos;t use profiling.
         </p>
+        <p>
+          When you use the chat, our website passes each message to our AI assistant, which runs on n8n and uses an AI
+          model from OpenAI to write its reply. The replies are written automatically and can be wrong. The assistant can&apos;t
+          book, buy or change anything for you, and it makes no decisions about you. Chats aren&apos;t added to your
+          account or to our enquiry records. Please don&apos;t share passwords, card details or other sensitive
+          information in the chat.
+        </p>
       </LegalSection>
 
       <LegalSection title="Who receives your data">
@@ -154,6 +170,14 @@ export default function PrivacyPolicyPage() {
           <li>
             <strong>Flutterwave</strong> takes your payments, and processes the card or bank details you enter on its
             payment page.
+          </li>
+          <li>
+            <strong>n8n</strong> runs our AI assistant. It receives your chat messages and keeps your conversation so
+            the assistant can follow it.
+          </li>
+          <li>
+            <strong>OpenAI</strong> provides the AI model that writes the assistant&apos;s replies from your chat
+            messages.
           </li>
           <li>
             <strong>Brevo</strong> sends the emails we send you and the team.
@@ -192,6 +216,11 @@ export default function PrivacyPolicyPage() {
           <li>
             <strong>Your account, subscription and payment records:</strong> while your account is open, and then for
             any further period the law requires, such as for tax and accounting records.
+          </li>
+          <li>
+            <strong>Chats:</strong> your browser keeps the conversation until you close the tab. Our assistant&apos;s
+            service providers keep chats for the limited period their settings and terms allow, and we delete them
+            when we no longer need them.
           </li>
           <li>
             <strong>Sign-in records:</strong> emailed sign-in codes and failed attempts are deleted after 1 day, and
@@ -254,6 +283,11 @@ export default function PrivacyPolicyPage() {
           then discards it, and it can&apos;t follow you to other websites. We don&apos;t use advertising trackers or
           similar tools. If that changes, we will update this policy and ask for your consent where the law requires
           it.
+        </p>
+        <p>
+          The chat keeps your conversation in your browser&apos;s storage for that tab only (session storage, not a
+          cookie), so it carries on as you move between pages. It is deleted when you close the tab, or when you choose
+          &quot;Start over&quot;.
         </p>
         <ul>
           <li>

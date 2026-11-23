@@ -83,7 +83,8 @@ export default function TermsPage() {
           </li>
           <li>
             A one-off setup fee may be charged on your first subscription, at the amount shown at checkout when you pay.
-            Paying upfront may waive it, as the pricing page shows, and it is never charged twice.
+            Whether it applies depends on how you pay, as the pricing page and checkout show, and it is never charged
+            twice.
           </li>
           <li>
             Payments are taken by Flutterwave. Your plan starts once Flutterwave confirms your payment to us.

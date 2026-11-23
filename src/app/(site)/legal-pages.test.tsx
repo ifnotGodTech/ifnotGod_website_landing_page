@@ -119,7 +119,7 @@ describe("Terms of Use", () => {
     expect(screen.getByText("We email you a reminder 3 days before each renewal, with the amount.")).toBeInTheDocument();
     expect(screen.getByText(/we try again up to 3 times, and your plan keeps working for 3 days meanwhile/)).toBeInTheDocument();
     expect(screen.getByText(/A one-off setup fee may be charged on your first subscription, at the amount shown at checkout/)).toHaveTextContent(
-      "it is never charged twice"
+      /depends on how you pay, as the pricing page and checkout show, and it is never charged\s+twice/
     );
     expect(screen.getByText(/A change of plan starts at your next renewal/)).toBeInTheDocument();
     expect(screen.getByText(/payments aren't refundable/)).toHaveTextContent("Nigerian consumer law");
