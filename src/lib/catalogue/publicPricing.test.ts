@@ -35,6 +35,28 @@ describe("buildPublicPricing", () => {
     expect(names).not.toContain(SERVICES[0].name);
   });
 
+  it("lists each service with the problem it solves and the plans that include it", () => {
+    const listed = SERVICES.filter((service) => service.available && !service.catchAll);
+    expect(pricing.services.map((service) => service.name)).toEqual(listed.map((service) => service.name));
+
+    const first = listed[0];
+    const service = pricing.services[0];
+    expect(service.solves).toBe(first.problem);
+    expect(service.type).toBe(SERVICE_GROUPS.find((group) => group.id === first.group)?.name);
+    expect(service.availableOn).toMatch(/^(From|In) |only$/);
+    expect(service.includedIn).toContain("Custom");
+    for (const planName of service.includedIn.filter((name) => name !== "Custom")) {
+      const plan = pricing.plans.find((item) => item.name === planName)!;
+      expect(plan.choices.some((choice) => choice.chooseFrom.includes(service.name))).toBe(true);
+    }
+  });
+
+  it("leaves services taken off the site out of the services list", () => {
+    const hidden = { ...catalogue, services: SERVICES.map((service, index) => (index === 0 ? { ...service, available: false } : service)) };
+    const names = buildPublicPricing(hidden, "https://www.ifnotgod.com").services.map((service) => service.name);
+    expect(names).not.toContain(SERVICES[0].name);
+  });
+
   it("gives the setup fee and upfront offers as numbers and in words", () => {
     expect(pricing.billingTerms).toEqual(BILLING_TERMS);
     expect(pricing.terms[0]).toBe("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.");

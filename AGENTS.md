@@ -175,7 +175,7 @@ A feature/section is done when:
 - Rate-limit or otherwise guard the contact endpoint against spam/abuse.
 
 ## Public Pricing Endpoint
-- `/api/pricing` (`src/lib/catalogue/publicPricing.ts`) gives today's plans, prices and plan terms as JSON, for our AI assistant in n8n. It's public, read-only and keyless, so it must only ever hold what the pricing page shows. n8n never calls the backend.
+- `/api/pricing` (`src/lib/catalogue/publicPricing.ts`) gives today's plans, prices, plan terms, and each service with the problem it solves, as JSON, for our AI assistant in n8n. It's public, read-only and keyless, so it must only ever hold what the pricing and services pages show. n8n never calls the backend.
 
 ## Client Account Rules
 Clients log in on this site to subscribe, and to see, renew, upgrade or cancel their subscription. Details are settled when each slice is built, but these rules apply from the start:
