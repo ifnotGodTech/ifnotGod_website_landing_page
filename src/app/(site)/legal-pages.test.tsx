@@ -40,6 +40,18 @@ describe("Privacy Policy", () => {
     expect(screen.getByText(/To understand how the website is used/)).toBeInTheDocument();
   });
 
+  it("describes the AI assistant chat: what it collects, who receives it and how long it's kept", () => {
+    render(<PrivacyPolicyPage />);
+
+    expect(screen.getByText(/Chats with our AI assistant:/)).toBeInTheDocument();
+    expect(screen.getByText(/To answer your questions in the chat/)).toBeInTheDocument();
+    expect(screen.getByText(/The replies are written automatically and can be wrong/)).toBeInTheDocument();
+    expect(screen.getByText("n8n")).toBeInTheDocument();
+    expect(screen.getByText("Our AI model provider")).toBeInTheDocument();
+    expect(screen.getByText(/your browser keeps the conversation until you close the tab/)).toBeInTheDocument();
+    expect(screen.getByText(/session storage, not a\s+cookie/)).toBeInTheDocument();
+  });
+
   it("names the payment provider and says card numbers are never stored", () => {
     render(<PrivacyPolicyPage />);
 
