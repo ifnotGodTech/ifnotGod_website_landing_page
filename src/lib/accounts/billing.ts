@@ -59,3 +59,15 @@ export function buildQuote(plan: Plan, period: BillingPeriod, terms: BillingTerm
         : `Covers ${months} months. Your plan renews automatically when they end, ${reminder}`,
   };
 }
+
+/** The plan terms listed on the pricing page, and in the public pricing endpoint. */
+export function planTerms(terms: BillingTerms): string[] {
+  return [
+    `One-time setup fee of ${formatNaira(terms.setupFee)}, waived when you pay ${terms.setupFeeWaivedFromMonths} months upfront.`,
+    "Pay month by month. There's no minimum term.",
+    "Your plan renews automatically, and we remind you before each renewal.",
+    `Pay 12 months upfront and get ${terms.freeMonthsOnTwelve} months free.`,
+    "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
+    "We're alerted the moment anything fails, on every plan.",
+  ];
+}

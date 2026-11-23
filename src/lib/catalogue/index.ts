@@ -1,4 +1,5 @@
 import type { BillingTerms, Plan, PlanChoice, PlanId, ServiceGroupWithServices, SiteText } from "@/types/catalogue";
+import { buildPublicPricing, type PublicPricing } from "./publicPricing";
 import { buildPlanChoices } from "./rules";
 import { loadCatalogue, loadSiteText } from "./source";
 
@@ -32,4 +33,9 @@ export async function getPlanChoices(id: PlanId): Promise<PlanChoice[]> {
 
 export async function getSiteText(): Promise<SiteText> {
   return loadSiteText();
+}
+
+/** Today's plans, prices and terms for /api/pricing. */
+export async function getPublicPricing(siteUrl: string): Promise<PublicPricing> {
+  return buildPublicPricing(await loadCatalogue(), siteUrl);
 }
