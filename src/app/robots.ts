@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/shared/constants";
+import { isSearchable } from "@/shared/indexing";
 
 export default function robots(): MetadataRoute.Robots {
-  // Vercel's preview copies, including staging.ifnotgod.com, stay out of search results.
-  if (process.env.VERCEL_ENV === "preview") return { rules: { userAgent: "*", disallow: "/" } };
+  // Previews and the staging project (staging.ifnotgod.com) stay out of search results.
+  if (!isSearchable()) return { rules: { userAgent: "*", disallow: "/" } };
   return {
     rules: {
       userAgent: "*",
