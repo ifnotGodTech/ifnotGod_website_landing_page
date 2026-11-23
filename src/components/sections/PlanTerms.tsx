@@ -1,20 +1,7 @@
 import { Container } from "@/components/ui/Container";
-import { describeBillingTerms } from "@/lib/accounts/billing";
+import { planTerms } from "@/lib/accounts/billing";
 import { cn } from "@/shared/cn";
 import type { BillingTerms } from "@/types/catalogue";
-
-/** The setup fee and upfront offers come from the terms the team sets in the dashboard. */
-function planTerms(terms: BillingTerms): string[] {
-  const { setupFee, freeMonths } = describeBillingTerms(terms);
-  return [
-    setupFee,
-    "Pay month by month. There's no minimum term.",
-    "Your plan renews automatically, and we remind you before each renewal.",
-    ...(freeMonths ? [freeMonths] : []),
-    "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
-    "We're alerted the moment anything fails, on every plan.",
-  ];
-}
 
 const QUESTIONS = [
   {
@@ -32,6 +19,7 @@ const QUESTIONS = [
   },
 ];
 
+/** The setup fee and upfront offers come from the terms the team sets in the dashboard. */
 export function PlanTerms({ terms }: { terms: BillingTerms }) {
   return (
     <section className="surface-light">

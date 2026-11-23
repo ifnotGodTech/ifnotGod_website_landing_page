@@ -78,3 +78,16 @@ export function describeBillingTerms(terms: BillingTerms): { setupFee: string; f
     freeMonths: terms.freeMonthsOnTwelve > 0 ? `Pay 12 months upfront and get ${monthsFree(terms.freeMonthsOnTwelve)}.` : null,
   };
 }
+
+/** The plan terms listed on the pricing page, and in the public pricing endpoint. */
+export function planTerms(terms: BillingTerms): string[] {
+  const { setupFee, freeMonths } = describeBillingTerms(terms);
+  return [
+    setupFee,
+    "Pay month by month. There's no minimum term.",
+    "Your plan renews automatically, and we remind you before each renewal.",
+    ...(freeMonths ? [freeMonths] : []),
+    "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
+    "We're alerted the moment anything fails, on every plan.",
+  ];
+}
