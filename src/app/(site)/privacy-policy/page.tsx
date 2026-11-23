@@ -145,7 +145,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <p>
           When you use the chat, our website passes each message to our AI assistant, which runs on n8n and uses an AI
-          model to write its reply. The replies are written automatically and can be wrong. The assistant can&apos;t
+          model from OpenAI to write its reply. The replies are written automatically and can be wrong. The assistant can&apos;t
           book, buy or change anything for you, and it makes no decisions about you. Chats aren&apos;t added to your
           account or to our enquiry records. Please don&apos;t share passwords, card details or other sensitive
           information in the chat.
@@ -176,7 +176,8 @@ export default function PrivacyPolicyPage() {
             the assistant can follow it.
           </li>
           <li>
-            <strong>Our AI model provider</strong> writes the assistant&apos;s replies from your chat messages.
+            <strong>OpenAI</strong> provides the AI model that writes the assistant&apos;s replies from your chat
+            messages.
           </li>
           <li>
             <strong>Brevo</strong> sends the emails we send you and the team.

@@ -5,7 +5,7 @@ const TERMS = [
   "One-time setup fee of ₦100,000, waived when you pay 6 months upfront.",
   "Pay month by month. There's no minimum term.",
   "Your plan renews automatically, and we remind you before each renewal.",
-  "Pay 12 months upfront and get 2 months free.",
+  "Pay 12 months upfront and get 2 months free. The setup fee still applies.",
   "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
   "We're alerted the moment anything fails, on every plan.",
 ];

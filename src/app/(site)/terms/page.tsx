@@ -82,8 +82,8 @@ export default function TermsPage() {
             months free.
           </li>
           <li>
-            A one-off setup fee is charged on your first monthly subscription. It is waived if you pay 6 or more months
-            upfront, and never charged twice.
+            A one-off setup fee is charged on your first subscription. It is waived if you pay 6 months upfront, and
+            never charged twice. Paying 12 months upfront gives you free months instead, and the setup fee applies.
           </li>
           <li>
             Payments are taken by Flutterwave. Your plan starts once Flutterwave confirms your payment to us.

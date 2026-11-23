@@ -60,7 +60,7 @@ describe("buildPublicPricing", () => {
   it("gives the setup fee and upfront offers as numbers and in words", () => {
     expect(pricing.billingTerms).toEqual(BILLING_TERMS);
     expect(pricing.terms[0]).toBe("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.");
-    expect(pricing.terms).toContain("Pay 12 months upfront and get 2 months free.");
+    expect(pricing.terms).toContain("Pay 12 months upfront and get 2 months free. The setup fee still applies.");
   });
 
   it("follows the stored terms", () => {

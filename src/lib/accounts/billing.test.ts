@@ -31,16 +31,24 @@ describe("buildQuote", () => {
     expect(quote.lines).toContainEqual({ label: "Setup fee", amount: "Waived" });
   });
 
-  it("gives 2 months free and no setup fee for 12 months upfront", () => {
+  it("gives 2 months free for 12 months upfront, and charges the setup fee", () => {
     const quote = buildQuote(growth, "twelve-months", BILLING_TERMS);
 
-    expect(quote.dueToday).toBe(400_000);
+    expect(quote.dueToday).toBe(500_000);
     expect(quote.lines).toEqual([
       { label: "Growth, 12 months", amount: "₦480,000" },
       { label: "2 months free", amount: "−₦80,000" },
-      { label: "Setup fee", amount: "Waived" },
+      { label: "One-time setup fee", amount: "₦100,000" },
     ]);
-    expect(quote.optionNote).toBe("2 months free, and no setup fee.");
+    expect(quote.optionNote).toBe("2 months free, plus a one-time setup fee of ₦100,000.");
+  });
+
+  it("doesn't charge the setup fee twice on 12 months upfront", () => {
+    const quote = buildQuote(growth, "twelve-months", BILLING_TERMS, { setupFeePaid: true });
+
+    expect(quote.dueToday).toBe(400_000);
+    expect(quote.lines.some((line) => line.label.toLowerCase().includes("setup fee"))).toBe(false);
+    expect(quote.optionNote).toBe("2 months free.");
   });
 
   it("recognises billing periods", () => {

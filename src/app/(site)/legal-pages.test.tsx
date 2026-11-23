@@ -47,7 +47,7 @@ describe("Privacy Policy", () => {
     expect(screen.getByText(/To answer your questions in the chat/)).toBeInTheDocument();
     expect(screen.getByText(/The replies are written automatically and can be wrong/)).toBeInTheDocument();
     expect(screen.getByText("n8n")).toBeInTheDocument();
-    expect(screen.getByText("Our AI model provider")).toBeInTheDocument();
+    expect(screen.getByText("OpenAI")).toBeInTheDocument();
     expect(screen.getByText(/your browser keeps the conversation until you close the tab/)).toBeInTheDocument();
     expect(screen.getByText(/session storage, not a\s+cookie/)).toBeInTheDocument();
   });
@@ -130,7 +130,8 @@ describe("Terms of Use", () => {
     expect(screen.getByText(/renew automatically at the end of each paid period until you cancel/)).toBeInTheDocument();
     expect(screen.getByText("We email you a reminder 3 days before each renewal, with the amount.")).toBeInTheDocument();
     expect(screen.getByText(/we try again up to 3 times, and your plan keeps working for 3 days meanwhile/)).toBeInTheDocument();
-    expect(screen.getByText(/waived if you pay 6 or more months upfront, and never charged twice/)).toBeInTheDocument();
+    expect(screen.getByText(/waived if you pay 6 months upfront, and\s+never charged twice/)).toBeInTheDocument();
+    expect(screen.getByText(/Paying 12 months upfront gives you free months instead, and the setup fee applies/)).toBeInTheDocument();
     expect(screen.getByText(/A change of plan starts at your next renewal/)).toBeInTheDocument();
     expect(screen.getByText(/payments aren't refundable/)).toHaveTextContent("Nigerian consumer law");
     expect(screen.getByText(/keeps working until the end of the period you've paid for, and it won't renew after that/)).toHaveTextContent(

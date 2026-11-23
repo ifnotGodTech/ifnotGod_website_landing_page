@@ -30,7 +30,7 @@ export type Plan = {
 export type BillingTerms = {
   /** In naira, charged once on a client's first monthly subscription. */
   setupFee: number;
-  /** Paying at least this many months upfront waives the setup fee. */
+  /** Paying exactly this many months upfront waives the setup fee. Other periods, including 12 months, pay it. */
   setupFeeWaivedFromMonths: number;
   /** Free months when paying 12 months upfront. */
   freeMonthsOnTwelve: number;

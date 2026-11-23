@@ -32,7 +32,8 @@ export function buildQuote(plan: Plan, period: BillingPeriod, terms: BillingTerm
   const price = plan.monthlyPrice ?? 0;
   const months = periodMonths(period);
   const freeMonths = months === 12 ? terms.freeMonthsOnTwelve : 0;
-  const setupFee = !setupFeePaid && months < terms.setupFeeWaivedFromMonths ? terms.setupFee : 0;
+  // Only paying exactly the waiver's months upfront (6) skips the setup fee. 12 months gets free months instead.
+  const setupFee = !setupFeePaid && months !== terms.setupFeeWaivedFromMonths ? terms.setupFee : 0;
 
   const lines: QuoteLine[] = [
     { label: months === 1 ? `${plan.name}, first month` : `${plan.name}, ${months} months`, amount: formatNaira(price * months) },
@@ -51,8 +52,12 @@ export function buildQuote(plan: Plan, period: BillingPeriod, terms: BillingTerm
           ? "Cancel any time."
           : `Plus a one-time setup fee of ${formatNaira(terms.setupFee)}. Cancel any time.`
         : months === 12
-          ? `${terms.freeMonthsOnTwelve} months free, and no setup fee.`
-          : "No setup fee.",
+          ? setupFeePaid
+            ? `${terms.freeMonthsOnTwelve} months free.`
+            : `${terms.freeMonthsOnTwelve} months free, plus a one-time setup fee of ${formatNaira(terms.setupFee)}.`
+          : setupFee
+            ? `Plus a one-time setup fee of ${formatNaira(terms.setupFee)}.`
+            : "No setup fee.",
     renewalNote:
       months === 1
         ? `Then ${formatNaira(price)} a month. Your plan renews automatically each month, ${reminder}`
@@ -66,7 +71,7 @@ export function planTerms(terms: BillingTerms): string[] {
     `One-time setup fee of ${formatNaira(terms.setupFee)}, waived when you pay ${terms.setupFeeWaivedFromMonths} months upfront.`,
     "Pay month by month. There's no minimum term.",
     "Your plan renews automatically, and we remind you before each renewal.",
-    `Pay 12 months upfront and get ${terms.freeMonthsOnTwelve} months free.`,
+    `Pay 12 months upfront and get ${terms.freeMonthsOnTwelve} months free. The setup fee still applies.`,
     "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
     "We're alerted the moment anything fails, on every plan.",
   ];
