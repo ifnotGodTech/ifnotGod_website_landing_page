@@ -14,7 +14,12 @@ const HIDE_OVER = "[data-page-hero], footer";
 // and on sign-in pages it would distract from the form.
 const HIDDEN_ON: readonly string[] = [AUDIT_PATH, "/privacy-policy", "/terms", "/login", "/signup", "/reset-password"];
 
-export function FloatingCta() {
+type FloatingCtaProps = {
+  /** The AI assistant's button takes the bottom-right corner, so this sits just to its left. */
+  besideChat?: boolean;
+};
+
+export function FloatingCta({ besideChat = false }: FloatingCtaProps) {
   const [clearOfCtas, setClearOfCtas] = useState(false);
   const pathname = usePathname();
   const visible = clearOfCtas && !HIDDEN_ON.includes(pathname);
@@ -38,7 +43,8 @@ export function FloatingCta() {
     <div
       data-testid="floating-cta"
       className={cn(
-        "fixed right-4 bottom-6.5 z-90 flex items-center gap-2.5 transition-[opacity,visibility] duration-200 sm:right-8",
+        "fixed bottom-6.5 z-90 flex items-center gap-2.5 transition-[opacity,visibility] duration-200",
+        besideChat ? "right-[4.375rem] sm:right-[5.375rem]" : "right-4 sm:right-8",
         visible ? "visible opacity-100" : "invisible opacity-0"
       )}
     >
