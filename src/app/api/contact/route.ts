@@ -4,6 +4,7 @@ import { sendContactNotification, EmailNotConfiguredError } from "@/lib/notifica
 import { apiBaseUrl } from "@/lib/api/config";
 import { sendLeadToBackend } from "@/lib/leads/backend";
 import { createRateLimiter } from "@/lib/rateLimit";
+import { clientIp, isCrossOrigin, isJson, isTooLarge } from "@/lib/requestGuards";
 import { HONEYPOT_FIELD } from "@/shared/constants";
 
 // 5 submissions per IP per 10 minutes. Vercel overwrites x-forwarded-for,
@@ -18,18 +19,6 @@ const limiter = createRateLimiter({
 // Comfortably above the validator's limits on all fields combined.
 const MAX_BODY_BYTES = 32 * 1024;
 
-function isCrossOrigin(request: NextRequest): boolean {
-  const origin = request.headers.get("origin");
-  if (!origin) return false;
-
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  try {
-    return new URL(origin).host !== host;
-  } catch {
-    return true;
-  }
-}
-
 function isHoneypotFilled(body: unknown): boolean {
   if (typeof body !== "object" || body === null) return false;
   return Boolean((body as Record<string, unknown>)[HONEYPOT_FIELD]);
@@ -40,17 +29,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Request not allowed." }, { status: 403 });
   }
 
-  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+  if (!isJson(request)) {
     return NextResponse.json({ ok: false, error: "Unsupported request format." }, { status: 415 });
   }
 
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
+  if (isTooLarge(request, MAX_BODY_BYTES)) {
     return NextResponse.json({ ok: false, error: "Your message is too long." }, { status: 413 });
   }
 
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-
-  if (limiter.isLimited(ip)) {
+  if (limiter.isLimited(clientIp(request))) {
     return NextResponse.json(
       { ok: false, error: "Too many submissions. Please try again in a few minutes." },
       { status: 429 }

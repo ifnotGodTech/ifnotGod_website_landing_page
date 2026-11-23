@@ -34,6 +34,8 @@ Until the backend reaches a feature, its data stays in code.
 - `src/lib/accounts` (the only route to the account backend: `api.ts` for accounts and `subscriptions.ts` for plans and payments, on the real API; Google sign-in; the encrypted login session cookie; and the form actions)
 - `src/app/(account)` (signed-in pages, with their own layout; sign-in pages live in `(site)` and read no session in its layout)
 - `src/components/account` (sign-in forms and account screens)
+- `src/components/chat` (the AI assistant: its floating button, chat window and conversation, in the `(site)` layout behind `NEXT_PUBLIC_CHAT_ENABLED`)
+- `src/lib/chat` (the only route to the assistant's n8n workflow, used by `src/app/api/chat`)
 - `src/shared` (constants, validators, shared helpers)
 - `src/types` (`ContactSubmission`, plan and service types, account types that form the contract with the backend, and other shared contracts)
 - `e2e` (Playwright browser tests, with accounts against a real backend started by `backend/scripts/serve_for_e2e.sh`)
@@ -174,8 +176,15 @@ A feature/section is done when:
 - Sensitive actions (sending the contact submission) must go through a trusted server-side route handler, not a direct client-side call to a third-party service.
 - Rate-limit or otherwise guard the contact endpoint against spam/abuse.
 
-## Public Pricing Endpoint
-- `/api/pricing` (`src/lib/catalogue/publicPricing.ts`) gives today's plans, prices, plan terms, and each service with the problem it solves, as JSON, for our AI assistant in n8n. It's public, read-only and keyless, so it must only ever hold what the pricing and services pages show. n8n never calls the backend.
+## AI Assistant Rules
+- The assistant is an n8n workflow, built and changed in n8n, not here. This site only shows the chat and passes messages on.
+- Browsers send messages only to this site's `/api/chat`, which forwards them to `N8N_CHAT_URL` from the server, with `N8N_CHAT_AUTH` when the chat trigger uses Basic Auth. Keep both out of the browser, and don't load n8n's own chat widget, which would need the security policy loosened.
+- `/api/chat` checks the origin, size and format, limits each visitor's messages, and turns every failure into a plain message. Never log what visitors type.
+- Each tab has one conversation: its id (n8n's memory key) and messages live in `sessionStorage`, never a cookie.
+- Replies are shown as text, with simple lists, bold and links parsed in `src/shared/chat.ts`. Never render them as HTML.
+- The assistant reads today's prices, and each service with the problem it solves, from `/api/pricing` (`src/lib/catalogue/publicPricing.ts`): public, read-only and keyless, so it must only ever hold what the pricing and services pages show. n8n never calls the backend.
+- The chat says its answers can be wrong. The site never states that something was booked or sent because of a chat reply.
+- The Privacy Policy describes the chat. Update it if the chat starts keeping or sending anything new, or the assistant changes provider.
 
 ## Client Account Rules
 Clients log in on this site to subscribe, and to see, renew, upgrade or cancel their subscription. Details are settled when each slice is built, but these rules apply from the start:
