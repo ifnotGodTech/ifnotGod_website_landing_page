@@ -1,14 +1,7 @@
 import { Container } from "@/components/ui/Container";
+import { planTerms } from "@/lib/accounts/billing";
 import { cn } from "@/shared/cn";
-
-const TERMS = [
-  "One-time setup fee of ₦100,000, waived when you pay 6 months upfront.",
-  "Pay month by month. There's no minimum term.",
-  "Your plan renews automatically, and we remind you before each renewal.",
-  "Pay 12 months upfront and get 2 months free. The setup fee still applies.",
-  "WhatsApp messages, AI usage and other third-party costs are billed at cost.",
-  "We're alerted the moment anything fails, on every plan.",
-];
+import type { BillingTerms } from "@/types/catalogue";
 
 const QUESTIONS = [
   {
@@ -26,14 +19,15 @@ const QUESTIONS = [
   },
 ];
 
-export function PlanTerms() {
+/** The setup fee and upfront offers come from the terms the team sets in the dashboard. */
+export function PlanTerms({ terms }: { terms: BillingTerms }) {
   return (
     <section className="surface-light">
       <Container className="grid grid-cols-1 gap-12 pb-18 sm:pb-24 lg:grid-cols-2">
         <div className="flex flex-col gap-3.5">
           <h2 className="text-[1.75rem] font-extrabold tracking-[-0.02em]">Plan terms</h2>
           <ul className="flex list-disc flex-col gap-2 pl-5 text-on-light-dim">
-            {TERMS.map((term) => (
+            {planTerms(terms).map((term) => (
               <li key={term}>{term}</li>
             ))}
           </ul>

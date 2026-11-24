@@ -57,18 +57,27 @@ describe("buildPublicPricing", () => {
     expect(names).not.toContain(SERVICES[0].name);
   });
 
-  it("gives the setup fee and upfront offers as numbers and in words", () => {
-    expect(pricing.billingTerms).toEqual(BILLING_TERMS);
+  it("gives the setup fee and each way of paying's offer as numbers and in words", () => {
+    expect(pricing.billingTerms).toEqual({
+      setupFee: 100_000,
+      paymentOptions: [
+        { period: "monthly", label: "Monthly", months: 1, freeMonths: 0, setupFeeWaived: false, setupFee: 100_000 },
+        { period: "six-months", label: "6 months upfront", months: 6, freeMonths: 0, setupFeeWaived: true, setupFee: 0 },
+        { period: "twelve-months", label: "12 months upfront", months: 12, freeMonths: 2, setupFeeWaived: false, setupFee: 100_000 },
+      ],
+    });
     expect(pricing.terms[0]).toBe("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.");
     expect(pricing.terms).toContain("Pay 12 months upfront and get 2 months free. The setup fee still applies.");
   });
 
-  it("follows the stored terms", () => {
+  it("follows a promotion the team saves", () => {
     const changed = buildPublicPricing(
-      { ...catalogue, billingTerms: { setupFee: 50_000, setupFeeWaivedFromMonths: 6, freeMonthsOnTwelve: 2 } },
+      { ...catalogue, billingTerms: { ...BILLING_TERMS, monthlySetupFeeWaived: true, twelveMonthsFreeMonths: 3 } },
       "https://www.ifnotgod.com"
     );
-    expect(changed.terms[0]).toBe("One-time setup fee of ₦50,000, waived when you pay 6 months upfront.");
+    expect(changed.billingTerms.paymentOptions[0]).toMatchObject({ setupFeeWaived: true, setupFee: 0 });
+    expect(changed.terms[0]).toBe("One-time setup fee of ₦100,000, waived when you pay monthly or 6 months upfront.");
+    expect(changed.terms).toContain("Pay 12 months upfront and get 3 months free. The setup fee still applies.");
   });
 
   it("links to the site's own pages", () => {

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { isSearchable } from "./src/shared/indexing";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -23,8 +24,8 @@ const contentSecurityPolicy = [
   "frame-ancestors 'none'",
 ].join("; ");
 
-// Vercel's preview copies, including staging.ifnotgod.com, must never appear in search results.
-const isPreview = process.env.VERCEL_ENV === "preview";
+// Previews and the staging project (staging.ifnotgod.com) must never appear in search results.
+const hiddenFromSearch = !isSearchable();
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -44,7 +45,7 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-          ...(isPreview ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
+          ...(hiddenFromSearch ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
         ],
       },
     ];

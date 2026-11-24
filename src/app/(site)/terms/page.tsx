@@ -78,12 +78,13 @@ export default function TermsPage() {
       <LegalSection title="Paying">
         <ul>
           <li>
-            You can pay monthly, for 6 months upfront, or for 12 months upfront. Paying 12 months upfront gives you 2
-            months free.
+            You can pay monthly, for 6 months upfront, or for 12 months upfront. Paying upfront may come with months
+            free, as shown on our <Link href="/pricing">pricing page</Link> and at checkout.
           </li>
           <li>
-            A one-off setup fee is charged on your first subscription. It is waived if you pay 6 months upfront, and
-            never charged twice. Paying 12 months upfront gives you free months instead, and the setup fee applies.
+            A one-off setup fee may be charged on your first subscription, at the amount shown at checkout when you pay.
+            Whether it applies depends on how you pay, as the pricing page and checkout show, and it is never charged
+            twice.
           </li>
           <li>
             Payments are taken by Flutterwave. Your plan starts once Flutterwave confirms your payment to us.

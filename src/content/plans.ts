@@ -59,6 +59,9 @@ export const PLANS: Plan[] = [
 
 export const BILLING_TERMS: BillingTerms = {
   setupFee: 100_000,
-  setupFeeWaivedFromMonths: 6,
-  freeMonthsOnTwelve: 2,
+  monthlySetupFeeWaived: false,
+  sixMonthsSetupFeeWaived: true,
+  twelveMonthsSetupFeeWaived: false,
+  sixMonthsFreeMonths: 0,
+  twelveMonthsFreeMonths: 2,
 };

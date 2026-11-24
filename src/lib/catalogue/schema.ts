@@ -38,9 +38,13 @@ export const catalogueSchema: z.ZodType<CatalogueData> = z
     groups: z.array(z.object({ id: z.string(), name: z.string(), unitSingular: z.string(), unitPlural: z.string() })),
     services: z.array(service),
     billingTerms: z.object({
-      setupFee: z.number().int().positive(),
-      setupFeeWaivedFromMonths: z.number().int().positive(),
-      freeMonthsOnTwelve: z.number().int().min(0),
+      // 0 when the team removes the setup fee.
+      setupFee: z.number().int().min(0),
+      monthlySetupFeeWaived: z.boolean(),
+      sixMonthsSetupFeeWaived: z.boolean(),
+      twelveMonthsSetupFeeWaived: z.boolean(),
+      sixMonthsFreeMonths: z.number().int().min(0),
+      twelveMonthsFreeMonths: z.number().int().min(0),
     }),
   })
   // The site's types use optional fields where the API sends empty or null values.
