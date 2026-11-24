@@ -48,7 +48,8 @@ describe("subscribe form", () => {
     await user.click(screen.getByRole("radio", { name: /Pro/ }));
     await user.click(screen.getByRole("radio", { name: /12 months upfront/ }));
 
-    expect(screen.getByRole("button", { name: "Pay ₦800,000 with Flutterwave" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pay ₦900,000 with Flutterwave" })).toBeInTheDocument();
+    expect(screen.getByText("One-time setup fee")).toBeInTheDocument();
     expect(screen.getByText("2 months free")).toBeInTheDocument();
   });
 });

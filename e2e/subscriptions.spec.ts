@@ -62,7 +62,8 @@ test("the total follows the plan and payment option", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Pay ₦240,000 with Flutterwave" })).toBeVisible();
   await page.getByRole("radio", { name: /Starter/ }).check();
   await page.getByRole("radio", { name: /12 months upfront/ }).check();
-  await expect(page.getByRole("button", { name: "Pay ₦200,000 with Flutterwave" })).toBeVisible();
+  // 12 months upfront: 10 months paid, plus the setup fee, which only 6 months upfront waives.
+  await expect(page.getByRole("button", { name: "Pay ₦300,000 with Flutterwave" })).toBeVisible();
 });
 
 test("paying starts the plan, then the client chooses services", async ({ page }) => {
@@ -86,7 +87,8 @@ test("paying starts the plan, then the client chooses services", async ({ page }
 
 test("Flutterwave is asked for the right amount, and cancelling there charges nothing", async ({ page }) => {
   await signUpAndChoose(page, "Growth", "12 months upfront");
-  await expect(page.getByText("Amount: NGN 400000")).toBeVisible();
+  // The backend charges 10 months plus the setup fee.
+  await expect(page.getByText("Amount: NGN 500000")).toBeVisible();
 
   await page.getByRole("button", { name: "Cancel", exact: true }).click();
 

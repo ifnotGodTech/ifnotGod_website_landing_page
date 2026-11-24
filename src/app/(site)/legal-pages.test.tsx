@@ -40,6 +40,18 @@ describe("Privacy Policy", () => {
     expect(screen.getByText(/To understand how the website is used/)).toBeInTheDocument();
   });
 
+  it("describes the AI assistant chat: what it collects, who receives it and how long it's kept", () => {
+    render(<PrivacyPolicyPage />);
+
+    expect(screen.getByText(/Chats with our AI assistant:/)).toBeInTheDocument();
+    expect(screen.getByText(/To answer your questions in the chat/)).toBeInTheDocument();
+    expect(screen.getByText(/The replies are written automatically and can be wrong/)).toBeInTheDocument();
+    expect(screen.getByText("n8n")).toBeInTheDocument();
+    expect(screen.getByText("OpenAI")).toBeInTheDocument();
+    expect(screen.getByText(/your browser keeps the conversation until you close the tab/)).toBeInTheDocument();
+    expect(screen.getByText(/session storage, not a\s+cookie/)).toBeInTheDocument();
+  });
+
   it("names the payment provider and says card numbers are never stored", () => {
     render(<PrivacyPolicyPage />);
 
@@ -119,7 +131,7 @@ describe("Terms of Use", () => {
     expect(screen.getByText("We email you a reminder 3 days before each renewal, with the amount.")).toBeInTheDocument();
     expect(screen.getByText(/we try again up to 3 times, and your plan keeps working for 3 days meanwhile/)).toBeInTheDocument();
     expect(screen.getByText(/A one-off setup fee may be charged on your first subscription, at the amount shown at checkout/)).toHaveTextContent(
-      "it is never charged twice"
+      /depends on how you pay, as the pricing page and checkout show, and it is never charged\s+twice/
     );
     expect(screen.getByText(/A change of plan starts at your next renewal/)).toBeInTheDocument();
     expect(screen.getByText(/payments aren't refundable/)).toHaveTextContent("Nigerian consumer law");

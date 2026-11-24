@@ -27,13 +27,16 @@ export type Plan = {
   monthlyChanges: number | "agreed";
 };
 
+/** The terms the team sets in the dashboard, for promotions as well as every day. */
 export type BillingTerms = {
-  /** In naira, charged once on a client's first monthly subscription. */
+  /** In naira, charged once, on a client's first subscription, unless it's waived for how they pay. 0 for none. */
   setupFee: number;
-  /** Paying at least this many months upfront waives the setup fee. */
-  setupFeeWaivedFromMonths: number;
-  /** Free months when paying 12 months upfront. */
-  freeMonthsOnTwelve: number;
+  monthlySetupFeeWaived: boolean;
+  sixMonthsSetupFeeWaived: boolean;
+  twelveMonthsSetupFeeWaived: boolean;
+  /** Monthly never has free months: a first payment of ₦0 can't save a card for renewals. */
+  sixMonthsFreeMonths: number;
+  twelveMonthsFreeMonths: number;
 };
 
 export type ServiceGroup = {

@@ -3,10 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { metadata } from "@/app/(site)/pricing/page";
 import { AUDIT_PATH } from "@/shared/constants";
+import { getBillingTerms } from "@/lib/catalogue";
 import { PlanTerms } from "./PlanTerms";
-
-const TERMS = { setupFee: 100_000, setupFeeWaivedFromMonths: 6 as const, freeMonthsOnTwelve: 2 };
 import { PricingPlans } from "./PricingPlans";
+
+// Today's terms, as the catalogue gives them.
+const TERMS = await getBillingTerms();
 
 const renderPlans = async () => render(await PricingPlans());
 const planButton = (name: RegExp) => screen.getByRole("button", { name });
@@ -139,7 +141,7 @@ describe("plan terms and questions", () => {
   it("shows the fee, term and billing terms", () => {
     render(<PlanTerms terms={TERMS} />);
 
-    expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 or 12 months upfront.")).toBeInTheDocument();
+    expect(screen.getByText("One-time setup fee of ₦100,000, waived when you pay 6 months upfront.")).toBeInTheDocument();
     expect(screen.getByText("Pay month by month. There's no minimum term.")).toBeInTheDocument();
     expect(screen.getByText(/2 months free/)).toBeInTheDocument();
     expect(screen.getByText("Your plan renews automatically, and we remind you before each renewal.")).toBeInTheDocument();
@@ -147,7 +149,7 @@ describe("plan terms and questions", () => {
   });
 
   it("follows the setup fee and offers the team sets", () => {
-    render(<PlanTerms terms={{ setupFee: 0, setupFeeWaivedFromMonths: 12, freeMonthsOnTwelve: 0 }} />);
+    render(<PlanTerms terms={{ ...TERMS, setupFee: 0, twelveMonthsFreeMonths: 0 }} />);
 
     expect(screen.getByText("No setup fee.")).toBeInTheDocument();
     expect(screen.queryByText(/months? free/)).not.toBeInTheDocument();

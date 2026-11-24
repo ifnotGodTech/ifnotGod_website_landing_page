@@ -1,5 +1,5 @@
-import { planTerms } from "@/lib/accounts/billing";
-import type { BillingTerms, CatalogueData } from "@/types/catalogue";
+import { chargesSetupFee, paymentOptions, planTerms } from "@/lib/accounts/billing";
+import type { CatalogueData } from "@/types/catalogue";
 import { buildPlanChoices, formatNaira, listedServices, planHighlights, servicePlansLabel } from "./rules";
 
 // What /api/pricing returns: the same plans, prices and terms the pricing page shows, for our AI
@@ -32,12 +32,24 @@ export type PublicService = {
   note?: string;
 };
 
+/** One way of paying, with the offer the team has set for it today. */
+export type PublicPaymentOption = {
+  period: string;
+  label: string;
+  months: number;
+  /** Months free on this payment, such as 2 on 12 months upfront. */
+  freeMonths: number;
+  setupFeeWaived: boolean;
+  /** The setup fee, in naira, added to a client's first subscription paid this way. 0 when waived or removed. */
+  setupFee: number;
+};
+
 export type PublicPricing = {
   company: string;
   currency: "NGN";
   plans: PublicPlan[];
   services: PublicService[];
-  billingTerms: BillingTerms;
+  billingTerms: { setupFee: number; paymentOptions: PublicPaymentOption[] };
   terms: string[];
   links: { pricing: string; services: string; audit: string };
 };
@@ -85,7 +97,17 @@ export function buildPublicPricing({ plans, groups, services, billingTerms }: Ca
       };
     }),
     services: offered,
-    billingTerms,
+    billingTerms: {
+      setupFee: billingTerms.setupFee,
+      paymentOptions: paymentOptions(billingTerms).map((option) => ({
+        period: option.period,
+        label: option.label,
+        months: option.months,
+        freeMonths: option.freeMonths,
+        setupFeeWaived: option.setupFeeWaived,
+        setupFee: chargesSetupFee(option.period, billingTerms, false) ? billingTerms.setupFee : 0,
+      })),
+    },
     terms: planTerms(billingTerms),
     links: { pricing: `${siteUrl}/pricing`, services: `${siteUrl}/services`, audit: `${siteUrl}/audit` },
   };
