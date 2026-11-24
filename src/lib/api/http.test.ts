@@ -56,6 +56,20 @@ describe("apiRequest", () => {
     expect(fetchMock.mock.calls[1][1].headers).not.toHaveProperty("x-visitor-ip");
   });
 
+  it("gives each release its own cached copy, so a new release never reads an old release's shape", async () => {
+    vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "abc123");
+    fetchMock.mockResolvedValue(json(200, { name: "Ada" }));
+
+    await apiRequest("/catalogue/", { schema, cacheFor: { revalidate: 3600, tags: ["catalogue"] } });
+    await apiRequest("/auth/me/", { schema });
+    vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "");
+    await apiRequest("/catalogue/", { schema, cacheFor: { revalidate: 3600, tags: ["catalogue"] } });
+
+    expect(fetchMock.mock.calls[0][1].headers["x-site-release"]).toBe("abc123");
+    expect(fetchMock.mock.calls[1][1].headers).not.toHaveProperty("x-site-release");
+    expect(fetchMock.mock.calls[2][1].headers).not.toHaveProperty("x-site-release");
+  });
+
   it("sends a JSON body and extra headers", async () => {
     fetchMock.mockResolvedValueOnce(json(200, { name: "Ada" }));
 

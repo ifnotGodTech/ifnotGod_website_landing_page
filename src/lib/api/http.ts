@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { API_PREFIX, API_TIMEOUT_MS, CACHED_API_TIMEOUT_MS, apiAppKey, apiBaseUrl } from "./config";
+import { API_PREFIX, API_TIMEOUT_MS, CACHED_API_TIMEOUT_MS, apiAppKey, apiBaseUrl, siteRelease } from "./config";
 import { apiError, codeForStatus, type ApiResult } from "./errors";
 import { visitorIp } from "./visitor";
 
@@ -49,6 +49,8 @@ export async function apiRequest<T>(
   }
   // Cached responses are shared by everyone, so they never carry one visitor's address.
   const visitor = cacheFor ? null : await visitorIp();
+  // Headers are part of the cache key, so each release caches its own copy (see siteRelease).
+  const release = cacheFor ? siteRelease() : null;
 
   let response: Response;
   try {
@@ -58,6 +60,7 @@ export async function apiRequest<T>(
         accept: "application/json",
         "x-app-key": appKey,
         ...(visitor ? { "x-visitor-ip": visitor } : {}),
+        ...(release ? { "x-site-release": release } : {}),
         ...(body === undefined ? {} : { "content-type": "application/json" }),
         ...headers,
       },

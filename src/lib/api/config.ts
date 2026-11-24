@@ -11,6 +11,16 @@ export function apiAppKey(): string | null {
   return process.env.BACKEND_APP_KEY || null;
 }
 
+/**
+ * Which release of this site is running: the deployed commit on Vercel. Vercel keeps cached
+ * responses across deployments, so cached reads send it (see apiRequest), giving each release
+ * its own copy. Otherwise a release that changes a response's shape would read the shape the old
+ * release cached, fail its check and take the page down until the cache refreshed.
+ */
+export function siteRelease(): string | null {
+  return process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || null;
+}
+
 export const API_PREFIX = "/api/v1";
 export const API_TIMEOUT_MS = 10_000;
 /**
