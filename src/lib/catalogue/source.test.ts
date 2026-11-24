@@ -29,7 +29,14 @@ const API_CATALOGUE = {
     { id: "ai-call-agent", group: "agents", name: "AI call agent", problem: "I miss calls.", note: "Minutes billed separately.", plans: ["pro"], available: true, catchAll: false },
     { id: "staff-assistant", group: "agents", name: "Staff assistant", problem: "Same questions.", note: "", plans: ["growth", "pro"], available: true, catchAll: false },
   ],
-  billingTerms: { setupFee: 100_000, setupFeeWaivedFromMonths: 6, freeMonthsOnTwelve: 2 },
+  billingTerms: {
+    setupFee: 100_000,
+    monthlySetupFeeWaived: false,
+    sixMonthsSetupFeeWaived: true,
+    twelveMonthsSetupFeeWaived: false,
+    sixMonthsFreeMonths: 0,
+    twelveMonthsFreeMonths: 2,
+  },
 };
 
 describe("where the catalogue comes from", () => {

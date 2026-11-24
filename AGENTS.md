@@ -178,12 +178,13 @@ A feature/section is done when:
 
 ## AI Assistant Rules
 - The assistant is an n8n workflow, built and changed in n8n, not here. This site only shows the chat and passes messages on.
-- Browsers send messages only to this site's `/api/chat`, which forwards them to `N8N_CHAT_URL` from the server. Keep the n8n address out of the browser, and don't load n8n's own chat widget, which would need the security policy loosened.
+- Browsers send messages only to this site's `/api/chat`, which forwards them to `N8N_CHAT_URL` from the server, with `N8N_CHAT_AUTH` when the chat trigger uses Basic Auth. Keep both out of the browser, and don't load n8n's own chat widget, which would need the security policy loosened.
 - `/api/chat` checks the origin, size and format, limits each visitor's messages, and turns every failure into a plain message. Never log what visitors type.
 - Each tab has one conversation: its id (n8n's memory key) and messages live in `sessionStorage`, never a cookie.
 - Replies are shown as text, with simple lists, bold and links parsed in `src/shared/chat.ts`. Never render them as HTML.
-- The assistant reads today's prices, and each service with the problem it solves, from `/api/pricing` (`src/lib/catalogue/publicPricing.ts`): public, read-only and keyless, so it must only ever hold what the pricing page shows. n8n never calls the backend.
+- The assistant reads today's prices, and each service with the problem it solves, from `/api/pricing` (`src/lib/catalogue/publicPricing.ts`): public, read-only and keyless, so it must only ever hold what the pricing and services pages show. n8n never calls the backend.
 - The chat says its answers can be wrong. The site never states that something was booked or sent because of a chat reply.
+- The Privacy Policy describes the chat. Update it if the chat starts keeping or sending anything new, or the assistant changes provider.
 
 ## Client Account Rules
 Clients log in on this site to subscribe, and to see, renew, upgrade or cancel their subscription. Details are settled when each slice is built, but these rules apply from the start:
